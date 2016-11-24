@@ -18,5 +18,11 @@
   "homepage": "https://github.com/sgratzl/d3boilerplate#readme",
   "dependencies": {
     "d3": "^4.4.0"
+  },
+  "devDependencies": {
+    "http-server": "^0.9.0"
+  },
+  "scripts": {
+    "start": "http-server"
   }
 }
