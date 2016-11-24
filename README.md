@@ -341,7 +341,7 @@ This is a common pitfall when using d3 resulting from premature optimization. In
 
 ---
 
-INTERACTIVE: creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html)
+INTERACTIVE: creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) [Open in Codepen](http://codepen.io/sgratzl/pen/xRrrgp)
 
 ---
 
@@ -398,7 +398,7 @@ circles.exit().remove();
 
 ---
 
-INTERACTIVE: adding a title attribute: [barchart02_title.html](examples/barchart02_title.html)
+INTERACTIVE: adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) [Open in Codepen](http://codepen.io/sgratzl/pen/PbjjWv)
 
 ---
 
@@ -438,7 +438,7 @@ see also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatt
 
 ---
 
-INTERACTIVE: loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html)
+INTERACTIVE: loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) [Open in Codepen](http://codepen.io/sgratzl/pen/JbJJWL)
 
 
 Scales and Axes
@@ -506,7 +506,7 @@ axis_container.call(axis);
 
 ---
 
-INTERACTIVE: adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html)
+INTERACTIVE: adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) [Open in Codepen](http://codepen.io/sgratzl/pen/aBwwWE)
 
 ---
 
@@ -534,7 +534,7 @@ commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `c
 
 ---
 
-INTERACTIVE: filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html)
+INTERACTIVE: filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) [Open in Codepen](http://codepen.io/sgratzl/pen/BQZZZB)
 
 ---
 
@@ -604,7 +604,13 @@ setTimeout(() => {
 
 ---
 
-INTERACTIVE: animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html)
+INTERACTIVE: animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html) [Open in Codepen](http://codepen.io/sgratzl/pen/zozzzE)
+
+---
+
+---
+
+INTERACTIVE: final results [barchart07_final.html](examples/barchart07_final.html) [Open in Codepen](http://codepen.io/sgratzl/pen/gLRRRJ)
 
 ---
 
@@ -635,7 +641,7 @@ A pie-layout is a simple layout algorithm. It takes the data and a way to sort/c
 
 ---
 
-SEE: animated filter: [pie.html](examples/pie.html)
+SEE: [pie.html](examples/pie.html)
 
 ---
 
@@ -646,7 +652,7 @@ A force layout is a graph layout algorithm, which uses a simulation for position
 
 ---
 
-SEE: animated filter: [miserables.html](examples/miserables.html)
+SEE: [miserables.html](examples/miserables.html)
 
 ---
 
