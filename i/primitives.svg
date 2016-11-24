@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+    width="200" height="100">
+  <rect x="0" y="0" width="50" height="50" fill="green"/>
+
+  <circle cx="75" cy="25" r="20" fill="red"/>
+
+  <ellipse cx="140" cy="25" rx="40" ry="20" fill="blue"/>
+
+  <line x1="0" y1="60" x2="200" y2="60" stroke="black"/>
+
+  <text x="10" y="80">Simple Text</text>
+
+  <image x="100" y="65" width="100" height="40" xlink:href="http://www.jku.at/cg/content/logo_mit_schriftzug.gif" />
+
+  <path d="M10,100 A30,35 0 0,1 35,85 L90,90" fill="orange"/> 
+</svg>
