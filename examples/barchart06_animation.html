@@ -59,6 +59,7 @@
   const g_yaxis = g.append('g').attr('class','y axis');
 
   /////////////////////////
+  // TODO use animated transtion between filtering changes
 
   d3.json('weather.json', (error, json) => {
     data = json;
