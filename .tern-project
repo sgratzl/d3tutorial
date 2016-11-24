@@ -1,0 +1,10 @@
+{
+  "ecmaVersion": 6,
+  "libs": [
+    "browser"
+  ],
+  "loadEagerly": [
+    "web_modules/d3/build/d3.js"
+  ],
+  "plugins": {}
+}

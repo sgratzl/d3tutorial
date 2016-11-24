@@ -1,0 +1,22 @@
+{
+  "name": "d3boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sgratzl/d3boilerplate.git"
+  },
+  "author": "Samuel Gratzl",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/sgratzl/d3boilerplate/issues"
+  },
+  "homepage": "https://github.com/sgratzl/d3boilerplate#readme",
+  "dependencies": {
+    "d3": "^4.4.0"
+  }
+}
