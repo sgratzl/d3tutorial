@@ -25,6 +25,7 @@
 <body>
   <h1>Student's First BarChart</h1>
 
+  <!--html filter checkbox-->
   <div>
     <strong>Filter:</strong>
     <label><input type="checkbox" name="US" value="1" id="filter-us-only" />US only</label>
@@ -83,15 +84,12 @@
     // ENTER
     // new elements
     const rect_enter = rect.enter().append('rect')
-      .attr('x', 0) //set intelligent default values for animation
-      .attr('y', 0)
-      .attr('width', 0)
-      .attr('height', 0);
+      .attr('x', 0)
     rect_enter.append('title');
 
     // ENTER + UPDATE
     // both old and new elements
-    rect.merge(rect_enter).transition()
+    rect.merge(rect_enter)
       .attr('height', yscale.bandwidth())
       .attr('width', (d) => xscale(d.temperature))
       .attr('y', (d) => yscale(d.location.city));
@@ -108,17 +106,7 @@
   d3.select('#filter-us-only').on('change', function() {
     // This will be triggered when the user selects or unselects the checkbox
     const checked = d3.select(this).property('checked');
-    if (checked === true) {
-      // Checkbox was just checked
 
-      // Keep only data element whose country is US
-      const filtered_data = data.filter((d) => d.location.country === 'US');
-
-      update(filtered_data);  // Update the chart with the filtered data
-    } else {
-      // Checkbox was just unchecked
-      update(data);  // Update the chart with all the data we have
-    }
   });
 
   </script>
