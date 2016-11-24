@@ -5,20 +5,20 @@ This is a short tutorial introducing the basic elements and concepts of D3. D3 s
 
 Homepage: http://d3js.org/
 
-Github: https://github.com/mbostock/d3
+Github: https://github.com/d3/d3
 
-API Documentation: https://github.com/mbostock/d3/wiki/API-Reference
+API Documentation: https://github.com/d3/d3/blob/master/API.md
 
 Gallery: https://github.com/mbostock/d3/wiki/Gallery
 
 Examples: **everywhere** just google it
 
-License: BSD license
+License: BSD-3-Clause license
 
 Download / Include:
 
--	`<script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>`
--	https://github.com/mbostock/d3/releases/latest
+-	`<script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>`
+-	https://github.com/d3/d3/releases/latest
 
 Elements
 --------
@@ -661,6 +661,12 @@ What Else
 -	Array Utilities: `d3.sum`, `d3.max`, `d3.set`, `d3.map`
 -	Selector Utilities: `.sort()`, `.filter()`, `.raise()`, `.lower()`
 
+Boilerplate
+===========
+
+online: http://codepen.io/sgratzl/pen/mOwrxO/
+Github repository: https://github.com/sgratzl/d3boilerplate
+
 What Else Besides D3
 ====================
 
@@ -682,7 +688,7 @@ http://www.highcharts.com/
 
 commercial JavaScript Plot library
 
-![HighCharts Screenshot](http://images.webdesignbooth.com/uploads/highcharts-charts-library.jpg)
+![HighCharts Screenshot](http://www.smashingapps.com/wp-content/uploads/2010/03/highcharts21.jpg)
 
 (c) http://webdesignbooth.com
 
@@ -695,12 +701,17 @@ own programming language for visualizations with OpenGL backend
 
 ![Processing Screenshot](http://www.noupe.com/wp-content/uploads/trans/wp-content/uploads/ext_uploads/images/infographic/infographic-119.jpg)
 
+Others
+------
+
+e.g. Plot.ly (https://plot.ly/) - chart creation
+
 Frameworks on top of D3:
 ------------------------
 
 -	NVD3 (http://nvd3.org/) - reusable plots on top of D3
 -	Cubism (https://square.github.io/cubism/) - Time Series Data
--	Vega (http://trifacta.github.io/vega/) - declaritive description of plots
+-	Vega (http://trifacta.github.io/vega/) - declarative description of plots
 -	Crossfilter (http://square.github.io/crossfilter/) - Fast Multidimensional Filtering for Coordinated Views
 -	...
 
