@@ -132,7 +132,9 @@ Example:
 <svg>
   <circle r="10" cx="20" cy="20" fill="green" />
   <rect x="18" y="18" width="30" height="20" style="fill: blue" />
+  <text x="10" y="30">Test</text>
 </svg>
+<div></div>
 ```
 
 Draws a circle at `20,20` (origin is the top left corner) with a radius of `10` filled with a `green` color. **Hint:** the order defines the visibility order --> the last one is on top
@@ -214,6 +216,7 @@ Simple Selections and Manipulations
 
 All functions of D3 are available under the namespace: `d3`. The most important functions are `select` and `selectAll`. `select` requires in the simplest form an CSS selector string as argument and returns an selector object for the first matching element only. `selectAll` returns a list of matched elements respectively. **Hint:** both functions won't throw an error if no element was found, in either cases they return a dummy selector, having no effect.
 
+
 ```js
 let header = d3.select('div.header');
 ```
@@ -221,7 +224,7 @@ let header = d3.select('div.header');
 Selectors provides a couple of function for manipulating the DOM element including: `attr`, `style`, `classed`, `text`, and `html`.
 
 ```js
-let header = d3.select('circle');
+let circle = d3.select('circle');
 circle.attr('r', 10);
 circle.attr('cx', 20);
 circle.attr('cy', 23);
@@ -238,7 +241,7 @@ circle.style('stroke-width', 2);
 circle.classed('highlight', true);
 
 //set inner text
-d3.select('text').text('Hallo');
+d3.select('text').text('Hello');
 d3.select('div').html(`<strong>Hello</strong>`);
 
 ```
@@ -267,6 +270,13 @@ for each of the cases we have to tell D3 what to do. e.g. when we have more data
 
 basic workflow:
 
+HTML boilerplate
+```html
+<svg width="300" height="300">
+</svg>
+```
+
+
 ```js
 const data = [1,2,3];
 //select svg element
@@ -286,8 +296,8 @@ let circles_update_and_enter = circles_update.merge(circles_enter);
 //1. argument (common name: d): the current data item
 //2. argument (common name: i): the index of the data item in the data array
 //this context: the current DOM element
-circles_update.attr('cx', (d,i) => d);
-circles_update.attr('cy', (d,i) => i);
+circles_update_and_enter.attr('cx', (d,i) => d*10);
+circles_update_and_enter.attr('cy', (d,i) => i*50);
 
 //exit phase
 let circles_exit = circles.exit();
@@ -304,8 +314,8 @@ let circles_enter = circles.enter().append('circle')
   .attr('r', 10);
 
 circles.merge(circles_enter)
-  .attr('cx', (d,i) => d)
-  .attr('cy', (d,i) => i);
+  .attr('cx', (d,i) => d*10)
+  .attr('cy', (d,i) => i*50);
 
 circles.exit().remove();
 ```
@@ -320,8 +330,8 @@ let circles = d3.select('svg').selectAll('circle').data(data)
 
 //what is the difference to the previous one?
 circles
-  .attr('cx', (d,i) => d)
-  .attr('cy', (d,i) => i);
+  .attr('cx', (d,i) => d*10)
+  .attr('cy', (d,i) => i*50);
 
 //exit is not defined?
 circles.exit().remove();
@@ -350,15 +360,17 @@ let groups = d3.select('svg').selectAll('g').data(data);
 let groups_enter = groups.enter().append('g')
 
 let groups_update = groups.merge(groups_enter)
-  .attr('transform', (d, i) => return `translate(${i * 20 + 10},10)`);
+  .attr('transform', (d, i) => `translate(${i * 20 + 10},10)`);
 
 //select all circles within each group and bind the inner array per data item
-let circles = groups_update.selectAll('circle').data((d) => d.arr});
+let circles = groups_update.selectAll('circle').data((d) => d.arr);
 
 //normal data-join
 let cirles_update = circles.enter().append('circle');
 
-circles.merge(cirles_update).attr('r', (d) => d*2);
+circles.merge(cirles_update)
+  .attr('r', (d) => d*2)
+  .attr('cy',(d,i) => i*20);
 
 circles.exit().remove();
 
@@ -372,12 +384,12 @@ const data = [1,2,3];
 let circles = d3.select('svg').selectAll('circle').data(data);
 
 let circles_enter = circles.enter().append('circle')
-  .attr('r', 10)
-  .append('title');
+  .attr('r', 10);
+circles_enter.append('title');
 
 let circles_update = circles.merge(circles_enter)
-  .attr('cx', (d,i) => d)
-  .attr('cy', (d,i) => i);
+  .attr('cx', (d,i) => d*10)
+  .attr('cy', (d,i) => i*50);
 
 circles_update.select('title').text((d) => d);
 
@@ -438,12 +450,14 @@ As seen in the barchart example, mapping a value to a pixel value manually is a 
 
 D3 provides different scales:
 
--	quantiative
+-	quantitative
 	-	`d3.scaleLinear()` ... linear mapping between domain and range
 	-	`d3.scalePow()`
 	-	`d3.scaleLog()`
 -	ordinal
 	-	`d3.scaleOrdinal()`
+  - `d3.scaleBand()`
+  - `d3.scalePoint()`
 -	predefined [categorical color scales](https://github.com/d3/d3-scale#schemeCategory10):
 	-	`d3.scaleOrdinal(d3.schemeCategory10)`
 	-	`d3.scaleOrdinal(d3.schemeCategory20)` ... special property: dark/bright pairs
@@ -451,20 +465,21 @@ D3 provides different scales:
 	-	`d3.scaleOrdinal(d3.schemeCategory20c)` ... 4 brightness levels per color
 
 ```js
-const scale = d3.scaleLinear().domain([0,654]).range([0,200]);
-const cscale = d3.scaleLinear().domain([0,654]).range(['black','white']);
+const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
+const cscale = d3.scaleLinear().domain([0,5]).range(['black','white']);
 
 ...
 //the scale can be applied as a function
-circles.attr('cx', (d) => scale(d));
-circles.style('fill', (d) => cscale(d));
+circles_update
+  .attr('cx', (d) => scale(d))
+  .style('fill', (d) => cscale(d));
 ```
 
 ```js
 //domain is a list of strings or numbers
 const scale = d3.scaleOrdinal().domain(['a','b','c']).range([10,20,30]);
 //distribute as a band for each item
-const bscale = d3.scaleOrdinal().domain(['a','b','c']).rangeBands([0,200]);
+const bscale = d3.scaleBand().domain(['a','b','c']).range([0,200]);
 
 ...
 //the scale can be applied as a function
@@ -475,12 +490,14 @@ In addition, it is quite common adding a axis for your charts. D3 provides a uti
 
 ```js
 
-const scale = d3.scaleLinear().domain([0,654]).range([0,200]);
+const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
 
 const axis = d3.axisBottom().scale(scale);
 
 //create a container to put the axis  
-const axis_container = svg.appeng('g').attr('class', 'axis');
+const axis_container = d3.select('svg').append('g')
+  .attr('class', 'axis')
+  .attr('transform', 'translate(0,200)');
 
 //call axis to create the SVG elements for you
 axis_container.call(axis);
@@ -504,6 +521,8 @@ let circles = d3.select('svg').selectAll('circle').data(data);
 
 circles.enter().append('circle')
   .attr('r', 10)
+  .attr('cy', 40)
+  .attr('cx', (d,i) => 30+i*30)
   .on('click', function(d, i) {
     console.log(`clicked on: ${d} (${i})`);
     const circle = d3.select(this); //can't use arrow scoping
@@ -530,15 +549,15 @@ let circles = d3.select('svg').selectAll('circle').data(data);
 
 let circles_enter = circles.enter().append('circle')
   .attr('r', 10)
-  .attr('cx', 0)
-  .attr('cy', 0); //useful default values for animation
+  .attr('cx', 100)
+  .attr('cy', 100); //useful default values for animation
 
 circles.merge(circles_enter)
   .transition()
   .duration(1000) //duration of the animation
   .delay(200) //delay animation start
-  .attr('cx', (d,i) => d)
-  .attr('cy', (d,i) => i)
+  .attr('cx', (d,i) => d*50)
+  .attr('cy', (d,i) => 40+i*100)
     .transition() //start another transition after the first one ended
     .attr('r', 20);
 
@@ -548,6 +567,9 @@ circles.exit().remove();
 D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn't take the order into account. So, if element 'a' was previously at the first position and now on the third it will bind it to the third element. However, this hampers animations, i.e. animated sorting. By using the *key* argument of the `data` function, one can force that the same DOM element is bound to the same data item regardless of the item order.
 
 ```js
+const cscale = d3.scaleOrdinal(d3.schemeCategory10).domain(['a','b','c', 'd']);
+const xscale = d3.scaleBand().domain(['a','b','c', 'd']).range([10,200]);
+
 function update(data) {
   let s = d3.select('svg');
   //key argument return a unique key/id per data-item (string)
@@ -555,11 +577,13 @@ function update(data) {
 
   //a will be bound to the first DOM element
   let circles_enter = circles.enter().append('circle')
-    .attr('r', 10).attr('cx', 10);
+    .attr('r', 10)
+    .attr('cx', xscale)
+    .style('fill', cscale);
 
   circles.merge(circles_enter)
     .transition()
-    .attr('cy', (d,i) => i*20)
+    .attr('cy', (d,i) => 10+i*20)
 
   circles.exit().remove();
 }
@@ -567,13 +591,14 @@ function update(data) {
 let data = ['a','b','c'];
 update(data);
 
-//later on...
-
-data = ['c','a','f'];
-//the items will move to their new position,
-//and the DOM element for 'b' will be removed
-//and another one for 'f' created
-update(data);
+//later on... 2secs
+setTimeout(() => {
+  data = ['c','a','d'];
+  //the items will move to their new position,
+  //and the DOM element for 'b' will be removed
+  //and another one for 'd' created
+  update(data);
+}, 2000)
 
 ```
 
