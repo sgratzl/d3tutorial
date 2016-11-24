@@ -1,0 +1,72 @@
+ [
+	{
+		"temperature": 66.38,
+		"location": {
+			"city": "San Francisco",
+			"country": "US"
+		}
+	},
+	{
+		"temperature": 21.51,
+		"location": {
+			"city": "Boston",
+			"country": "US"
+		}
+	},
+	{
+		"temperature": 23.37,
+		"location": {
+			"city": "New York",
+			"country": "US"
+		}
+	},
+	{
+		"temperature": 34.17,
+		"location": {
+			"city": "Tokyo",
+			"country": "JP"
+		}
+	},
+	{
+		"temperature": 36.21,
+		"location": {
+			"city": "Washington, D. C.",
+			"country": "US"
+		}
+	},
+	{
+		"temperature": 64.16,
+		"location": {
+			"city": "Los Angeles",
+			"country": "US"
+		}
+	},
+	{
+		"temperature": 59.05,
+		"location": {
+			"city": "Mexico City",
+			"country": "MX"
+		}
+	},
+	{
+		"temperature": 14.77,
+		"location": {
+			"city": "Seoul",
+			"country": "KR"
+		}
+	},
+	{
+		"temperature": 28.93,
+		"location": {
+			"city": "Beijing",
+			"country": "CN"
+		}
+	},
+	{
+		"temperature": 34.34,
+		"location": {
+			"city": "London",
+			"country": "GB"
+		}
+	}
+]
