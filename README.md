@@ -670,8 +670,21 @@ What Else
 Boilerplate
 ===========
 
+Basic Setup
+-----------
+
 online: http://codepen.io/sgratzl/pen/mOwrxO/
+
 Github repository: https://github.com/sgratzl/d3boilerplate
+
+Linking of two plots example
+----------------------------
+
+online: http://codepen.io/sgratzl/pen/zopEgX
+
+Github repository: https://github.com/sgratzl/d3boilerplate_linking
+
+
 
 What Else Besides D3
 ====================
