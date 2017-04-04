@@ -203,6 +203,17 @@ python -m SimpleHTTPServer
 
 Full list: https://gist.github.com/willurd/5720255
 
+
+Git (Version Control)
+----------------------
+
+Using a version control tool (in our case git) tracks changes to your code. Git keeps copies of multiple states of files, which allows you to go back to an older version.
+
+We are using [Github](https://github.com), an online tool for hosting git repositories. You can sign up there and create a public git repository for free.
+
+You should already have git installed, if not see the [official documentation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) on how to install git on your operating system. Alternatively, you can use [GitHub Desktop](https://desktop.github.com/).
+
+
 Dive into D3
 ============
 
