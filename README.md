@@ -134,7 +134,6 @@ Example:
   <rect x="18" y="18" width="30" height="20" style="fill: blue" />
   <text x="10" y="30">Test</text>
 </svg>
-<div></div>
 ```
 
 Draws a circle at `20,20` (origin is the top left corner) with a radius of `10` filled with a `green` color. **Hint:** the order defines the visibility order --> the last one is on top
