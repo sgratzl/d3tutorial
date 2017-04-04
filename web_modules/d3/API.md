@@ -39,7 +39,7 @@ D3 uses [semantic versioning](http://semver.org/). The current version is expose
 
 Array manipulation, ordering, searching, summarizing, etc.
 
-#### [Statistics](https://github.com/d3/d3-array/blob/master/README.md#statistics)
+### [Statistics](https://github.com/d3/d3-array/blob/master/README.md#statistics)
 
 Methods for computing basic summary statistics.
 
@@ -53,7 +53,7 @@ Methods for computing basic summary statistics.
 * [d3.variance](https://github.com/d3/d3-array/blob/master/README.md#variance) - compute the variance of an array of numbers.
 * [d3.deviation](https://github.com/d3/d3-array/blob/master/README.md#deviation) - compute the standard deviation of an array of numbers.
 
-#### [Search](https://github.com/d3/d3-array/blob/master/README.md#search)
+### [Search](https://github.com/d3/d3-array/blob/master/README.md#search)
 
 Methods for searching arrays for a specific element.
 
@@ -67,10 +67,11 @@ Methods for searching arrays for a specific element.
 * [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending) - compute the natural order of two values.
 * [d3.descending](https://github.com/d3/d3-array/blob/master/README.md#descending) - compute the natural order of two values.
 
-#### [Transformations](https://github.com/d3/d3-array/blob/master/README.md#transformations)
+### [Transformations](https://github.com/d3/d3-array/blob/master/README.md#transformations)
 
 Methods for transforming arrays and for generating new arrays.
 
+* [d3.cross](https://github.com/d3/d3-array/blob/master/README.md#cross) - compute the Cartesian product of two arrays.
 * [d3.merge](https://github.com/d3/d3-array/blob/master/README.md#merge) - merge multiple arrays into one array.
 * [d3.pairs](https://github.com/d3/d3-array/blob/master/README.md#pairs) - create an array of adjacent pairs of elements.
 * [d3.permute](https://github.com/d3/d3-array/blob/master/README.md#permute) - reorder an array of elements according to an array of indexes.
@@ -81,7 +82,7 @@ Methods for transforming arrays and for generating new arrays.
 * [d3.transpose](https://github.com/d3/d3-array/blob/master/README.md#transpose) - transpose an array of arrays.
 * [d3.zip](https://github.com/d3/d3-array/blob/master/README.md#zip) - transpose a variable number of arrays.
 
-#### [Histograms](https://github.com/d3/d3-array/blob/master/README.md#histograms)
+### [Histograms](https://github.com/d3/d3-array/blob/master/README.md#histograms)
 
 Bin discrete samples into continuous, non-overlapping intervals.
 
@@ -149,7 +150,7 @@ Select a one- or two-dimensional region using the mouse or touch.
 
 Handy data structures for elements keyed by string.
 
-#### [Objects](https://github.com/d3/d3-collection/blob/master/README.md#objects)
+### [Objects](https://github.com/d3/d3-collection/blob/master/README.md#objects)
 
 Methods for converting associative arrays (objects) to arrays.
 
@@ -157,7 +158,7 @@ Methods for converting associative arrays (objects) to arrays.
 * [d3.values](https://github.com/d3/d3-collection/blob/master/README.md#values) - list the values of an associated array.
 * [d3.entries](https://github.com/d3/d3-collection/blob/master/README.md#entries) - list the key-value entries of an associative array.
 
-#### [Maps](https://github.com/d3/d3-collection/blob/master/README.md#maps)
+### [Maps](https://github.com/d3/d3-collection/blob/master/README.md#maps)
 
 Like ES6 Map, but with string keys and a few other differences.
 
@@ -174,7 +175,7 @@ Like ES6 Map, but with string keys and a few other differences.
 * [*map*.empty](https://github.com/d3/d3-collection/blob/master/README.md#map_empty) - returns false if the map has at least one entry.
 * [*map*.size](https://github.com/d3/d3-collection/blob/master/README.md#map_size) - compute the number of entries.
 
-#### [Sets](https://github.com/d3/d3-collection/blob/master/README.md#sets)
+### [Sets](https://github.com/d3/d3-collection/blob/master/README.md#sets)
 
 Like ES6 Set, but with string keys and a few other differences.
 
@@ -188,7 +189,7 @@ Like ES6 Set, but with string keys and a few other differences.
 * [*set*.empty](https://github.com/d3/d3-collection/blob/master/README.md#set_empty) - returns true if the set has at least one value.
 * [*set*.size](https://github.com/d3/d3-collection/blob/master/README.md#set_size) - compute the number of values.
 
-#### [Nests](https://github.com/d3/d3-collection/blob/master/README.md#nests)
+### [Nests](https://github.com/d3/d3-collection/blob/master/README.md#nests)
 
 Group data into arbitrary hierarchies.
 
@@ -375,6 +376,7 @@ Geographic projections, shapes and math.
 * [*path*.area](https://github.com/d3/d3-geo/blob/master/README.md#path_area) - compute the projected planar area of a given feature.
 * [*path*.bounds](https://github.com/d3/d3-geo/blob/master/README.md#path_bounds) - compute the projected planar bounding box of a given feature.
 * [*path*.centroid](https://github.com/d3/d3-geo/blob/master/README.md#path_centroid) - compute the projected planar centroid of a given feature.
+* [*path*.measure](https://github.com/d3/d3-geo/blob/master/README.md#path_measure) - compute the projected planar length of a given feature.
 * [*path*.projection](https://github.com/d3/d3-geo/blob/master/README.md#path_projection) - set the geographic projection.
 * [*path*.context](https://github.com/d3/d3-geo/blob/master/README.md#path_context) - set the render context.
 * [*path*.pointRadius](https://github.com/d3/d3-geo/blob/master/README.md#path_pointRadius) - set the radius to display point features.
@@ -428,6 +430,7 @@ Geographic projections, shapes and math.
 * [d3.geoArea](https://github.com/d3/d3-geo/blob/master/README.md#geoArea) - compute the spherical area of a given feature.
 * [d3.geoBounds](https://github.com/d3/d3-geo/blob/master/README.md#geoBounds) - compute the latitude-longitude bounding box for a given feature.
 * [d3.geoCentroid](https://github.com/d3/d3-geo/blob/master/README.md#geoCentroid) - compute the spherical centroid of a given feature.
+* [d3.geoContains](https://github.com/d3/d3-geo/blob/master/README.md#geoContains) - test whether a point is inside a given feature.
 * [d3.geoDistance](https://github.com/d3/d3-geo/blob/master/README.md#geoDistance) - compute the great-arc distance between two points.
 * [d3.geoLength](https://github.com/d3/d3-geo/blob/master/README.md#geoLength) - compute the length of a line string or the perimeter of a polygon.
 * [d3.geoInterpolate](https://github.com/d3/d3-geo/blob/master/README.md#geoInterpolate) - interpolate between two points along a great arc.
@@ -465,9 +468,11 @@ Geographic projections, shapes and math.
 * [*stream*.polygonEnd](https://github.com/d3/d3-geo/blob/master/README.md#stream_polygonEnd) -
 * [*stream*.sphere](https://github.com/d3/d3-geo/blob/master/README.md#stream_sphere) -
 
-#### [Transforms](https://github.com/d3/d3-geo/blob/master/README.md#transforms)
+### [Transforms](https://github.com/d3/d3-geo/blob/master/README.md#transforms)
 
 * [d3.geoIdentity](https://github.com/d3/d3-geo/blob/master/README.md#geoIdentity) - scale, translate or clip planar geometry.
+* [*identity*.reflectX](https://github.com/d3/d3-geo/blob/master/README.md#identity_reflectX) - reflect the *x*-dimension.
+* [*identity*.reflectY](https://github.com/d3/d3-geo/blob/master/README.md#identity_reflectY) - reflect the *y*-dimension.
 * [d3.geoTransform](https://github.com/d3/d3-geo/blob/master/README.md#geoTransform) - define a custom geometry transform.
 
 ## [Hierarchies (d3-hierarchy)](https://github.com/d3/d3-hierarchy)
@@ -482,6 +487,7 @@ Layout algorithms for visualizing hierarchical data.
 * [*node*.links](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_links) - generate an array of links.
 * [*node*.sum](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_sum) - evaluate and aggregate quantitative values.
 * [*node*.sort](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_sort) - sort all descendant siblings.
+* [*node*.count](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_count) - count the number of leaves.
 * [*node*.each](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_each) - breadth-first traversal.
 * [*node*.eachAfter](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_eachAfter) - post-order traversal.
 * [*node*.eachBefore](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_eachBefore) - pre-order traversal.
@@ -1167,6 +1173,7 @@ Pan and zoom SVG, HTML or Canvas using mouse or touch input.
 * [*zoom*.scaleExtent](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_scaleExtent) - set the allowed scale range.
 * [*zoom*.translateExtent](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_translateExtent) - set the extent of the zoomable world.
 * [*zoom*.duration](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_duration) - set the duration of zoom transitions.
+* [*zoom*.interpolate](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_interpolate) - control the interpolation of zoom transitions.
 * [*zoom*.on](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_on) - listen for zoom events.
 * [d3.zoomTransform](https://github.com/d3/d3-zoom/blob/master/README.md#zoomTransform) - get the zoom transform for a given element.
 * [*transform*.scale](https://github.com/d3/d3-zoom/blob/master/README.md#transform_scale) - scale a transform by the specified amount.
