@@ -27,11 +27,11 @@ This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl
 
 # Content
 
+-	[Development Environment](#dev-environment)
 - [HTML - Hypertext Markup Language](#html)
 -	[CSS - Cascading Style Sheets](#css)
 -	[SVG - Scalable Vector Graphics](#svg)
 -	[JS - JavaScript / JSON (JavaScript Object Notation)](#js)
--	[Development Environment](#dev-environment)
 -	[D3 - Data-Driven Documents](#d3)
     - [Simple Selections and Manipulations](#d3-selections)
     - [Data Join: Enter / Update / Exit](#d3-data-join)
@@ -47,6 +47,56 @@ This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl
 > SURVEY: What do you guys already know?
 
 ----
+
+<a id="dev-environment"></a>
+# Development Environment
+
+Using a good development environment can save you time and prevent you from pain. Editors like [Sublime](http://www.sublimetext.com/) or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
+
+## Chrome Developer Tools
+
+The [Chrome Developer Tools](https://developer.chrome.com/devtools) are a great set of utilities for web development.
+
+Among other you have:
+
+-	Web Inspector
+	-	Properties
+	-	CSS Style Selector
+-	Console
+	-	in-place coding
+	-	`console.log`, `console.error`
+-	Debugger
+	-	(Conditional) Breakpoints
+	-	Callstack
+	-	Console context
+	-	`debugger` statement a hard-coded breakpoint forcing the debugger to stop (if the developer tools are opened)
+-	Profiler profile your JS code for bottlenecks
+-	Network look at all the requests/responses of your website
+
+Every major web browser (Firefox, Safari, Internet Explorer, etc.) has integrated developer tools.
+
+## Local WebServer
+
+While you can view local sites (`file:///`), Chrome doesn't allow you to load additional external files, e.g., JSON files, for security reasons. Therefore, you need a local webserver running for development. As alternative you can use an integrated IDE (such as [WebStorm](https://www.jetbrains.com/webstorm/)\) that has a webserver already integrated.
+
+Starting a simple python static webserver:
+
+```bash
+python -m SimpleHTTPServer
+```
+
+Full list: https://gist.github.com/willurd/5720255
+
+
+## Git (Version Control)
+
+Using a version control tool (in our case git) tracks changes to your code. Git keeps copies of multiple states of files, which allows you to go back to an older version.
+
+We are using [Github](https://github.com), an online tool for hosting git repositories. You can sign up there and create a public git repository for free.
+
+You should already have git installed, if not see the [official documentation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) on how to install git on your operating system. Alternatively, you can use [GitHub Desktop](https://desktop.github.com/).
+
+---
 
 <a id="html"></a>
 # HTML - Hypertext Markup Language
@@ -299,56 +349,6 @@ console.log(compute(add, 20,10));
 Further reading about JavaScript at [MDN](https://developer.mozilla.org/en-US/docs/Web/javascript).
 
 ----
-
-<a id="dev-environment"></a>
-# Development Environment
-
-Using a good development environment can save you time and prevent you from pain. Editors like [Sublime](http://www.sublimetext.com/) or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
-
-## Chrome Developer Tools
-
-The [Chrome Developer Tools](https://developer.chrome.com/devtools) are a great set of utilities for web development.
-
-Among other you have:
-
--	Web Inspector
-	-	Properties
-	-	CSS Style Selector
--	Console
-	-	in-place coding
-	-	`console.log`, `console.error`
--	Debugger
-	-	(Conditional) Breakpoints
-	-	Callstack
-	-	Console context
-	-	`debugger` statement a hard-coded breakpoint forcing the debugger to stop (if the developer tools are opened)
--	Profiler profile your JS code for bottlenecks
--	Network look at all the requests/responses of your website
-
-Every major web browser (Firefox, Safari, Internet Explorer, etc.) has integrated developer tools.
-
-## Local WebServer
-
-While you can view local sites (`file:///`), Chrome doesn't allow you to load additional external files, e.g., JSON files, for security reasons. Therefore, you need a local webserver running for development. As alternative you can use an integrated IDE (such as [WebStorm](https://www.jetbrains.com/webstorm/)\) that has a webserver already integrated.
-
-Starting a simple python static webserver:
-
-```bash
-python -m SimpleHTTPServer
-```
-
-Full list: https://gist.github.com/willurd/5720255
-
-
-## Git (Version Control)
-
-Using a version control tool (in our case git) tracks changes to your code. Git keeps copies of multiple states of files, which allows you to go back to an older version.
-
-We are using [Github](https://github.com), an online tool for hosting git repositories. You can sign up there and create a public git repository for free.
-
-You should already have git installed, if not see the [official documentation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) on how to install git on your operating system. Alternatively, you can use [GitHub Desktop](https://desktop.github.com/).
-
----
 
 <a id="d3"></a>
 # Dive into D3
