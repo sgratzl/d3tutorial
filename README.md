@@ -445,7 +445,7 @@ circles.merge(circles_enter)
 circles.exit().remove();
 ```
 
-**Hint**: common pitfall
+**Hint**: Common pitfall
 
 ```js
 let data = [1,2,3];
@@ -462,11 +462,13 @@ circles
 circles.exit().remove();
 ```
 
-This is a common pitfall when using d3 resulting from premature optimization. In this case it `circles` stores the *enter*-phase instead of the generic data-join selection. This happens quite often you just create a visualizations but don't think about updating your visualization. The first error is that the `exit` function is not defined. The severe problem is that the next time you run the same function even with modified dataset, the attributes `cx` and `cy` won't be updated. The reason is that the *enter*-phase selector is empty, since there is no need for new DOM elements.
+This is a common pitfall when using D3 resulting from premature optimization. In this case it `circles` stores the *enter*-phase instead of the generic data-join selection. This happens quite often you just create a visualizations but don't think about updating your visualization. The first error is that the `exit` function is not defined. The severe problem is that the next time you run the same function even with modified dataset, the attributes `cx` and `cy` won't be updated. The reason is that the *enter*-phase selector is empty, since there is no need for new DOM elements.
 
 ---
 
-INTERACTIVE: creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) [Open in Codepen](http://codepen.io/thinkh/pen/YZgOEq)
+**INTERACTIVE**
+
+Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) ([Open in Codepen](http://codepen.io/thinkh/pen/YZgOEq))
 
 ---
 
@@ -474,7 +476,7 @@ INTERACTIVE: creating a bar chart: [barchart01_initial.html](examples/barchart01
 
 Nested selections can be used for adding inner elements. A common approach is creating one `g` element for each data item and add several sub DOM elements. The sub element will be created during the enter-phase and updated using `select`. By using `select` function the data-join remains using `selectAll` a nested data join will be created. Nested data joins are useful for hierarchical data.
 
-nested data join
+Nested data join:
 
 ```js
 // hierarchical data
@@ -502,7 +504,7 @@ circles.exit().remove();
 groups.exit().remove();
 ```
 
-nested selection
+Nested selection:
 
 ```js
 const data = [1,2,3];
@@ -523,18 +525,22 @@ circles.exit().remove();
 
 ---
 
-INTERACTIVE: adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) [Open in Codepen](http://codepen.io/thinkh/pen/BWbOJd)
+**INTERACTIVE**
+
+Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) ([Open in Codepen](http://codepen.io/thinkh/pen/BWbOJd))
 
 ---
 
 ## Data Loading: d3.json, d3.csv
 
-In the current version we have static hard-coded data in our files. D3 provides a bunch of function for loading external files. The most important ones are `d3.json` for loading JSON files and `d3.csv` for CSV files respectively. **Important** Data Loading is **asynchronous**. That means you won't get the data immediately as a return value. But you are handing in a callback function, as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
+In the current version we have static hard-coded data in our files. D3 provides a bunch of function for loading external files. The most important ones are `d3.json` for loading JSON files and `d3.csv` for CSV files respectively.
+
+**Important: Data Loading is asynchronous**! That means you won't get the data immediately as a return value. But you are handing in a callback function, as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
 
 ```js
 d3.json('file_to_load.json', (error, data) => {
   if (error) {
-    console.error('cant load data');
+    console.error('Error loading the data');
   } else {
     // do something with the data
   }
@@ -546,7 +552,7 @@ d3.json('file_to_load.json', (error, data) => {
 ```js
 d3.csv('file_to_load.csv', (error, data) => {
   if (error) {
-    console.error('cant load data');
+    console.error('Error loading the data');
   } else {
     // array of objects
     console.log(data.length);
@@ -556,18 +562,21 @@ d3.csv('file_to_load.csv', (error, data) => {
 
 ```
 
-see also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatting and parsing options
+See also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatting and parsing options.
 
-**Warning**: Chrome doesn't allow that local files access other local files using XmlRequests by default. (Firefox does). So, you need a local webserver running on your machine
+**Warning**: Chrome prevents accessing local files using XMLHttpRequest by default (from `file:///`); Firefox does allow this. So, you need a local webserver running on your machine.
 
 ---
 
-INTERACTIVE: loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) [Open in Codepen](http://codepen.io/thinkh/pen/evXLLo)
+**INTERACTIVE**
 
+Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) ([Open in Codepen](http://codepen.io/thinkh/pen/evXLLo))
+
+---
 
 ## Scales and Axes
 
-As seen in the barchart example, mapping a value to a pixel value manually is a pain. D3 provides scales for this case. The idea is creating a mapping function between the domain values (data space) and the output range (pixel space).
+As seen in the barchart example, mapping a value to a pixel value manually is a pain. D3 provides scales for this case. The idea is creating a mapping function between the *domain* values (data space) and the output *range* (pixel space).
 
 [![D3 scales](http://i0.wp.com/www.jeromecukier.net/wp-content/uploads/2011/08/d3scalePower.png)](http://www.jeromecukier.net/blog/2011/08/11/d3-scales-and-color/)
 
@@ -629,7 +638,10 @@ axis_container.call(axis);
 
 ---
 
-INTERACTIVE: adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) [Open in Codepen](http://codepen.io/thinkh/pen/ZePMwZ)
+
+**INTERACTIVE**
+
+Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) ([Open in Codepen](http://codepen.io/thinkh/pen/ZePMwZ))
 
 ---
 
@@ -656,7 +668,9 @@ commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `c
 
 ---
 
-INTERACTIVE: filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) [Open in Codepen](http://codepen.io/thinkh/pen/zZbJbO)
+**INTERACTIVE**
+
+Filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) ([Open in Codepen](http://codepen.io/thinkh/pen/zZbJbO))
 
 ---
 
@@ -725,13 +739,17 @@ setTimeout(() => {
 
 ---
 
-INTERACTIVE: animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html) [Open in Codepen](http://codepen.io/thinkh/pen/YZgOgN)
+**INTERACTIVE**
+
+Animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html) ([Open in Codepen](http://codepen.io/thinkh/pen/YZgOgN))
 
 ---
 
 ---
 
-INTERACTIVE: final results [barchart07_final.html](examples/barchart07_final.html) [Open in Codepen](http://codepen.io/thinkh/pen/YZgObZ)
+**INTERACTIVE**
+
+Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in Codepen](http://codepen.io/thinkh/pen/YZgObZ))
 
 ---
 
