@@ -19,22 +19,36 @@ Download / Include:
 -	`<script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>`
 -	https://github.com/d3/d3/releases/latest
 
-## Content
-
-> SURVEY: What do you guys already know?
-
-- HTML - Hypertext Markup Language
--	CSS - Cascading Style Sheets
--	SVG - Scalable Vector Graphics
--	JS - JavaScript / JSON (JavaScript Object Notation)
--	D3 - Data-Driven Documents
-
 ## Credits
 
 This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl/d3tutorial) and [Alexander Lex](http://dataviscourse.net/2016/tutorials/).
 
+---
+
+# Content
+
+- [HTML - Hypertext Markup Language](#html)
+-	[CSS - Cascading Style Sheets](#css)
+-	[SVG - Scalable Vector Graphics](#svg)
+-	[JS - JavaScript / JSON (JavaScript Object Notation)](#js)
+-	[Development Environment](#dev-environment)
+-	[D3 - Data-Driven Documents](#d3)
+    - [Simple Selections and Manipulations](#d3-selections)
+    - [Data Join: Enter / Update / Exit](#d3-data-join)
+    - [Data Loading: d3.json, d3.csv](#d3-data-loading)
+    - [Scales and Axes](#d3-scales-axes)
+    - [Interactivity](#d3-interactivity)
+    - [Transitions](#d3-transitions)
+-	[D3 Layouts](#layouts)
+-	[More D3](#more-d3)
+-	[D3 Boilerplate](#boilerplate)
+-	[What Else Besides D3](#beside-d3)
+
+> SURVEY: What do you guys already know?
+
 ----
 
+<a id="html"></a>
 # HTML - Hypertext Markup Language
 
 In HTML the markup is represented by elements. An HTML element is a portion of the content that is surrounded by a pair of tags of the same name. Like this:
@@ -85,6 +99,7 @@ While HTML is a textual representation of a markup document, the DOM (Document O
 
 ----
 
+<a id="css"></a>
 # CSS - Cascading Style Sheets
 
 HTML specifies the content of a web page. CSS (Cascading Style Sheets) are external declarations that control the way HTML elements will get rendered by a web browser. A full discussion of CSS syntax can be found at [MDN CSS website](https://developer.mozilla.org/en-US/docs/Web/CSS/Syntax); in following only the very basics are shown.
@@ -162,6 +177,7 @@ CSS rules can be also stored as external file. This is very useful when sharing 
 
 ----
 
+<a id="svg"></a>
 # SVG - Scalable Vector Graphics
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_VS_SVG.svg" height="200px">
@@ -216,6 +232,7 @@ A list of all SVG attributes at [MDN](https://developer.mozilla.org/en-US/docs/W
 
 ----
 
+<a id="js"></a>
 # JS - JavaScript
 
 HTML and SVG code are only static; JavaScript can manipulate the DOM and thus create interactive sites and applications. JavaScript is the most important programming language of the web, and the only programming language that can be used on most web-browsers without any plugins.
@@ -283,6 +300,7 @@ Further reading about JavaScript at [MDN](https://developer.mozilla.org/en-US/do
 
 ----
 
+<a id="dev-environment"></a>
 # Development Environment
 
 Using a good development environment can save you time and prevent you from pain. Editors like [Sublime](http://www.sublimetext.com/) or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
@@ -332,12 +350,14 @@ You should already have git installed, if not see the [official documentation](h
 
 ---
 
+<a id="d3"></a>
 # Dive into D3
 
 A fundamental concept in D3 is binding a DOM element to a data item and manipulate the attributes according to the bound data item. For example, you have a list of persons each having two numerical attributes (age, weight) and a categorical one (gender). You bind each person to an SVG circle element and set the circle's x-position according to the age and the y-position according to the weight. If you additionally fill the circle according to the person's gender, you end up with a simple colored scatterplot visualization.
 
 Code: [persons.html](examples/persons.html)
 
+<a id="d3-selections"></a>
 ## Simple Selections and Manipulations
 
 All functions of D3 are available under the namespace: `d3`. The most important functions are `select` and `selectAll`. `select` requires in the simplest form an CSS selector string as argument and returns an selector object for the first matching element only. `selectAll` returns a list of matched elements respectively. **Hint:** both functions won't throw an error if no element was found, in either cases they return a dummy selector, having no effect.
@@ -386,6 +406,7 @@ d3.select('svg').remove();
 ```
 [Open in Codepen](http://codepen.io/thinkh/pen/WpWMey)
 
+<a id="d3-data-join"></a>
 ## Data Join: Enter / Update / Exit
 
 The basic idea of D3 is binding data items to DOM elements and manipulate them accordingly. We can distinguish three different cases when binding a bunch of data items to a set of DOM elements:
@@ -533,6 +554,7 @@ Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html
 
 ---
 
+<a id="d3-data-loading"></a>
 ## Data Loading: d3.json, d3.csv
 
 In the current version we have static hard-coded data in our files. D3 provides a bunch of function for loading external files. The most important ones are `d3.json` for loading JSON files and `d3.csv` for CSV files respectively.
@@ -576,6 +598,7 @@ Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/b
 
 ---
 
+<a id="d3-scales-axes"></a>
 ## Scales and Axes
 
 As seen in the barchart example, mapping a value to a pixel value manually is a pain. D3 provides scales for this case. The idea is creating a mapping function between the *domain* values (data space) and the output *range* (pixel space).
@@ -646,6 +669,7 @@ Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_sca
 
 ---
 
+<a id="d3-interactivity"></a>
 ## Interactivity
 
 Interactivity is event-driven as in the usual DOM. However, you have easy access to the currently bound data-item. The raw DOM event is hidden but can be accessed using `d3.event`. This is useful for stopping the event propagation (bubbling) `d3.event.stopPropgation()` or preventing the default behavior `d3.event.preventDefault()`. Moreover, the current context of the function `this` is the current DOM element.
@@ -676,6 +700,7 @@ Filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.
 
 ---
 
+<a id="d3-transitions"></a>
 ## Transitions
 
 Animated transitions can help the user understanding changes and are just fun to watch. Transitions in D3 are very simple. Just add `.transition()` within a selector and the changes afterwards are done in an animated fashion. D3 is very smart when it comes to interpolating values, colors, and much more. Transitions can be used during all phases: enter, update, and exit. By nesting transitions you can create fancy animations with just a bunch line of code.
@@ -756,6 +781,7 @@ Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in 
 
 ---
 
+<a id="layouts"></a>
 # Layouts
 
 D3 provides a bunch of standard layouts. A layout does not actually render the visualization but prepares your data, such that you can render, e.g. a pie chart. Most of the time the work with helper tools for SVG from D3. e.g. the `d3.layout.pie()` works best with `d3.svg.arc()`.
@@ -794,7 +820,8 @@ SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](http://codep
 
 ---
 
-# What Else
+<a id="more-d3"></a>
+# More D3
 
 -	Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
 -	Time: Scales, Formatting/Parsing, ...
@@ -804,6 +831,9 @@ SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](http://codep
 -	Array Utilities: `d3.sum`, `d3.max`, `d3.set`, `d3.map`
 -	Selector Utilities: `.sort()`, `.filter()`, `.raise()`, `.lower()`
 
+---
+
+<a id="boilerplate"></a>
 # Boilerplate
 
 ## Basic Setup
@@ -818,9 +848,10 @@ Online: http://codepen.io/sgratzl/pen/zopEgX
 
 Github repository: https://github.com/sgratzl/d3boilerplate_linking
 
+---
 
-
-# What Else Besides D3
+<a id="beside-d3"></a>
+# What Else Besides D3?
 
 ## Tableau
 
