@@ -218,25 +218,34 @@ A list of all SVG attributes at [MDN](https://developer.mozilla.org/en-US/docs/W
 
 # JS - JavaScript
 
+HTML and SVG code are only static; JavaScript can manipulate the DOM and thus create interactive sites and applications. JavaScript is the most important programming language of the web, and the only programming language that can be used on most web-browsers without any plugins.
+
+JavaScript can be used with imperative/procedural, object-oriented, and functional programming styles.
+
+It is a dynamically typed language, which can be strange for developers who mainly work with strongly typed languages such as C/C++ and Java.
+
+**Note** To follow the examples below, you can  open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do.
+
 ```js
-//variables
+// variables
 let x = 5;
 let s = "abc";
 let s2 = 'abc';
 let arr = [1,2,4];
 let obj = { a : 10, b : 'test'};
-//access: obj.a or obj['a']
+// access: obj.a or obj['a']
 
-//conditionals
+// conditionals
 if (x < 10) {
   console.log('small');
 } else {
   console.log('large');
 }
 
+// ternary operator
 let x2 = x < 10 ? 20 : 30;
 
-//loops
+// loops
 for(let i = 0; i < arr.length; i++) {
   x += arr[i];
 }
@@ -250,7 +259,7 @@ while(i < 10) {
   x += i++ * 10;
 }
 
-//functions
+// functions
 function add(a,b) {
   return a + b;
 }
@@ -259,17 +268,18 @@ let sub = (a,b) => {
 }
 console.log(add(10,30), sub(10,5));
 
-//functional style programming
+// functional style programming
 arr.forEach((d) => x += d);
 let arr2 = arr.map((d)  => d* 10);
 let arrf = arr.filter((d) => d < 3);
-//function are first-level objects
+// function are first-level objects
 function compute(f, a, b) {
   return f(a,b);
 };
 console.log(compute(add, 20,10));
-
 ```
+
+Further reading about JavaScript at [MDN](https://developer.mozilla.org/en-US/docs/Web/javascript).
 
 ----
 
@@ -320,6 +330,7 @@ We are using [Github](https://github.com), an online tool for hosting git reposi
 
 You should already have git installed, if not see the [official documentation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) on how to install git on your operating system. Alternatively, you can use [GitHub Desktop](https://desktop.github.com/).
 
+---
 
 # Dive into D3
 
