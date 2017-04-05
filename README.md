@@ -19,7 +19,7 @@ Download / Include:
 -	`<script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>`
 -	https://github.com/d3/d3/releases/latest
 
-## Elements
+## Content
 
 > SURVEY: What do you guys already know?
 
@@ -27,7 +27,13 @@ Download / Include:
 -	CSS - Cascading Style Sheets
 -	SVG - Scalable Vector Graphics
 -	JS - JavaScript / JSON (JavaScript Object Notation)
+-	D3 - Data-Driven Documents
 
+## Credits
+
+This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl/d3tutorial) and [Alexander Lex](http://dataviscourse.net/2016/tutorials/).
+
+----
 
 # HTML - Hypertext Markup Language
 
@@ -71,17 +77,69 @@ Below are a couple of tags that don’t have visual equivalents on the website, 
 
 A comprehensive and well structured list of all elements can be found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
 
+## DOM - Document Object Model
+
+The markup document is a tree structure: it has a root, the HTML element, and elements can have children that are containing elements themselves.
+
+While HTML is a textual representation of a markup document, the DOM (Document Object Model) is a programming interface for it. DOM Elements contain further internal properties and can be accessed and modified from JavaScript.
+
+----
 
 # CSS - Cascading Style Sheets
+
+HTML specifies the content of a web page. CSS (Cascading Style Sheets) are external declarations that control the way HTML elements will get rendered by a web browser. A full discussion of CSS syntax can be found at [MDN CSS website](https://developer.mozilla.org/en-US/docs/Web/CSS/Syntax); in following only the very basics are shown.
+
+A stylesheet will usually consist of a list of CSS rules that are inserted in `<style>` elements on the HTML header, `<head>`. A single CSS rule associates a CSS selector with a set of CSS declarations. These are easier to see through examples.
+
+More important than styling, however, are the rules on how we identify elements in the DOM, the selectors.
+
+## Selectors
 
 Great way to spearate the style from the actual content. In addition, the selector notation is used for navigation and selections in D3.
 
 Good overview of CSS Selectors: http://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
 
-Most important selectors:
+Most important selectors explained in an example:
 
 ```html
+<!DOCTYPE html>
 <html>
+<head>
+  <title>CSS Example</title>
+  <style>
+    /* select all `div` elements */
+    div {
+      border: 1px solid blue;
+      margin: 10px;
+    }
+
+    /* select elements having class `header` */
+    .header {
+      background: steelblue;
+      color: white;
+    }
+
+    /* select the element with the id `main` */
+    #main {
+      border: 1px solid red; /* Overrides the rules from `div`, because `#main` is more specific */
+    }
+
+    /* select all `div` with class `header` */
+    div.header {
+      background: green; /* Overrides the rules from `.header`, because `div.header` is more specific */
+    }
+
+    /* select all descendent `p` within a `div` */
+    div p {
+      font-size: 200%;
+    }
+
+    /* matches when the mouse hovers a `div` */
+    div:hover {
+      background-color: orange;
+    }
+  </style>
+</head>
 <body>
   <div class="header">
     D3 Test
@@ -94,14 +152,7 @@ Most important selectors:
 </html>
 ```
 
-| Selector     | Meaning                                  |
-|--------------|------------------------------------------|
-| `div`        | select all `div` elements                |
-| `.header`    | select elements having class `header`    |
-| `#main`      | select the element with the id `main`    |
-| `div.header` | select all `div` with class `header`     |
-| `div p`      | select all descendent `p` within a `div` |
-| `div:hover`  | matches when the mouse hovers a `div`    |
+----
 
 # SVG - Scalable Vector Graphics
 
@@ -148,6 +199,7 @@ Important attributes:
 2.	fill attribute: `fill="blue"`
 3.	css rule: `circle { fill: blue; }`
 
+----
 
 # JS - JavaScript
 
@@ -204,6 +256,7 @@ console.log(compute(add, 20,10));
 
 ```
 
+----
 
 # Development Environment
 
