@@ -1,5 +1,4 @@
-D3 Tutorial
-===========
+# D3 Tutorial
 
 This is a short tutorial introducing the basic elements and concepts of D3. D3 stands for Data-Driven Documents and is a very popular JavaScript library written by [Mike Bostock](http://bost.ocks.org/mike/).
 
@@ -20,17 +19,137 @@ Download / Include:
 -	`<script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>`
 -	https://github.com/d3/d3/releases/latest
 
-Elements
---------
+## Elements
 
 > SURVEY: What do you guys already know?
 
--	JS - JavaScript / JSON (JavaScript Object Notation)
+- HTML - Hypertext Markup Language
 -	CSS - Cascading Style Sheets
 -	SVG - Scalable Vector Graphics
+-	JS - JavaScript / JSON (JavaScript Object Notation)
 
-JS - JavaScript
-===============
+
+# HTML - Hypertext Markup Language
+
+In HTML the markup is represented by elements. An HTML element is a portion of the content that is surrounded by a pair of tags of the same name. Like this:
+
+```html
+<strong>This is an HTML element.</strong>
+```
+
+HTML elements can be nested:
+
+```html
+<strong>This is an <u>HTML</u> element.</strong>
+```
+
+The opening tag of an element can contain extra information as attributes:
+
+```html
+<a href='http://www.google.com'>A link to Google's main page</a>
+```
+
+The `a` element (which stood for "anchor") describes a link. The attribute `href` means "HTML reference". The meaning given to each attribute changes from element to element.
+
+Elements contain attributes, for instance `id`, `class`, and `style`. The `id` attribute must be unique through the entire document and can be accessed easily from JavaScript. It can be seen as a global variable.
+The attributes `class` and `style` are used in conjunction with CSS and will be explained in the CSS section below.
+
+Some elements are self-closing, i.e. `<foo />` is equivalent to `<foo></foo>`
+
+```html
+<img src="logo.png" alt="Logo"/>
+```
+
+Below are a couple of tags that don’t have visual equivalents on the website, but they are used to define document metadata:
+
+* `<html>` creates the entire HTML container.
+* `<head>` creates the header (generally where the title and links to style sheets/scripts are found).
+* `<script>` links to or embeds a script (we will do that a lot).
+* `<style>` for embedding a style in the website.
+* `<link>` to reference an external document, often a CSS document like that: `<link rel="stylesheet" type="text/css" href="theme.css">`. The `rel` attribute defines the relationship to the active document, the `type` attribute tells the browser which type of file to expect.
+* `<body>` marks the container of the content of the website.
+
+A comprehensive and well structured list of all elements can be found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
+
+
+# CSS - Cascading Style Sheets
+
+Great way to spearate the style from the actual content. In addition, the selector notation is used for navigation and selections in D3.
+
+Good overview of CSS Selectors: http://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
+
+Most important selectors:
+
+```html
+<html>
+<body>
+  <div class="header">
+    D3 Test
+  </div>
+  <div id="main">
+    <p class="header">Lorem Impsum Header</p>
+    <p>Lorem Impsum</p>
+  </div>
+</body>
+</html>
+```
+
+| Selector     | Meaning                                  |
+|--------------|------------------------------------------|
+| `div`        | select all `div` elements                |
+| `.header`    | select elements having class `header`    |
+| `#main`      | select the element with the id `main`    |
+| `div.header` | select all `div` with class `header`     |
+| `div p`      | select all descendent `p` within a `div` |
+| `div:hover`  | matches when the mouse hovers a `div`    |
+
+# SVG - Scalable Vector Graphics
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_VS_SVG.svg" height="200px">
+
+https://en.wikipedia.org/wiki/Scalable_Vector_Graphics
+
+SVG describes the image to be drawn instead of drawing it.
+
+Example:
+
+```html
+<svg>
+  <circle r="10" cx="20" cy="20" fill="green" />
+  <rect x="18" y="18" width="30" height="20" style="fill: blue" />
+  <text x="10" y="30">Test</text>
+</svg>
+```
+
+Draws a circle at `20,20` (origin is the top left corner) with a radius of `10` filled with a `green` color. **Hint:** the order defines the visibility order --> the last one is on top
+
+Some examples: [Primitive Examples](i/primitives.svg)
+
+Important elements:
+
+-	`circle(cx, cy, r)`
+-	`rect(x, y, width, height)`
+-	`line(x1, y1, x2, y2)`
+-	`text` ... text as the body of the element
+-	`path(d)` ... complex shapes
+-	`g` ... grouping of elements
+-	**Hint:** `title` ... can be a child of each element for creating a decription shown as a tooltip
+
+Important attributes:
+
+-	`style` ... set CSS style attribute
+-	`fill` ... fill color
+-	`stroke` ... stroke color
+-	`transform` ... apply a linear transformation on the element and its children (in case of a `g` element), e.g., `transform="translate(100,10)rotate(90)scale(2,2)"`
+
+3 ways for specifying the fill color of an element:
+
+1.	inline style: `style="fill: green"`
+2.	fill attribute: `fill="blue"`
+3.	css rule: `circle { fill: blue; }`
+
+
+# JS - JavaScript
 
 ```js
 //variables
@@ -85,91 +204,12 @@ console.log(compute(add, 20,10));
 
 ```
 
-CSS - Cascading Style Sheets
-============================
 
-Great way to spearate the style from the actual content. In addition, the selector notation is used for navigation and selections in D3.
-
-Good overview of CSS Selectors: http://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
-
-Most important selectors:
-
-```html
-<html>
-<body>
-  <div class="header">
-    D3 Test
-  </div>
-  <div id="main">
-    <p class="header">Lorem Impsum Header</p>
-    <p>Lorem Impsum</p>
-  </div>
-</body>
-</html>
-```
-
-| Selector     | Meaning                                  |
-|--------------|------------------------------------------|
-| `div`        | select all `div` elements                |
-| `.header`    | select elements having class `header`    |
-| `#main`      | select the element with the id `main`    |
-| `div.header` | select all `div` with class `header`     |
-| `div p`      | select all descendent `p` within a `div` |
-| `div:hover`  | matches when the mouse hovers a `div`    |
-
-SVG - Scalable Vector Graphics
-==============================
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_VS_SVG.svg" height="200px">
-
-https://en.wikipedia.org/wiki/Scalable_Vector_Graphics
-
-SVG describes the image to be drawn instead of drawing it.
-
-Example:
-
-```html
-<svg>
-  <circle r="10" cx="20" cy="20" fill="green" />
-  <rect x="18" y="18" width="30" height="20" style="fill: blue" />
-  <text x="10" y="30">Test</text>
-</svg>
-```
-
-Draws a circle at `20,20` (origin is the top left corner) with a radius of `10` filled with a `green` color. **Hint:** the order defines the visibility order --> the last one is on top
-
-Some examples: [Primitive Examples](i/primitives.svg)
-
-Important elements:
-
--	`circle(cx, cy, r)`
--	`rect(x, y, width, height)`
--	`line(x1, y1, x2, y2)`
--	`text` ... text as the body of the element
--	`path(d)` ... complex shapes
--	`g` ... grouping of elements
--	**Hint:** `title` ... can be a child of each element for creating a decription shown as a tooltip
-
-Important attributes:
-
--	`style` ... set CSS style attribute
--	`fill` ... fill color
--	`stroke` ... stroke color
--	`transform` ... apply a linear transformation on the element and its children (in case of a `g` element), e.g., `transform="translate(100,10)rotate(90)scale(2,2)"`
-
-3 ways for specifying the fill color of an element:
-
-1.	inline style: `style="fill: green"`
-2.	fill attribute: `fill="blue"`
-3.	css rule: `circle { fill: blue; }`
-
-Development Environment
-=======================
+# Development Environment
 
 Using a good development environment can save you time and prevent you from pain. Editors like [Sublime](http://www.sublimetext.com/) or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
 
-Chrome Developer Tools
-----------------------
+## Chrome Developer Tools
 
 The [Chrome Developer Tools](https://developer.chrome.com/devtools) are a great set of utilities for web development.
 
@@ -191,7 +231,7 @@ Among other you have:
 
 Every major web browser (Firefox, Safari, Internet Explorer, etc.) has integrated developer tools.
 
-###Local WebServer
+## Local WebServer
 
 While you can view local sites (`file:///`), Chrome doesn't allow you to load additional external files, e.g., JSON files, for security reasons. Therefore, you need a local webserver running for development. As alternative you can use an integrated IDE (such as [WebStorm](https://www.jetbrains.com/webstorm/)\) that has a webserver already integrated.
 
@@ -204,8 +244,7 @@ python -m SimpleHTTPServer
 Full list: https://gist.github.com/willurd/5720255
 
 
-Git (Version Control)
-----------------------
+## Git (Version Control)
 
 Using a version control tool (in our case git) tracks changes to your code. Git keeps copies of multiple states of files, which allows you to go back to an older version.
 
@@ -214,15 +253,13 @@ We are using [Github](https://github.com), an online tool for hosting git reposi
 You should already have git installed, if not see the [official documentation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) on how to install git on your operating system. Alternatively, you can use [GitHub Desktop](https://desktop.github.com/).
 
 
-Dive into D3
-============
+# Dive into D3
 
 A fundamental concept in D3 is binding a DOM element to a data item and manipulate the attributes according to the bound data item. For example, you have a list of persons each having two numerical attributes (age, weight) and a categorical one (gender). You bind each person to an SVG circle element and set the circle's x-position according to the age and the y-position according to the weight. If you additionally fill the circle according to the person's gender, you end up with a simple colored scatterplot visualization.
 
 Code: [persons.html](examples/persons.html)
 
-Simple Selections and Manipulations
------------------------------------
+## Simple Selections and Manipulations
 
 All functions of D3 are available under the namespace: `d3`. The most important functions are `select` and `selectAll`. `select` requires in the simplest form an CSS selector string as argument and returns an selector object for the first matching element only. `selectAll` returns a list of matched elements respectively. **Hint:** both functions won't throw an error if no element was found, in either cases they return a dummy selector, having no effect.
 
@@ -269,8 +306,7 @@ body.append('svg').attr('width', 800).attr('height',600);
 d3.select('svg').remove();
 ```
 
-Data Join: Enter / Update / Exit
---------------------------------
+## Data Join: Enter / Update / Exit
 
 The basic idea of D3 is binding data items to DOM elements and manipulate them accordingly. We can distinguish three different cases when binding a bunch of data items to a set of DOM elements:
 
@@ -351,7 +387,7 @@ This is a common pitfall when using d3 resulting from premature optimization. In
 
 ---
 
-INTERACTIVE: creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) [Open in Codepen](http://codepen.io/sgratzl/pen/xRrrgp)
+INTERACTIVE: creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) [Open in Codepen](http://codepen.io/thinkh/pen/YZgOEq)
 
 ---
 
@@ -408,12 +444,11 @@ circles.exit().remove();
 
 ---
 
-INTERACTIVE: adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) [Open in Codepen](http://codepen.io/sgratzl/pen/PbjjWv)
+INTERACTIVE: adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) [Open in Codepen](http://codepen.io/thinkh/pen/BWbOJd)
 
 ---
 
-Data Loading: d3.json, d3.csv
------------------------------
+## Data Loading: d3.json, d3.csv
 
 In the current version we have static hard-coded data in our files. D3 provides a bunch of function for loading external files. The most important ones are `d3.json` for loading JSON files and `d3.csv` for CSV files respectively. **Important** Data Loading is **asynchronous**. That means you won't get the data immediately as a return value. But you are handing in a callback function, as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
 
@@ -448,11 +483,10 @@ see also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatt
 
 ---
 
-INTERACTIVE: loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) [Open in Codepen](http://codepen.io/sgratzl/pen/JbJJWL)
+INTERACTIVE: loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) [Open in Codepen](http://codepen.io/thinkh/pen/evXLLo)
 
 
-Scales and Axes
----------------
+## Scales and Axes
 
 As seen in the barchart example, mapping a value to a pixel value manually is a pain. D3 provides scales for this case. The idea is creating a mapping function between the domain values (data space) and the output range (pixel space).
 
@@ -516,12 +550,11 @@ axis_container.call(axis);
 
 ---
 
-INTERACTIVE: adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) [Open in Codepen](http://codepen.io/sgratzl/pen/aBwwWE)
+INTERACTIVE: adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) [Open in Codepen](http://codepen.io/thinkh/pen/ZePMwZ)
 
 ---
 
-Interactivity
--------------
+## Interactivity
 
 Interactivity is event-driven as in the usual DOM. However, you have easy access to the currently bound data-item. The raw DOM event is hidden but can be accessed using `d3.event`. This is useful for stopping the event propagation (bubbling) `d3.event.stopPropgation()` or preventing the default behavior `d3.event.preventDefault()`. Moreover, the current context of the function `this` is the current DOM element.
 
@@ -544,12 +577,11 @@ commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `c
 
 ---
 
-INTERACTIVE: filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) [Open in Codepen](http://codepen.io/sgratzl/pen/BQZZZB)
+INTERACTIVE: filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) [Open in Codepen](http://codepen.io/thinkh/pen/zZbJbO)
 
 ---
 
-Transitions
------------
+## Transitions
 
 Animated transitions can help the user understanding changes and are just fun to watch. Transitions in D3 are very simple. Just add `.transition()` within a selector and the changes afterwards are done in an animated fashion. D3 is very smart when it comes to interpolating values, colors, and much more. Transitions can be used during all phases: enter, update, and exit. By nesting transitions you can create fancy animations with just a bunch line of code.
 
@@ -614,25 +646,23 @@ setTimeout(() => {
 
 ---
 
-INTERACTIVE: animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html) [Open in Codepen](http://codepen.io/sgratzl/pen/zozzzE)
+INTERACTIVE: animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html) [Open in Codepen](http://codepen.io/thinkh/pen/YZgOgN)
 
 ---
 
 ---
 
-INTERACTIVE: final results [barchart07_final.html](examples/barchart07_final.html) [Open in Codepen](http://codepen.io/sgratzl/pen/gLRRRJ)
+INTERACTIVE: final results [barchart07_final.html](examples/barchart07_final.html) [Open in Codepen](http://codepen.io/thinkh/pen/YZgObZ)
 
 ---
 
-Layouts
-=======
+# Layouts
 
 D3 provides a bunch of standard layouts. A layout does not actually render the visualization but prepares your data, such that you can render, e.g. a pie chart. Most of the time the work with helper tools for SVG from D3. e.g. the `d3.layout.pie()` works best with `d3.svg.arc()`.
 
 A full list of all available layouts can be found at: https://github.com/mbostock/d3/wiki/Layouts
 
-Basic Setup
------------
+## Basic Setup
 
 ![General Setup](i/CS171_Erklaerbaer_01_General.png)
 
@@ -644,8 +674,7 @@ example including a layout simulation:
 
 ![Simulation Setup](i/CS171_Erklaerbaer_03_HW2.png)
 
-Pie Layout
-----------
+## Pie Layout
 
 A pie-layout is a simple layout algorithm. It takes the data and a way to sort/compute the value per slice. It wraps the data and enhance it with additional attributes for the pie slice, such as start end end angle. *Hint* the angles and arcs are computed relatively to the pie's center. The computed attributes with another utility function `d3.svg.arc()` which converts the given values to a SVG path.
 
@@ -655,8 +684,7 @@ SEE: [pie.html](examples/pie.html)
 
 ---
 
-Force Layout
-------------
+## Force Layout
 
 A force layout is a graph layout algorithm, which uses a simulation for positioning nodes. The goal is to minimize the force applied on the system introduced by gravity, node repulsive force, and edge attraction forces. In this case it is not a one layout step, but a continuous one, where on each `tick` a new set of positions are available.
 
@@ -666,8 +694,7 @@ SEE: [miserables.html](examples/miserables.html)
 
 ---
 
-What Else
-=========
+# What Else
 
 -	Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
 -	Time: Scales, Formatting/Parsing, ...
@@ -677,18 +704,15 @@ What Else
 -	Array Utilities: `d3.sum`, `d3.max`, `d3.set`, `d3.map`
 -	Selector Utilities: `.sort()`, `.filter()`, `.raise()`, `.lower()`
 
-Boilerplate
-===========
+# Boilerplate
 
-Basic Setup
------------
+## Basic Setup
 
 online: http://codepen.io/sgratzl/pen/mOwrxO/
 
 Github repository: https://github.com/sgratzl/d3boilerplate
 
-Linking of two plots example
-----------------------------
+## Linking of two plots example
 
 online: http://codepen.io/sgratzl/pen/zopEgX
 
@@ -696,11 +720,9 @@ Github repository: https://github.com/sgratzl/d3boilerplate_linking
 
 
 
-What Else Besides D3
-====================
+# What Else Besides D3
 
-Tableau
--------
+## Tableau
 
 http://www.tableau.com/
 
@@ -710,8 +732,7 @@ The big player for commercial fat client data visualization.
 
 (c) http://www.marketwatch.ro
 
-HighCharts
-----------
+## HighCharts
 
 http://www.highcharts.com/
 
@@ -721,8 +742,7 @@ commercial JavaScript Plot library
 
 (c) http://webdesignbooth.com
 
-Processing
-----------
+## Processing
 
 https://processing.org/ and http://processingjs.org/ for a web-version
 
@@ -730,13 +750,11 @@ own programming language for visualizations with OpenGL backend
 
 ![Processing Screenshot](http://www.noupe.com/wp-content/uploads/trans/wp-content/uploads/ext_uploads/images/infographic/infographic-119.jpg)
 
-Others
-------
+## Others
 
 e.g. Plot.ly (https://plot.ly/) - chart creation
 
-Frameworks on top of D3:
-------------------------
+## Frameworks on top of D3:
 
 -	NVD3 (http://nvd3.org/) - reusable plots on top of D3
 -	Cubism (https://square.github.io/cubism/) - Time Series Data
