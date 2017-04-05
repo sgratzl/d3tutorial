@@ -99,7 +99,7 @@ Great way to spearate the style from the actual content. In addition, the select
 
 Good overview of CSS Selectors: http://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
 
-Most important selectors explained in an example:
+Most important selectors explained in an example ([Open in Codepen](http://codepen.io/thinkh/pen/rybJVE?editors=1100)):
 
 ```html
 <!DOCTYPE html>
@@ -224,7 +224,7 @@ JavaScript can be used with imperative/procedural, object-oriented, and function
 
 It is a dynamically typed language, which can be strange for developers who mainly work with strongly typed languages such as C/C++ and Java.
 
-**Note** To follow the examples below, you can  open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do.
+**Note** To follow the examples below, you can  open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or [open in Codepen](http://codepen.io/thinkh/pen/qrwxdb?editors=0011).
 
 ```js
 // variables
@@ -369,8 +369,8 @@ circle.classed('highlight', true);
 // set inner text
 d3.select('text').text('Hello');
 d3.select('div').html(`<strong>Hello</strong>`);
-
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/zZXRYg)
 
 The function come in different shapes: as setter (previous examples) as in a getter version. In the later case the value of the first element in the list will be returned. e.g. `circle.attr('cx')`
 
@@ -384,6 +384,7 @@ body.append('svg').attr('width', 800).attr('height',600);
 
 d3.select('svg').remove();
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/WpWMey)
 
 ## Data Join: Enter / Update / Exit
 
@@ -400,7 +401,6 @@ HTML boilerplate
 <svg width="300" height="300">
 </svg>
 ```
-
 
 ```js
 const data = [1,2,3];
@@ -428,8 +428,9 @@ circles_update_and_enter.attr('cy', (d,i) => i*50);
 let circles_exit = circles.exit();
 circles_exit.remove();
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/VpNQZK)
 
-common shortcut
+Common shortcut:
 
 ```js
 const data = [1,2,3];
@@ -444,6 +445,7 @@ circles.merge(circles_enter)
 
 circles.exit().remove();
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/mWgpNW)
 
 **Hint**: Common pitfall
 
@@ -476,7 +478,7 @@ Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html
 
 Nested selections can be used for adding inner elements. A common approach is creating one `g` element for each data item and add several sub DOM elements. The sub element will be created during the enter-phase and updated using `select`. By using `select` function the data-join remains using `selectAll` a nested data join will be created. Nested data joins are useful for hierarchical data.
 
-Nested data join:
+Nested data join ([Open in Codepen](http://codepen.io/thinkh/pen/QpPaXx)):
 
 ```js
 // hierarchical data
@@ -504,7 +506,7 @@ circles.exit().remove();
 groups.exit().remove();
 ```
 
-Nested selection:
+Nested selection ([Open in Codepen](http://codepen.io/thinkh/pen/vxMpqy)):
 
 ```js
 const data = [1,2,3];
@@ -621,7 +623,6 @@ circles.attr('cx', (d) => scale(d));
 In addition, it is quite common adding a axis for your charts. D3 provides a utility function for this case : `d3.svg.axis()`. It uses a scale as input and the necessary SVG elements for you.
 
 ```js
-
 const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
 
 const axis = d3.axisBottom().scale(scale);
@@ -633,8 +634,8 @@ const axis_container = d3.select('svg').append('g')
 
 // call axis to create the SVG elements for you
 axis_container.call(axis);
-
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/GWLyam)
 
 ---
 
@@ -663,8 +664,9 @@ circles.enter().append('circle')
     circle.style('stroke', 'orange');
   });
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/BWEJEw)
 
-commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `change`, `input`
+Commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `change`, `input`
 
 ---
 
@@ -698,6 +700,7 @@ circles.merge(circles_enter)
 
 circles.exit().remove();
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/RpOxdo)
 
 D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn't take the order into account. So, if element 'a' was previously at the first position and now on the third it will bind it to the third element. However, this hampers animations, i.e. animated sorting. By using the *key* argument of the `data` function, one can force that the same DOM element is bound to the same data item regardless of the item order.
 
@@ -733,9 +736,9 @@ setTimeout(() => {
   // and the DOM element for 'b' will be removed
   // and another one for 'd' created
   update(data);
-}, 2000)
-
+}, 2000);
 ```
+[Open in Codepen](http://codepen.io/thinkh/pen/OpGzdj)
 
 ---
 
