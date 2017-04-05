@@ -291,7 +291,7 @@ JavaScript can be used with imperative/procedural, object-oriented, and function
 
 It is a dynamically typed language, which can be strange for developers who mainly work with strongly typed languages such as C/C++ and Java.
 
-**Note** To follow the examples below, you can  open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or [open in Codepen](http://codepen.io/thinkh/pen/qrwxdb?editors=0011).
+**Note** To follow the examples below, you can  open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or [open in Codepen](http://codepen.io/thinkh/pen/qrwxdb?editors=0012).
 
 ```js
 // variables
