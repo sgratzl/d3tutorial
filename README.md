@@ -152,15 +152,23 @@ Most important selectors explained in an example:
 </html>
 ```
 
+## Other ways of declaring CSS
+
+CSS rules can be also stored as external file. This is very useful when sharing CSS rules across many different documents. In that case, include the following element in the document `<head>`:
+
+```html
+<link rel="stylesheet" href="style.css"/>
+```
+
 ----
 
 # SVG - Scalable Vector Graphics
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_VS_SVG.svg" height="200px">
 
-https://en.wikipedia.org/wiki/Scalable_Vector_Graphics
+Image Source: https://en.wikipedia.org/wiki/Scalable_Vector_Graphics
 
-SVG describes the image to be drawn instead of drawing it.
+SVG describes the image to be drawn instead of drawing it pixel by pixel.
 
 Example:
 
@@ -174,7 +182,9 @@ Example:
 
 Draws a circle at `20,20` (origin is the top left corner) with a radius of `10` filled with a `green` color. **Hint:** the order defines the visibility order --> the last one is on top
 
-Some examples: [Primitive Examples](i/primitives.svg)
+<img src="i/primitives.svg" height="100px">
+
+See source code for this image at [i/primitives.svg](i/primitives.svg)
 
 Important elements:
 
@@ -186,12 +196,17 @@ Important elements:
 -	`g` ... grouping of elements
 -	**Hint:** `title` ... can be a child of each element for creating a decription shown as a tooltip
 
+A list of all SVG elements at [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Element).
+
 Important attributes:
 
 -	`style` ... set CSS style attribute
 -	`fill` ... fill color
 -	`stroke` ... stroke color
 -	`transform` ... apply a linear transformation on the element and its children (in case of a `g` element), e.g., `transform="translate(100,10)rotate(90)scale(2,2)"`
+
+A list of all SVG attributes at [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute).
+
 
 3 ways for specifying the fill color of an element:
 
