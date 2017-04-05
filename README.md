@@ -355,18 +355,18 @@ circle.attr('r', 10);
 circle.attr('cx', 20);
 circle.attr('cy', 23);
 
-//alternative syntax via chaining
+// alternative syntax via chaining
 circle.attr('r', 10)
       .attr('cx', 20)
       .attr('cy', 23);
 
-//set css styles
+// set css styles
 circle.style('stroke-width', 2);
 
-//add, remove css classes
+// add, remove css classes
 circle.classed('highlight', true);
 
-//set inner text
+// set inner text
 d3.select('text').text('Hello');
 d3.select('div').html(`<strong>Hello</strong>`);
 
@@ -376,7 +376,7 @@ The function come in different shapes: as setter (previous examples) as in a get
 
 ### DOM Manipulation
 
-the dom elements can be manipulated using. `append` and `remove`
+The DOM elements can be manipulated using. `append` and `remove`
 
 ```js
 let body = d3.select('body');
@@ -391,9 +391,9 @@ The basic idea of D3 is binding data items to DOM elements and manipulate them a
 
 ![D3 Data Join Set Relationship](i/join.png)
 
-for each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the *enter* phase and need to specify a way how to create the remaining ones. Similarly if we more DOM elements than data items we are in the *exit* phase and need to take care of removing the superfluous ones.
+For each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the *enter* phase and need to specify a way how to create the remaining ones. Similarly if we more DOM elements than data items we are in the *exit* phase and need to take care of removing the superfluous ones.
 
-basic workflow:
+Basic workflow:
 
 HTML boilerplate
 ```html
@@ -404,27 +404,27 @@ HTML boilerplate
 
 ```js
 const data = [1,2,3];
-//select svg element
-//select all circles - even if there none yet - and bind the data array *data* onto them
+// select svg element
+// select all circles - even if there none yet - and bind the data array `data` onto them
 let circles = d3.select('svg').selectAll('circle').data(data);
 
-//enter phase
-//append an element matching the selector and set constant attributes
+// enter phase
+// append an element matching the selector and set constant attributes
 let circles_enter = circles.enter().append('circle');
 circles_enter.attr('r', 10);
 
-//update phase ... actually update all including the newly created ones
+// update phase ... actually update all including the newly created ones
 let circles_update = circles;
 let circles_update_and_enter = circles_update.merge(circles_enter);
 
-//function argument given two parameters:
-//1. argument (common name: d): the current data item
-//2. argument (common name: i): the index of the data item in the data array
-//this context: the current DOM element
+// function argument given two parameters:
+// 1. argument (common name: d): the current data item
+// 2. argument (common name: i): the index of the data item in the data array
+// this context: the current DOM element
 circles_update_and_enter.attr('cx', (d,i) => d*10);
 circles_update_and_enter.attr('cy', (d,i) => i*50);
 
-//exit phase
+// exit phase
 let circles_exit = circles.exit();
 circles_exit.remove();
 ```
@@ -453,12 +453,12 @@ let circles = d3.select('svg').selectAll('circle').data(data)
   .enter().append('circle')
   .attr('r', 10);
 
-//what is the difference to the previous one?
+// what is the difference to the previous one?
 circles
   .attr('cx', (d,i) => d*10)
   .attr('cy', (d,i) => i*50);
 
-//exit is not defined?
+// exit is not defined?
 circles.exit().remove();
 ```
 
@@ -477,7 +477,7 @@ Nested selections can be used for adding inner elements. A common approach is cr
 nested data join
 
 ```js
-//hierarchical data
+// hierarchical data
 const data = [{ name: 'a', arr: [1,2,3]}, { name: 'b', arr: [3,2,4] }];
 
 let groups = d3.select('svg').selectAll('g').data(data);
@@ -487,10 +487,10 @@ let groups_enter = groups.enter().append('g')
 let groups_update = groups.merge(groups_enter)
   .attr('transform', (d, i) => `translate(${i * 20 + 10},10)`);
 
-//select all circles within each group and bind the inner array per data item
+// select all circles within each group and bind the inner array per data item
 let circles = groups_update.selectAll('circle').data((d) => d.arr);
 
-//normal data-join
+// normal data-join
 let cirles_update = circles.enter().append('circle');
 
 circles.merge(cirles_update)
@@ -536,7 +536,7 @@ d3.json('file_to_load.json', (error, data) => {
   if (error) {
     console.error('cant load data');
   } else {
-    //do something with the data
+    // do something with the data
   }
 });
 ```
@@ -548,9 +548,9 @@ d3.csv('file_to_load.csv', (error, data) => {
   if (error) {
     console.error('cant load data');
   } else {
-    //array of objects
+    // array of objects
     console.log(data.length);
-    //do something with the data
+    // do something with the data
   }
 });
 
@@ -592,20 +592,20 @@ const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
 const cscale = d3.scaleLinear().domain([0,5]).range(['black','white']);
 
 ...
-//the scale can be applied as a function
+// the scale can be applied as a function
 circles_update
   .attr('cx', (d) => scale(d))
   .style('fill', (d) => cscale(d));
 ```
 
 ```js
-//domain is a list of strings or numbers
+// domain is a list of strings or numbers
 const scale = d3.scaleOrdinal().domain(['a','b','c']).range([10,20,30]);
-//distribute as a band for each item
+// distribute as a band for each item
 const bscale = d3.scaleBand().domain(['a','b','c']).range([0,200]);
 
 ...
-//the scale can be applied as a function
+// the scale can be applied as a function
 circles.attr('cx', (d) => scale(d));
 ```
 
@@ -617,12 +617,12 @@ const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
 
 const axis = d3.axisBottom().scale(scale);
 
-//create a container to put the axis  
+// create a container to put the axis  
 const axis_container = d3.select('svg').append('g')
   .attr('class', 'axis')
   .attr('transform', 'translate(0,200)');
 
-//call axis to create the SVG elements for you
+// call axis to create the SVG elements for you
 axis_container.call(axis);
 
 ```
@@ -647,7 +647,7 @@ circles.enter().append('circle')
   .attr('cx', (d,i) => 30+i*30)
   .on('click', function(d, i) {
     console.log(`clicked on: ${d} (${i})`);
-    const circle = d3.select(this); //can't use arrow scoping
+    const circle = d3.select(this); // can't use arrow scoping
     circle.style('stroke', 'orange');
   });
 ```
@@ -671,15 +671,15 @@ let circles = d3.select('svg').selectAll('circle').data(data);
 let circles_enter = circles.enter().append('circle')
   .attr('r', 10)
   .attr('cx', 100)
-  .attr('cy', 100); //useful default values for animation
+  .attr('cy', 100); // useful default values for animation
 
 circles.merge(circles_enter)
   .transition()
-  .duration(1000) //duration of the animation
-  .delay(200) //delay animation start
+  .duration(1000) // duration of the animation
+  .delay(200) // delay animation start
   .attr('cx', (d,i) => d*50)
   .attr('cy', (d,i) => 40+i*100)
-    .transition() //start another transition after the first one ended
+    .transition() // start another transition after the first one ended
     .attr('r', 20);
 
 circles.exit().remove();
@@ -693,10 +693,10 @@ const xscale = d3.scaleBand().domain(['a','b','c', 'd']).range([10,200]);
 
 function update(data) {
   let s = d3.select('svg');
-  //key argument return a unique key/id per data-item (string)
+  // key argument return a unique key/id per data-item (string)
   let circles = s.selectAll('circle').data(data, (d) => d);
 
-  //a will be bound to the first DOM element
+  // a will be bound to the first DOM element
   let circles_enter = circles.enter().append('circle')
     .attr('r', 10)
     .attr('cx', xscale)
@@ -712,12 +712,12 @@ function update(data) {
 let data = ['a','b','c'];
 update(data);
 
-//later on... 2secs
+// later on... 2secs
 setTimeout(() => {
   data = ['c','a','d'];
-  //the items will move to their new position,
-  //and the DOM element for 'b' will be removed
-  //and another one for 'd' created
+  // the items will move to their new position,
+  // and the DOM element for 'b' will be removed
+  // and another one for 'd' created
   update(data);
 }, 2000)
 
