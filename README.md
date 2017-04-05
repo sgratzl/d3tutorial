@@ -780,7 +780,7 @@ A pie-layout is a simple layout algorithm. It takes the data and a way to sort/c
 
 ---
 
-SEE: [pie.html](examples/pie.html)
+SEE: [pie.html](examples/pie.html) ([Open in Codepen](http://codepen.io/thinkh/pen/JWVpEX))
 
 ---
 
@@ -790,7 +790,7 @@ A force layout is a graph layout algorithm, which uses a simulation for position
 
 ---
 
-SEE: [miserables.html](examples/miserables.html)
+SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](http://codepen.io/thinkh/pen/EWJQWj))
 
 ---
 
@@ -808,13 +808,13 @@ SEE: [miserables.html](examples/miserables.html)
 
 ## Basic Setup
 
-online: http://codepen.io/sgratzl/pen/mOwrxO/
+Online: http://codepen.io/sgratzl/pen/mOwrxO/
 
 Github repository: https://github.com/sgratzl/d3boilerplate
 
 ## Linking of two plots example
 
-online: http://codepen.io/sgratzl/pen/zopEgX
+Online: http://codepen.io/sgratzl/pen/zopEgX
 
 Github repository: https://github.com/sgratzl/d3boilerplate_linking
 
@@ -836,7 +836,7 @@ The big player for commercial fat client data visualization.
 
 http://www.highcharts.com/
 
-commercial JavaScript Plot library
+Commercial JavaScript Plot library
 
 ![HighCharts Screenshot](http://www.smashingapps.com/wp-content/uploads/2010/03/highcharts21.jpg)
 
@@ -846,7 +846,7 @@ commercial JavaScript Plot library
 
 https://processing.org/ and http://processingjs.org/ for a web-version
 
-own programming language for visualizations with OpenGL backend
+Own programming language for visualizations with OpenGL backend
 
 ![Processing Screenshot](http://www.noupe.com/wp-content/uploads/trans/wp-content/uploads/ext_uploads/images/infographic/infographic-119.jpg)
 
