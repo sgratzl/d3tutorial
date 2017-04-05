@@ -182,7 +182,7 @@ Example:
 
 Draws a circle at `20,20` (origin is the top left corner) with a radius of `10` filled with a `green` color. **Hint:** the order defines the visibility order --> the last one is on top
 
-<img src="i/primitives.svg" height="100px">
+<img src="https://cdn.rawgit.com/thinkh/d3tutorial/master/i/primitives.svg" height="100px">
 
 See source code for this image at [i/primitives.svg](i/primitives.svg)
 
