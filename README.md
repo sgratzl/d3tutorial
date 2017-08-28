@@ -21,7 +21,7 @@ Download / Include:
 
 ## Credits
 
-This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl/d3tutorial) and [Alexander Lex](http://dataviscourse.net/2016/tutorials/).
+This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl/d3tutorial), [Holger Stitz](https://github.com/thinkh/d3tutorial) and [Alexander Lex](http://dataviscourse.net/2016/tutorials/).
 
 ---
 
@@ -248,7 +248,7 @@ Example:
 
 Draws a circle at `20,20` (origin is the top left corner) with a radius of `10` filled with a `green` color. **Hint:** the order defines the visibility order --> the last one is on top
 
-<img src="https://cdn.rawgit.com/thinkh/d3tutorial/master/i/primitives.svg" height="100px">
+<img src="https://cdn.rawgit.com/sgratzl/d3tutorial/master/i/primitives.svg" height="100px">
 
 See source code for this image at [i/primitives.svg](i/primitives.svg)
 
@@ -823,13 +823,13 @@ SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](http://codep
 <a id="more-d3"></a>
 # More D3
 
--	Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
--	Time: Scales, Formatting/Parsing, ...
--	Behaviors:
-	-	Zoom
-	-	Drag
--	Array Utilities: `d3.sum`, `d3.max`, `d3.set`, `d3.map`
--	Selector Utilities: `.sort()`, `.filter()`, `.raise()`, `.lower()`
+- Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
+- Time: Scales, Formatting/Parsing, ...
+- Behaviors:
+  - Zoom
+  - Drag
+- Array Utilities: `d3.sum`, `d3.max`, `d3.set`, `d3.map`
+- Selector Utilities: `.sort()`, `.filter()`, `.raise()`, `.lower()`
 
 ---
 
@@ -887,10 +887,10 @@ e.g. Plot.ly (https://plot.ly/) - chart creation
 
 ## Frameworks on top of D3:
 
--	NVD3 (http://nvd3.org/) - reusable plots on top of D3
--	Cubism (https://square.github.io/cubism/) - Time Series Data
--	Vega (http://trifacta.github.io/vega/) - declarative description of plots
--	Crossfilter (http://square.github.io/crossfilter/) - Fast Multidimensional Filtering for Coordinated Views
--	...
+- NVD3 (http://nvd3.org/) - reusable plots on top of D3
+- Cubism (https://square.github.io/cubism/) - Time Series Data
+- Vega (http://trifacta.github.io/vega/) - declarative description of plots
+- Crossfilter (http://square.github.io/crossfilter/) - Fast Multidimensional Filtering for Coordinated Views
+- ...
 
 Thank You
