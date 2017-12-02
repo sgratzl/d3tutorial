@@ -164,7 +164,7 @@ Great way to spearate the style from the actual content. In addition, the select
 
 Good overview of CSS Selectors: http://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
 
-Most important selectors explained in an example ([Open in Codepen](http://codepen.io/thinkh/pen/rybJVE?editors=1100)):
+Most important selectors explained in an example ([Open in Codepen](https://codepen.io/thinkh/pen/rybJVE)):
 
 ```html
 <!DOCTYPE html>
@@ -390,7 +390,7 @@ circle.classed('highlight', true);
 d3.select('text').text('Hello');
 d3.select('div').html(`<strong>Hello</strong>`);
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/zZXRYg)
+[Open in Codepen](https://codepen.io/sgratzl/pen/POVKRj)
 
 The function come in different shapes: as setter (previous examples) as in a getter version. In the later case the value of the first element in the list will be returned. e.g. `circle.attr('cx')`
 
@@ -404,7 +404,7 @@ body.append('svg').attr('width', 800).attr('height',600);
 
 d3.select('svg').remove();
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/WpWMey)
+[Open in Codepen](https://codepen.io/sgratzl/pen/YEBxaW)
 
 <a id="d3-data-join"></a>
 ## Data Join: Enter / Update / Exit
@@ -449,7 +449,7 @@ circles_update_and_enter.attr('cy', (d,i) => i*50);
 let circles_exit = circles.exit();
 circles_exit.remove();
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/VpNQZK)
+[Open in Codepen](https://codepen.io/sgratzl/pen/XzOaZQ)
 
 Common shortcut:
 
@@ -466,7 +466,7 @@ circles.merge(circles_enter)
 
 circles.exit().remove();
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/mWgpNW)
+[Open in Codepen](https://codepen.io/sgratzl/pen/QOYMQm)
 
 **Hint**: Common pitfall
 
@@ -491,7 +491,7 @@ This is a common pitfall when using D3 resulting from premature optimization. In
 
 **INTERACTIVE**
 
-Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) ([Open in Codepen](http://codepen.io/thinkh/pen/YZgOEq))
+Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/xRrrgp))
 
 ---
 
@@ -499,7 +499,7 @@ Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html
 
 Nested selections can be used for adding inner elements. A common approach is creating one `g` element for each data item and add several sub DOM elements. The sub element will be created during the enter-phase and updated using `select`. By using `select` function the data-join remains using `selectAll` a nested data join will be created. Nested data joins are useful for hierarchical data.
 
-Nested data join ([Open in Codepen](http://codepen.io/thinkh/pen/QpPaXx)):
+Nested data join ([Open in Codepen](https://codepen.io/sgratzl/pen/wPNqyr)):
 
 ```js
 // hierarchical data
@@ -527,7 +527,7 @@ circles.exit().remove();
 groups.exit().remove();
 ```
 
-Nested selection ([Open in Codepen](http://codepen.io/thinkh/pen/vxMpqy)):
+Nested selection ([Open in Codepen](https://codepen.io/sgratzl/pen/vWbJdK)):
 
 ```js
 const data = [1,2,3];
@@ -550,7 +550,7 @@ circles.exit().remove();
 
 **INTERACTIVE**
 
-Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) ([Open in Codepen](http://codepen.io/thinkh/pen/BWbOJd))
+Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/PbjjWv))
 
 ---
 
@@ -594,7 +594,7 @@ See also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatt
 
 **INTERACTIVE**
 
-Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) ([Open in Codepen](http://codepen.io/thinkh/pen/evXLLo))
+Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/JbJJWL))
 
 ---
 
@@ -658,14 +658,14 @@ const axis_container = d3.select('svg').append('g')
 // call axis to create the SVG elements for you
 axis_container.call(axis);
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/GWLyam)
+[Open in Codepen](https://codepen.io/sgratzl/pen/zPedpX)
 
 ---
 
 
 **INTERACTIVE**
 
-Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) ([Open in Codepen](http://codepen.io/thinkh/pen/ZePMwZ))
+Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/aBwwWE))
 
 ---
 
@@ -688,7 +688,7 @@ circles.enter().append('circle')
     circle.style('stroke', 'orange');
   });
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/BWEJEw)
+[Open in Codepen](https://codepen.io/sgratzl/pen/MOLvrP)
 
 Commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `change`, `input`
 
@@ -696,7 +696,7 @@ Commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `c
 
 **INTERACTIVE**
 
-Filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) ([Open in Codepen](http://codepen.io/thinkh/pen/zZbJbO))
+Filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/BQZZZB))
 
 ---
 
@@ -725,7 +725,7 @@ circles.merge(circles_enter)
 
 circles.exit().remove();
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/RpOxdo)
+[Open in Codepen](https://codepen.io/sgratzl/pen/WXPEdM)
 
 D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn't take the order into account. So, if element 'a' was previously at the first position and now on the third it will bind it to the third element. However, this hampers animations, i.e. animated sorting. By using the *key* argument of the `data` function, one can force that the same DOM element is bound to the same data item regardless of the item order.
 
@@ -763,13 +763,13 @@ setTimeout(() => {
   update(data);
 }, 2000);
 ```
-[Open in Codepen](http://codepen.io/thinkh/pen/OpGzdj)
+[Open in Codepen](https://codepen.io/sgratzl/pen/oomepX)
 
 ---
 
 **INTERACTIVE**
 
-Animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html) ([Open in Codepen](http://codepen.io/thinkh/pen/YZgOgN))
+Animated filter: [barchart06_interactive.html](examples/barchart06_interactive.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/zozzzE))
 
 ---
 
@@ -777,7 +777,7 @@ Animated filter: [barchart06_interactive.html](examples/barchart06_interactive.h
 
 **INTERACTIVE**
 
-Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in Codepen](http://codepen.io/thinkh/pen/YZgObZ))
+Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/gLRRRJ))
 
 ---
 
@@ -806,7 +806,7 @@ A pie-layout is a simple layout algorithm. It takes the data and a way to sort/c
 
 ---
 
-SEE: [pie.html](examples/pie.html) ([Open in Codepen](http://codepen.io/thinkh/pen/JWVpEX))
+SEE: [pie.html](examples/pie.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/rYPzYP))
 
 ---
 
@@ -816,7 +816,7 @@ A force layout is a graph layout algorithm, which uses a simulation for position
 
 ---
 
-SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](http://codepen.io/thinkh/pen/EWJQWj))
+SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/BmMdmd))
 
 ---
 
@@ -838,13 +838,13 @@ SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](http://codep
 
 ## Basic Setup
 
-Online: http://codepen.io/sgratzl/pen/mOwrxO/
+Online: https://codepen.io/sgratzl/pen/mOwrxO
 
 Github repository: https://github.com/sgratzl/d3boilerplate
 
 ## Linking of two plots example
 
-Online: http://codepen.io/sgratzl/pen/zopEgX
+Online: https://codepen.io/sgratzl/pen/zopEgX
 
 Github repository: https://github.com/sgratzl/d3boilerplate_linking
 
