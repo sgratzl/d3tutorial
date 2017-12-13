@@ -643,7 +643,7 @@ const bscale = d3.scaleBand().domain(['a','b','c']).range([0,200]);
 circles.attr('cx', (d) => scale(d));
 ```
 
-In addition, it is quite common adding a axis for your charts. D3 provides a utility function for this case : `d3.svg.axis()`. It uses a scale as input and the necessary SVG elements for you.
+In addition, it is quite common adding a axis for your charts. D3 provides a utility function for this case : `d3.axisBottom()`, `d3.axisLeft()`, `d3.axisRight()`, `d3.axisTop()`. It uses a scale as input and the necessary SVG elements for you.
 
 ```js
 const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
