@@ -594,7 +594,7 @@ See also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatt
 
 **INTERACTIVE**
 
-Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/JbJJWL))
+Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/JMoGdP))
 
 ---
 
