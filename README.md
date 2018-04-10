@@ -16,7 +16,7 @@ License: BSD-3-Clause license
 
 Download / Include:
 
--	`<script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>`
+-	`<script src="https://d3js.org/d3.v5.min.js"></script>`
 -	https://github.com/d3/d3/releases/latest
 
 ## Credits
