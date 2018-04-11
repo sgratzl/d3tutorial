@@ -1,8 +1,8 @@
 # D3 Tutorial
 
-This is a short tutorial introducing the basic elements and concepts of D3. D3 stands for Data-Driven Documents and is a very popular JavaScript library written by [Mike Bostock](http://bost.ocks.org/mike/).
+This is a short tutorial introducing the basic elements and concepts of D3. D3 stands for Data-Driven Documents and is a very popular JavaScript library written by [Mike Bostock](https://bost.ocks.org/mike/).
 
-Homepage: http://d3js.org/
+Homepage: https://d3js.org/
 
 Github: https://github.com/d3/d3
 
@@ -140,7 +140,7 @@ Below are a couple of tags that don’t have visual equivalents on the website, 
 * `<head>` creates the header (generally where the title and links to style sheets/scripts are found).
 * `<script>` links to or embeds a script (we will do that a lot).
 * `<style>` for embedding a style in the website.
-* `<link>` to reference an external document, often a CSS document like that: `<link rel="stylesheet" type="text/css" href="theme.css">`. The `rel` attribute defines the relationship to the active document, the `type` attribute tells the browser which type of file to expect.
+* `<link>` to reference an external document, often a CSS document like that: `<link rel="stylesheet" href="theme.css">`. The `rel` attribute defines the relationship to the active document.
 * `<body>` marks the container of the content of the website.
 
 A comprehensive and well structured list of all elements can be found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
