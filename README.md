@@ -55,7 +55,7 @@ Using a good development environment can save you time and prevent you from pain
 
 ## Editors
 
-Editors like [Visual Studio Code](https://code.visualstudio.com), [Sublime](https://www.sublimetext.com/), or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
+The editor is one of the tools that will you use most. Choose the editor you feel comfortable with and that supports your work. A good start are editors like [Visual Studio Code](https://code.visualstudio.com), [Sublime](https://www.sublimetext.com/), or [Atom](https://atom.io). Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
 
 ## Chrome Developer Tools
 
@@ -143,6 +143,21 @@ Below are a couple of tags that don’t have visual equivalents on the website, 
 * `<link>` to reference an external document, often a CSS document like that: `<link rel="stylesheet" href="theme.css">`. The `rel` attribute defines the relationship to the active document.
 * `<body>` marks the container of the content of the website.
 
+A minimal HTML document looks like this:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document Title</title>
+</head>
+<body>
+  Document Content
+</body>
+</html>
+```
+
 A comprehensive and well structured list of all elements can be found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
 
 ## DOM - Document Object Model
@@ -172,8 +187,9 @@ Most important selectors explained in an example ([Open in Codepen](https://code
 
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>CSS Example</title>
   <style>
     /* select all `div` elements */
@@ -295,7 +311,7 @@ JavaScript can be used with imperative/procedural, object-oriented, and function
 
 It is a dynamically typed language, which can be strange for developers who mainly work with strongly typed languages such as C/C++ and Java.
 
-**Note** To follow the examples below, you can  open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or [open in Codepen](https://codepen.io/thinkh/pen/qrwxdb?editors=0012).
+**Note** To follow the examples below, you can open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or [open in Codepen](https://codepen.io/thinkh/pen/qrwxdb?editors=0012).
 
 ```js
 // variables
@@ -351,6 +367,93 @@ console.log(compute(add, 20,10));
 ```
 
 Further reading about JavaScript at [MDN](https://developer.mozilla.org/en-US/docs/Web/javascript).
+
+## Promises
+
+The core idea behind promises is that a promise represents the result of an asynchronous operation, i.e., the Promise object represents a value that may not be available yet, but will be resolved at some point in the future.
+
+A promise is in one of three different states:
+
+* pending - The initial state of a promise.
+* fulfilled - The state of a promise representing a successful operation.
+* rejected - The state of a promise representing a failed operation.
+
+Once a promise is fulfilled or rejected, it is immutable (i.e. it can never change again).
+
+The basic promise syntax looks like this:
+
+```js
+new Promise(/* executor*/ function (resolve, reject) { ... } );
+```
+
+A promise can be produced by handing a function that accepts the two parameters `resolve`, `reject`
+
+```js
+const isFileLoaded = false;
+
+// Promise
+const willIGetTheFile = new Promise(
+  function (resolve, reject) {
+    if (isFileLoaded) {
+      var fileData = {
+        filename: 'data.txt',
+        content: 'Hello World'
+      };
+      resolve(fileData); // fulfilled
+    } else {
+      var reason = new Error('something bad happened');
+      reject(reason); // reject
+    }
+  }
+);
+```
+
+A promise can be consumed by using the `then` and `catch` functions:
+
+```js
+// call our promise
+var requestFile = function () {
+  willIGetTheFile
+    .then(function (fulfilled) {
+      // yay, you got a file
+      console.log(fulfilled);
+      // output: { filename: 'data.txt', content: 'Hello World' }
+    })
+    .catch(function (error) {
+      // oops, file didn't load
+      console.log(error.message);
+      // output: 'something bad happened'
+    });
+};
+
+requestFile();
+```
+
+Promises can be chained as well to execute multiple steps of a workflow:
+
+```js
+function parseContent(fileData) {
+  return fileData.content;
+}
+
+// call our promise
+var requestFile = function () {
+  willIGetTheFile
+    .then(parseContent)
+    .then(function (fulfilled) {
+      // yay, you got a file
+      console.log(fulfilled);
+      // output: 'Hello World'
+    })
+    .catch(function (error) {
+      // oops, file didn't load
+      console.log(error.message);
+      // output: 'something bad happened'
+    });
+};
+
+requestFile();
+```
 
 ----
 
