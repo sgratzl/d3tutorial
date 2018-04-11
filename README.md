@@ -51,7 +51,11 @@ This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl
 <a id="dev-environment"></a>
 # Development Environment
 
-Using a good development environment can save you time and prevent you from pain. Editors like [Sublime](http://www.sublimetext.com/) or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
+Using a good development environment can save you time and prevent you from pain.
+
+## Editors
+
+Editors like [Visual Studio Code](https://code.visualstudio.com), [Sublime](https://www.sublimetext.com/), or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
 
 ## Chrome Developer Tools
 
@@ -73,19 +77,19 @@ Among other you have:
 -	Profiler profile your JS code for bottlenecks
 -	Network look at all the requests/responses of your website
 
-Every major web browser (Firefox, Safari, Internet Explorer, etc.) has integrated developer tools.
+Every major web browser ([Firefox](https://developer.mozilla.org/en-US/docs/Tools/), [Safari](https://developer.apple.com/safari/tools/), [Edge](https://docs.microsoft.com/en-us/microsoft-edge/devtools-guide), etc.) has integrated developer tools.
 
 ## Local WebServer
 
 While you can view local sites (`file:///`), Chrome doesn't allow you to load additional external files, e.g., JSON files, for security reasons. Therefore, you need a local webserver running for development. As alternative you can use an integrated IDE (such as [WebStorm](https://www.jetbrains.com/webstorm/)\) that has a webserver already integrated.
 
-Starting a simple python static webserver:
+Starting a simple Python static webserver:
 
 ```bash
 python -m SimpleHTTPServer
 ```
 
-Full list: https://gist.github.com/willurd/5720255
+Full list of webserver: https://gist.github.com/willurd/5720255
 
 
 ## Git (Version Control)
