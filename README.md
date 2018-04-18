@@ -368,6 +368,7 @@ console.log(compute(add, 20,10));
 
 Further reading about JavaScript at [MDN](https://developer.mozilla.org/en-US/docs/Web/javascript).
 
+<a id="promises"></a>
 ## Promises
 
 The core idea behind promises is that a promise represents the result of an asynchronous operation, i.e., the Promise object represents a value that may not be available yet, but will be resolved at some point in the future. This technique is extremely powerful and versatile for instance when requesting a data file. Promises are also used by D3 for asynchronous file loading.
@@ -666,31 +667,31 @@ Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html
 
 In the current version we have static hard-coded data in our files. D3 provides a bunch of function for loading external files. The most important ones are `d3.json` for loading JSON files and `d3.csv` for CSV files respectively.
 
-**Important: Data Loading is asynchronous**! That means you won't get the data immediately as a return value. But you are handing in a callback function, as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
+**Important: Data Loading is asynchronous**! That means you won't get the data immediately as a return value. But you are getting a [promise](#promises) that will be resolved as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
 
 ```js
-d3.json('file_to_load.json', (error, data) => {
-  if (error) {
-    console.error('Error loading the data');
-  } else {
+d3.json('file_to_load.json')
+  .then((data) => {
+    // file successfully loaded
     // do something with the data
-  }
-});
+  })
+  .catch((error) => {
+    console.error('Error loading the data');
+  });
 ```
 
 **Hint**: D3 is smart enough, when just one argument is given that it will interpreted as the data argument
 
 ```js
-d3.csv('file_to_load.csv', (error, data) => {
-  if (error) {
-    console.error('Error loading the data');
-  } else {
+d3.csv('file_to_load.csv')
+  .then((data) => {
     // array of objects
     console.log(data.length);
     // do something with the data
-  }
-});
-
+  })
+  .catch((error) => {
+      console.error('Error loading the data');
+  });
 ```
 
 See also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatting and parsing options.
