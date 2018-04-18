@@ -59,13 +59,20 @@
       .then((json) => {
         data = json;
         update(data);
+      })
+      .catch((error) => {
+        console.error('Error loading the data');
       });
 
     // You might find the callback notation (for D3 < v5.0) for some examples:
     // ```
     // d3.json('weather.json', (error, json) => {
-    //     data = json;
-    //     update(data);
+    //  if(error) {
+    //    console.error('Error loading the data');
+    //  } else {
+    //    data = json;
+    //    update(data);
+    //  }
     // });
     // ```
 

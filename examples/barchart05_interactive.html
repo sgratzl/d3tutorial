@@ -68,6 +68,9 @@
     .then((json) => {
       data = json;
       update(data);
+    })
+    .catch((error) => {
+      console.error('Error loading the data');
     });
 
   function update(new_data) {
