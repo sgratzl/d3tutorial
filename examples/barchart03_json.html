@@ -1,79 +1,85 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
   <script src="../web_modules/d3/build/d3.js"></script>
-  <style type="text/css">
+  <style>
     body {
       width: 800px;
       margin: 25px auto;
       font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     }
+
     rect {
       fill: steelblue;
       fill-opacity: 0.8;
     }
+
     rect:hover {
       fill-opacity: 1;
     }
+
     .axis {
       font-size: smaller;
     }
   </style>
 </head>
+
 <body>
-  <h1>Student's First BarChart</h1>
+  <h1>Student's First Bar Chart</h1>
 
-  <script type="text/javascript">
+  <script>
 
-  const margin = {top: 40, bottom: 10, left: 120, right: 20};
-  const width = 800 - margin.left - margin.right;
-  const height = 600 - margin.top - margin.bottom;
+    const margin = { top: 40, bottom: 10, left: 120, right: 20 };
+    const width = 800 - margin.left - margin.right;
+    const height = 600 - margin.top - margin.bottom;
 
-  // Creates sources <svg> element
-  const svg = d3.select('body').append('svg')
-              .attr('width', width+margin.left+margin.right)
-              .attr('height', height+margin.top+margin.bottom);
+    // Creates sources <svg> element
+    const svg = d3.select('body').append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom);
 
-  // Group used to enforce margin
-  const g = svg.append('g')
-              .attr('transform', `translate(${margin.left},${margin.top})`);
+    // Group used to enforce margin
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
-  // Global variable for all data
-  const data = [66.38, 21.51, 23.37, 34.17, 36.21];
+    // Global variable for all data
+    const data = [66.38, 21.51, 23.37, 34.17, 36.21];
 
-  const bar_height = 50;
+    const bar_height = 50;
 
-  /////////////////////////
-  // TODO load `weather.json` file
-  // use `.temperature` as `width` and
-  // the `loation.city` as `title`
+    /////////////////////////
+    // TODO load `weather.json` file
+    // use `.temperature` as `width` and
+    // the `location.city` as `title`
 
-  // Render the chart with new data
+    // Render the chart with new data
 
-  // DATA JOIN
-  const rect = g.selectAll('rect').data(data);
+    // DATA JOIN
+    const rect = g.selectAll('rect').data(data);
 
-  // ENTER
-  // new elements
-  const rect_enter = rect.enter().append('rect')
-    .attr('x', 0);
-  rect_enter.append('title');
+    // ENTER
+    // new elements
+    const rect_enter = rect.enter().append('rect')
+      .attr('x', 0);
+    rect_enter.append('title');
 
-  // ENTER + UPDATE
-  // both old and new elements
-  rect.merge(rect_enter)
-    .attr('height', bar_height)
-    .attr('width', (d) => d * 7)
-    .attr('y', (d, i) => i*(bar_height+5));
+    // ENTER + UPDATE
+    // both old and new elements
+    rect.merge(rect_enter)
+      .attr('height', bar_height)
+      .attr('width', (d) => d * 7)
+      .attr('y', (d, i) => i * (bar_height + 5));
 
-  rect.merge(rect_enter).select('title').text((d) => `value: ${d}`);
+    rect.merge(rect_enter).select('title').text((d) => `value: ${d}`);
 
-  // EXIT
-  // elements that aren't associated with data
-  rect.exit().remove();
+    // EXIT
+    // elements that aren't associated with data
+    rect.exit().remove();
 
   </script>
 </body>
+
 </html>

@@ -18,7 +18,7 @@
     },
     "homepage": "https://github.com/sgratzl/d3boilerplate#readme",
     "dependencies": {
-        "d3": "^5.0.0"
+        "d3": "^5.1.0"
     },
     "devDependencies": {
         "http-server": "^0.9.0"

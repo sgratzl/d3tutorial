@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
   <script src="../web_modules/d3/build/d3.js"></script>
-  <style type="text/css">
+  <style>
     body {
       width: 800px;
       margin: 25px auto;
@@ -23,7 +23,7 @@
   </style>
 </head>
 <body>
-  <h1>Student's First BarChart</h1>
+  <h1>Student's First Bar Chart</h1>
 
   <!--html filter checkbox-->
   <div>
@@ -31,7 +31,7 @@
     <label><input type="checkbox" name="US" value="1" id="filter-us-only" />US only</label>
   </div>
 
-  <script type="text/javascript">
+  <script>
 
   const margin = {top: 40, bottom: 10, left: 120, right: 20};
   const width = 800 - margin.left - margin.right;
@@ -64,11 +64,11 @@
   // when checked just the entries where `location.country === 'US'` should be shown
   
 
-  d3.json('weather.json', (error, json) => {
-    data = json;
-
-    update(data);
-  });
+  d3.json('weather.json')
+    .then((json) => {
+      data = json;
+      update(data);
+    });
 
   function update(new_data) {
     //update the scales
@@ -81,7 +81,7 @@
 
     // Render the chart with new data
 
-    // DATA JOIN use the key argument for ensurign that the same DOM element is bound to the same data-item
+    // DATA JOIN use the key argument for ensuring that the same DOM element is bound to the same data-item
     const rect = g.selectAll('rect').data(new_data, (d) => d.location.city);
 
     // ENTER
