@@ -723,11 +723,9 @@ D3 provides different scales:
 	-	`d3.scaleOrdinal()`
   - `d3.scaleBand()`
   - `d3.scalePoint()`
--	predefined [categorical color scales](https://github.com/d3/d3-scale#schemeCategory10):
+-	predefined [categorical color scales](https://github.com/d3/d3-scale-chromatic):
 	-	`d3.scaleOrdinal(d3.schemeCategory10)`
-	-	`d3.scaleOrdinal(d3.schemeCategory20)` ... special property: dark/bright pairs
-	-	`d3.scaleOrdinal(d3.schemeCategory20b)` ... 4 brightness levels per color
-	-	`d3.scaleOrdinal(d3.schemeCategory20c)` ... 4 brightness levels per color
+	-	`d3.scaleOrdinal(d3.schemePaired)` ... special property: dark/bright pairs
 
 ```js
 const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
