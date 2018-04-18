@@ -667,7 +667,7 @@ Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html
 
 In the current version we have static hard-coded data in our files. D3 provides a bunch of function for loading external files. The most important ones are `d3.json` for loading JSON files and `d3.csv` for CSV files respectively.
 
-**Important: Data Loading is asynchronous**! That means you won't get the data immediately as a return value. But you are getting a [promise](#promises) that will be resolved as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
+**Important: Data loading is asynchronous**! That means you won't get the data immediately as a return value. But you are getting a [promise](#promises) that will be resolved as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
 
 ```js
 d3.json('file_to_load.json')
