@@ -927,7 +927,7 @@ SEE: [miserables.html](examples/miserables.html) ([Open in CodePen](https://code
 <a id="more-d3"></a>
 # More D3
 
--	Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
+-	Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/d3/d3-geo
 -	Time: Scales, Formatting/Parsing, ...
 -	Behaviors:
 	-	Zoom
