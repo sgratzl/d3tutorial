@@ -859,23 +859,13 @@ Github repository: https://github.com/sgratzl/d3boilerplate_linking
 
 ## Tableau
 
-http://www.tableau.com/
+https://www.tableau.com/
 
 The big player for commercial fat client data visualization.
 
-![Tableau Screenshot](http://www.marketwatch.ro/mw/pics/images/image/SeniorVisualBI-Articole.png)
+![Tableau Screenshot](./i/tableau.png)
 
 (c) http://www.marketwatch.ro
-
-## HighCharts
-
-http://www.highcharts.com/
-
-Commercial JavaScript Plot library
-
-![HighCharts Screenshot](http://www.smashingapps.com/wp-content/uploads/2010/03/highcharts21.jpg)
-
-(c) http://webdesignbooth.com
 
 ## Processing
 
@@ -883,11 +873,37 @@ https://processing.org/ and http://processingjs.org/ for a web-version
 
 Own programming language for visualizations with OpenGL backend
 
-![Processing Screenshot](http://www.noupe.com/wp-content/uploads/trans/wp-content/uploads/ext_uploads/images/infographic/infographic-119.jpg)
+![Processing Screenshot](./i/processing.jpg)
 
-## Others
+## HighCharts
 
-e.g. Plot.ly (https://plot.ly/) - chart creation
+https://www.highcharts.com/
+
+Commercial JavaScript Plot library
+
+![HighCharts Screenshot](./i/highcharts.jpg)
+
+(c) https://www.webdesignbooth.com
+
+## Chart.js
+
+https://chartjs.org
+
+Open source canvas based charting library
+
+![Chart.js Screenshot](./i/chartjs.png)
+
+## Plot.ly
+
+https://plot.ly
+
+free and commerical charting library.
+
+
+![Plot.ly Screenshot](./i/plotly.png)
+
+(c) https://aperiodical.com/
+
 
 ## Frameworks on top of D3:
 
