@@ -47,7 +47,7 @@
 
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-  d3.json('miserables.json', (error, data) => {
+  d3.json('miserables.json').then((data) => {
 
     // Links data join
     const link = svg.selectAll('.link').data(data.links);

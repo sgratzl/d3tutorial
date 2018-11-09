@@ -61,7 +61,7 @@
   /////////////////////////
   // TODO use animated transtion between filtering changes
 
-  d3.json('weather.json', (error, json) => {
+  d3.json('weather.json').then((json) => {
     data = json;
 
     update(data);

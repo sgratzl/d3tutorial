@@ -505,11 +505,11 @@ Nested data join ([Open in Codepen](https://codepen.io/sgratzl/pen/wPNqyr)):
 
 ```js
 // hierarchical data
-const data = [{ name: 'a', arr: [1,2,3]}, { name: 'b', arr: [3,2,4] }];
+const data = [{ name: 'a', arr: [1, 2, 3]}, { name: 'b', arr: [3, 2, 4] }];
 
 let groups = d3.select('svg').selectAll('g').data(data);
 
-let groups_enter = groups.enter().append('g')
+let groups_enter = groups.enter().append('g');
 
 let groups_update = groups.merge(groups_enter)
   .attr('transform', (d, i) => `translate(${i * 20 + 10},10)`);
@@ -521,8 +521,8 @@ let circles = groups_update.selectAll('circle').data((d) => d.arr);
 let cirles_update = circles.enter().append('circle');
 
 circles.merge(cirles_update)
-  .attr('r', (d) => d*2)
-  .attr('cy',(d,i) => i*20);
+  .attr('r', (d) => d * 2)
+  .attr('cy',(d, i) => i * 20);
 
 circles.exit().remove();
 
@@ -532,7 +532,7 @@ groups.exit().remove();
 Nested selection ([Open in Codepen](https://codepen.io/sgratzl/pen/vWbJdK)):
 
 ```js
-const data = [1,2,3];
+const data = [1, 2, 3];
 let circles = d3.select('svg').selectAll('circle').data(data);
 
 let circles_enter = circles.enter().append('circle')
@@ -540,8 +540,8 @@ let circles_enter = circles.enter().append('circle')
 circles_enter.append('title');
 
 let circles_update = circles.merge(circles_enter)
-  .attr('cx', (d,i) => d*10)
-  .attr('cy', (d,i) => i*50);
+  .attr('cx', (d, i) => d * 10)
+  .attr('cy', (d, i) => i * 50);
 
 circles_update.select('title').text((d) => d);
 
@@ -564,28 +564,21 @@ In the current version we have static hard-coded data in our files. D3 provides 
 **Important: Data Loading is asynchronous**! That means you won't get the data immediately as a return value. But you are handing in a callback function, as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
 
 ```js
-d3.json('file_to_load.json', (error, data) => {
-  if (error) {
-    console.error('Error loading the data');
-  } else {
-    // do something with the data
-  }
+d3.json('file_to_load.json').then((data) => {
+  // do something with the data
+}).catch((error) => {
+  console.error('Error loading the data');
 });
 ```
 
-**Hint**: D3 is smart enough, when just one argument is given that it will interpreted as the data argument
-
 ```js
-d3.csv('file_to_load.csv', (error, data) => {
-  if (error) {
-    console.error('Error loading the data');
-  } else {
-    // array of objects
-    console.log(data.length);
-    // do something with the data
-  }
+d3.csv('file_to_load.csv').then((data) => {
+  // array of objects
+  console.log(data.length);
+  // do something with the data
+}).catch((error) => {
+  console.error('Error loading the data');
 });
-
 ```
 
 See also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatting and parsing options.

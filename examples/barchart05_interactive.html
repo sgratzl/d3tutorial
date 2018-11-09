@@ -64,7 +64,7 @@
   // when checked just the entries where `location.country === 'US'` should be shown
   
 
-  d3.json('weather.json', (error, json) => {
+  d3.json('weather.json').then((json) => {
     data = json;
 
     update(data);

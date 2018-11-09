@@ -51,7 +51,7 @@
   // y a band ordinal scale range: [0, height] and domain the different cities
 
 
-  d3.json('weather.json', function(json) {
+  d3.json('weather.json').then((json) => {
     data = json;
 
     update(data);
