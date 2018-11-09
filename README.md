@@ -598,27 +598,34 @@ Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/b
 
 As seen in the barchart example, mapping a value to a pixel value manually is a pain. D3 provides scales for this case. The idea is creating a mapping function between the *domain* values (data space) and the output *range* (pixel space).
 
-[![D3 scales](http://i0.wp.com/www.jeromecukier.net/wp-content/uploads/2011/08/d3scalePower.png)](http://www.jeromecukier.net/blog/2011/08/11/d3-scales-and-color/)
+[![D3 scales](./i/scale.png)]
 
 D3 provides different scales:
 
 -	quantitative
 	-	`d3.scaleLinear()` ... linear mapping between domain and range
 	-	`d3.scalePow()`
+	-	`d3.scaleSqrt()`
 	-	`d3.scaleLog()`
+	-	`d3.scaleTime()`
 -	ordinal
 	-	`d3.scaleOrdinal()`
   - `d3.scaleBand()`
   - `d3.scalePoint()`
--	predefined [categorical color scales](https://github.com/d3/d3-scale#schemeCategory10):
-	-	`d3.scaleOrdinal(d3.schemeCategory10)`
-	-	`d3.scaleOrdinal(d3.schemeCategory20)` ... special property: dark/bright pairs
-	-	`d3.scaleOrdinal(d3.schemeCategory20b)` ... 4 brightness levels per color
-	-	`d3.scaleOrdinal(d3.schemeCategory20c)` ... 4 brightness levels per color
+- more specialized ones see https://github.com/d3/d3-scale
+
+### Colors
+
+With version 5 D3 extracted the color schemes to it on repository located at 
+https://github.com/d3/d3-scale-chromatic. Including both D3 standard schemes (e.g. `d3.schemeCategory10`) but also the ones from [ColorBrewer](http://colorbrewer2.org/) (e.g. `d3.schemeSet3`). These can be used as `range` for an ordinal scale.  
 
 ```js
-const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
-const cscale = d3.scaleLinear().domain([0,5]).range(['black','white']);
+const cscale = d3.scaleOrdinal().domain(['a', 'b', 'c']).range(d3.schemeCategory10);
+```
+	
+```js
+const scale = d3.scaleLinear().domain([0, 5]).range([0, 200]);
+const cscale = d3.scaleLinear().domain([0, 5]).range(['black', 'white']);
 
 ...
 // the scale can be applied as a function
@@ -629,21 +636,21 @@ circles_update
 
 ```js
 // domain is a list of strings or numbers
-const scale = d3.scaleOrdinal().domain(['a','b','c']).range([10,20,30]);
+const scale = d3.scaleOrdinal().domain(['a', 'b', 'c']).range([10, 20, 30]);
 // distribute as a band for each item
-const bscale = d3.scaleBand().domain(['a','b','c']).range([0,200]);
+const bscale = d3.scaleBand().domain(['a', 'b', 'c']).range([0, 200]);
 
 ...
 // the scale can be applied as a function
 circles.attr('cx', (d) => scale(d));
 
-// hint: bscale.bandwidth() returns the width of a bandh
+// hint: bscale.bandwidth() returns the width of a band
 ```
 
 In addition, it is quite common adding a axis for your charts. D3 provides a utility function for this case : `d3.axisBottom()`, `d3.axisLeft()`, `d3.axisRight()`, `d3.axisTop()`. It uses a scale as input and the necessary SVG elements for you.
 
 ```js
-const scale = d3.scaleLinear().domain([0,5]).range([0,200]);
+const scale = d3.scaleLinear().domain([0, 5]).range([0, 200]);
 
 const axis = d3.axisBottom().scale(scale);
 
@@ -672,13 +679,13 @@ Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_sca
 Interactivity is event-driven as in the usual DOM. However, you have easy access to the currently bound data-item. The raw DOM event is hidden but can be accessed using `d3.event`. This is useful for stopping the event propagation (bubbling) `d3.event.stopPropgation()` or preventing the default behavior `d3.event.preventDefault()`. Moreover, the current context of the function `this` is the current DOM element.
 
 ```js
-const data = [1,2,3];
+const data = [1, 2, 3];
 let circles = d3.select('svg').selectAll('circle').data(data);
 
 circles.enter().append('circle')
   .attr('r', 10)
   .attr('cy', 40)
-  .attr('cx', (d,i) => 30+i*30)
+  .attr('cx', (d, i) => 30 + i * 30)
   .on('click', function(d, i) {
     console.log(`clicked on: ${d} (${i})`);
     const circle = d3.select(this); // can't use arrow scoping
@@ -703,7 +710,7 @@ Filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.
 Animated transitions can help the user understanding changes and are just fun to watch. Transitions in D3 are very simple. Just add `.transition()` within a selector and the changes afterwards are done in an animated fashion. D3 is very smart when it comes to interpolating values, colors, and much more. Transitions can be used during all phases: enter, update, and exit. By nesting transitions you can create fancy animations with just a bunch line of code.
 
 ```js
-const data = [1,2,3];
+const data = [1, 2, 3];
 let circles = d3.select('svg').selectAll('circle').data(data);
 
 let circles_enter = circles.enter().append('circle')
@@ -715,8 +722,8 @@ circles.merge(circles_enter)
   .transition()
   .duration(1000) // duration of the animation
   .delay(200) // delay animation start
-  .attr('cx', (d,i) => d*50)
-  .attr('cy', (d,i) => 40+i*100)
+  .attr('cx', (d, i) => d * 50)
+  .attr('cy', (d, i) => 40 + i *100)
     .transition() // start another transition after the first one ended
     .attr('r', 20);
 
@@ -727,8 +734,8 @@ circles.exit().remove();
 D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn't take the order into account. So, if element 'a' was previously at the first position and now on the third it will bind it to the third element. However, this hampers animations, i.e. animated sorting. By using the *key* argument of the `data` function, one can force that the same DOM element is bound to the same data item regardless of the item order.
 
 ```js
-const cscale = d3.scaleOrdinal(d3.schemeCategory10).domain(['a','b','c', 'd']);
-const xscale = d3.scaleBand().domain(['a','b','c', 'd']).range([10,200]);
+const cscale = d3.scaleOrdinal(d3.schemeCategory10).domain(['a', 'b', 'c', 'd']);
+const xscale = d3.scaleBand().domain(['a', 'b', 'c', 'd']).range([10,200]);
 
 function update(data) {
   let s = d3.select('svg');
@@ -743,17 +750,17 @@ function update(data) {
 
   circles.merge(circles_enter)
     .transition()
-    .attr('cy', (d,i) => 10+i*20)
+    .attr('cy', (d, i) => 10 + i * 20)
 
   circles.exit().remove();
 }
 
-let data = ['a','b','c'];
+let data = ['a', 'b', 'c'];
 update(data);
 
 // later on... 2secs
 setTimeout(() => {
-  data = ['c','a','d'];
+  data = ['c', 'a', 'd'];
   // the items will move to their new position,
   // and the DOM element for 'b' will be removed
   // and another one for 'd' created
