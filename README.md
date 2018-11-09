@@ -16,7 +16,7 @@ License: BSD-3-Clause license
 
 Download / Include:
 
--	`<script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>`
+-	`<script src="http://d3js.org/d3.v5.js" charset="utf-8"></script>`
 -	https://github.com/d3/d3/releases/latest
 
 ## Credits
@@ -51,7 +51,7 @@ This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl
 <a id="dev-environment"></a>
 # Development Environment
 
-Using a good development environment can save you time and prevent you from pain. Editors like [Sublime](http://www.sublimetext.com/) or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
+Using a good development environment can save you time and prevent you from pain. Editors like [Visual Studio Code](https://code.visualstudio.com), [Sublime](http://www.sublimetext.com/), or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
 
 ## Chrome Developer Tools
 
@@ -73,11 +73,11 @@ Among other you have:
 -	Profiler profile your JS code for bottlenecks
 -	Network look at all the requests/responses of your website
 
-Every major web browser (Firefox, Safari, Internet Explorer, etc.) has integrated developer tools.
+Every major web browser (Firefox, Safari, Edge, Internet Explorer, etc.) has integrated developer tools.
 
 ## Local WebServer
 
-While you can view local sites (`file:///`), Chrome doesn't allow you to load additional external files, e.g., JSON files, for security reasons. Therefore, you need a local webserver running for development. As alternative you can use an integrated IDE (such as [WebStorm](https://www.jetbrains.com/webstorm/)\) that has a webserver already integrated.
+While you can view local sites (`file:///`), Chrome doesn't allow you to load additional external files, e.g., JSON files, for security reasons. Therefore, you need a local webserver running for development. As alternative you can use an integrated IDE (such as [WebStorm](https://www.jetbrains.com/webstorm/)) that has a webserver already integrated.
 
 Starting a simple python static webserver:
 
@@ -295,11 +295,11 @@ It is a dynamically typed language, which can be strange for developers who main
 
 ```js
 // variables
-let x = 5;
-let s = "abc";
-let s2 = 'abc';
-let arr = [1,2,4];
-let obj = { a : 10, b : 'test'};
+const x = 5;
+const s = "abc";
+const s2 = 'abc';
+const arr = [1,2,4];
+const obj = { a : 10, b : 'test'};
 // access: obj.a or obj['a']
 
 // conditionals
@@ -310,14 +310,14 @@ if (x < 10) {
 }
 
 // ternary operator
-let x2 = x < 10 ? 20 : 30;
+const x2 = x < 10 ? 20 : 30;
 
 // loops
 for(let i = 0; i < arr.length; i++) {
   x += arr[i];
 }
 // for of
-for(let ai of arr) {
+for(const ai of arr) {
   x += ai;
 }
 
@@ -330,15 +330,15 @@ while(i < 10) {
 function add(a,b) {
   return a + b;
 }
-let sub = (a,b) => {
+const sub = (a,b) => {
   return a - b;
 }
 console.log(add(10,30), sub(10,5));
 
 // functional style programming
 arr.forEach((d) => x += d);
-let arr2 = arr.map((d)  => d* 10);
-let arrf = arr.filter((d) => d < 3);
+const arr2 = arr.map((d)  => d* 10);
+const arrf = arr.filter((d) => d < 3);
 // function are first-level objects
 function compute(f, a, b) {
   return f(a,b);
@@ -364,13 +364,13 @@ All functions of D3 are available under the namespace: `d3`. The most important 
 
 
 ```js
-let header = d3.select('div.header');
+const header = d3.select('div.header');
 ```
 
 Selectors provides a couple of function for manipulating the DOM element including: `attr`, `style`, `classed`, `text`, and `html`.
 
 ```js
-let circle = d3.select('circle');
+const circle = d3.select('circle');
 circle.attr('r', 10);
 circle.attr('cx', 20);
 circle.attr('cy', 23);
@@ -399,7 +399,7 @@ The function come in different shapes: as setter (previous examples) as in a get
 The DOM elements can be manipulated using. `append` and `remove`
 
 ```js
-let body = d3.select('body');
+const body = d3.select('body');
 body.append('svg').attr('width', 800).attr('height',600);
 
 d3.select('svg').remove();
@@ -413,6 +413,8 @@ The basic idea of D3 is binding data items to DOM elements and manipulate them a
 
 ![D3 Data Join Set Relationship](i/join.png)
 
+![D3 Data Join Set Relationship](i/join_types.png)
+
 For each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the *enter* phase and need to specify a way how to create the remaining ones. Similarly if we more DOM elements than data items we are in the *exit* phase and need to take care of removing the superfluous ones.
 
 Basic workflow:
@@ -424,7 +426,7 @@ HTML boilerplate
 ```
 
 ```js
-const data = [1,2,3];
+const data = [1, 2, 3];
 // select svg element
 // select all circles - even if there none yet - and bind the data array `data` onto them
 let circles = d3.select('svg').selectAll('circle').data(data);
@@ -442,8 +444,8 @@ let circles_update_and_enter = circles_update.merge(circles_enter);
 // 1. argument (common name: d): the current data item
 // 2. argument (common name: i): the index of the data item in the data array
 // this context: the current DOM element
-circles_update_and_enter.attr('cx', (d,i) => d*10);
-circles_update_and_enter.attr('cy', (d,i) => i*50);
+circles_update_and_enter.attr('cx', (d, i) => d * 10);
+circles_update_and_enter.attr('cy', (d, i) => i * 50);
 
 // exit phase
 let circles_exit = circles.exit();
@@ -454,15 +456,15 @@ circles_exit.remove();
 Common shortcut:
 
 ```js
-const data = [1,2,3];
+const data = [1, 2, 3];
 let circles = d3.select('svg').selectAll('circle').data(data);
 
 let circles_enter = circles.enter().append('circle')
   .attr('r', 10);
 
 circles.merge(circles_enter)
-  .attr('cx', (d,i) => d*10)
-  .attr('cy', (d,i) => i*50);
+  .attr('cx', (d, i) => d * 10)
+  .attr('cy', (d, i) => i * 50);
 
 circles.exit().remove();
 ```
@@ -471,15 +473,15 @@ circles.exit().remove();
 **Hint**: Common pitfall
 
 ```js
-let data = [1,2,3];
+const data = [1, 2, 3];
 let circles = d3.select('svg').selectAll('circle').data(data)
   .enter().append('circle')
   .attr('r', 10);
 
 // what is the difference to the previous one?
 circles
-  .attr('cx', (d,i) => d*10)
-  .attr('cy', (d,i) => i*50);
+  .attr('cx', (d, i) => d * 10)
+  .attr('cy', (d, i) => i * 50);
 
 // exit is not defined?
 circles.exit().remove();

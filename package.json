@@ -13,9 +13,9 @@
   "author": "Samuel Gratzl",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/sgratzl/d3boilerplate/issues"
+    "url": "https://github.com/sgratzl/d3tutorial/issues"
   },
-  "homepage": "https://github.com/sgratzl/d3boilerplate#readme",
+  "homepage": "https://github.com/sgratzl/d3tutorial#readme",
   "dependencies": {
     "d3": "^5.7.0"
   },
