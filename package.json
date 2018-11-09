@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "http-server"
   },
   "repository": {
     "type": "git",
@@ -17,12 +17,9 @@
   },
   "homepage": "https://github.com/sgratzl/d3boilerplate#readme",
   "dependencies": {
-    "d3": "^4.4.0"
+    "d3": "^5.7.0"
   },
   "devDependencies": {
-    "http-server": "^0.9.0"
-  },
-  "scripts": {
-    "start": "http-server"
+    "http-server": "^0.11.1"
   }
 }
