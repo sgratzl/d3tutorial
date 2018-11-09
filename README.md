@@ -598,7 +598,7 @@ Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/b
 
 As seen in the barchart example, mapping a value to a pixel value manually is a pain. D3 provides scales for this case. The idea is creating a mapping function between the *domain* values (data space) and the output *range* (pixel space).
 
-[![D3 scales](./i/scale.png)]
+![D3 scales](./i/scale.png)
 
 D3 provides different scales:
 
