@@ -81,8 +81,8 @@
 
     // Render the chart with new data
 
-    // DATA JOIN use the key argument for ensurign that the same DOM element is bound to the same data-item
-    const rect = g.selectAll('rect').data(new_data, (d) => d.location.city);
+    // DATA JOIN
+    const rect = g.selectAll('rect').data(new_data);
 
     // ENTER
     // new elements
