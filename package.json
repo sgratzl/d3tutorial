@@ -1,5 +1,5 @@
 {
-  "name": "d3boilerplate",
+  "name": "d3tutorial",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sgratzl/d3boilerplate.git"
+    "url": "git+https://github.com/sgratzl/d3tutorial.git"
   },
   "author": "Samuel Gratzl",
   "license": "BSD-3-Clause",
