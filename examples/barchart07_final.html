@@ -71,8 +71,8 @@
     xscale.domain([0, d3.max(new_data, (d) => d.temperature)]);
     yscale.domain(new_data.map((d) => d.location.city));
     //render the axis
-    g_xaxis.call(xaxis);
-    g_yaxis.call(yaxis);
+    g_xaxis.transition().call(xaxis);
+    g_yaxis.transition().call(yaxis);
 
 
     // Render the chart with new data
