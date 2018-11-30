@@ -21,8 +21,21 @@
       fill-opacity: 1;
     }
 
+    path {
+      fill-opacity: 0.8;
+    }
+
+    path:hover {
+      fill-opacity: 1;
+    }
+
     .axis {
       font-size: smaller;
+    }
+
+    main {
+      display: flex;
+      align-items: center;
     }
   </style>
 </head>
@@ -61,8 +74,8 @@
         left: 120,
         right: 20
       };
-      const width = 800 - margin.left - margin.right;
-      const height = 600 - margin.top - margin.bottom;
+      const width = 600 - margin.left - margin.right;
+      const height = 400 - margin.top - margin.bottom;
 
       // Creates sources <svg> element
       const svg = d3.select(svgSelector)
@@ -111,9 +124,9 @@
         // ENTER + UPDATE
         // both old and new elements
         rect.merge(rect_enter).transition()
-          .attr('height', (d) => yscale(d.x1) - yscale(d.x0))
+          .attr('height', (d) => yscale(d.x1) - yscale(d.x0) - 2)
           .attr('width', (d) => xscale(d.length))
-          .attr('y', (d) => yscale(d.x0));
+          .attr('y', (d) => yscale(d.x0) + 1);
 
         rect.merge(rect_enter).select('title').text((d) => `${d.x0}: ${d.length}`);
 
@@ -139,9 +152,9 @@
         .attr('transform', `translate(${radius + margin},${radius + margin})`);
 
       const pie = d3.pie().value((d) => d.values.length);
-      const arc = d3.arc().outerRadius(radius);
+      const arc = d3.arc().outerRadius(radius).innerRadius(0);
 
-      const cscale = d3.scaleOrdinal(d3.schemeCategory10);
+      const cscale = d3.scaleOrdinal(d3.schemeSet2);
       
       function update(new_data) { //{key: string, values: IPerson[]}[]
         const pied = pie(new_data);
