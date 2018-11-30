@@ -31,21 +31,30 @@
   <h1>Student's First Linking &amp; brushing</h1>
 
   <div>
-    <strong>Filter:</strong>
-    <label><input type="checkbox" name="US" value="1" id="filter-us-only" />US only</label>
+    <label for="passenger-class"><strong>Passenger Class:</strong></label>
+    <select id="passenger-class">
+      <option value="" selected>All Classes</option>
+      <option value="1">First Class</option>
+      <option value="2">2nd Class</option>
+      <option value="3">3rd Class</option>
+    </select>
   </div>
 
   <main>
-    <svg class="barchart">
+    <svg id="sex">
     </svg>
-    <svg class="">
-
+    <svg id="age">
     </svg>
-  </main>>
+  </main>
 
   <script type="text/javascript">
+
+    let state = {
+      data: [],
+      passengerClass: ""
+    };
     
-    function createBarChart(svgSelector) {
+    function createHistogram(svgSelector) {
       const margin = {
         top: 40,
         bottom: 10,
@@ -67,7 +76,7 @@
 
       // Scales setup
       const xscale = d3.scaleLinear().range([0, width]);
-      const yscale = d3.scaleBand().rangeRound([0, height]).paddingInner(0.1);
+      const yscale = d3.scaleLinear().range([0, height]);
 
       // Axis setup
       const xaxis = d3.axisTop().scale(xscale);
@@ -76,10 +85,10 @@
       const g_yaxis = g.append('g').attr('class', 'y axis');
 
       
-      function update(new_data) {
+      function update(new_data) { //: (IPerson[] & {x0: number, x1: number})[]
         //update the scales
-        xscale.domain([0, d3.max(new_data, (d) => d.temperature)]);
-        yscale.domain(new_data.map((d) => d.location.city));
+        xscale.domain([0, d3.max(new_data, (d) => d.length)]);
+        yscale.domain([new_data[0].x0, new_data[new_data.length - 1].x1]);
         //render the axis
         g_xaxis.transition().call(xaxis);
         g_yaxis.transition().call(yaxis);
@@ -87,8 +96,8 @@
 
         // Render the chart with new data
 
-        // DATA JOIN use the key argument for ensurign that the same DOM element is bound to the same data-item
-        const rect = g.selectAll('rect').data(new_data, (d) => d.location.city);
+        // DATA JOIN
+        const rect = g.selectAll('rect').data(new_data);
 
         // ENTER
         // new elements
@@ -102,11 +111,11 @@
         // ENTER + UPDATE
         // both old and new elements
         rect.merge(rect_enter).transition()
-          .attr('height', yscale.bandwidth())
-          .attr('width', (d) => xscale(d.temperature))
-          .attr('y', (d) => yscale(d.location.city));
+          .attr('height', (d) => yscale(d.x1) - yscale(d.x0))
+          .attr('width', (d) => xscale(d.length))
+          .attr('y', (d) => yscale(d.x0));
 
-        rect.merge(rect_enter).select('title').text((d) => d.location.city);
+        rect.merge(rect_enter).select('title').text((d) => `${d.x0}: ${d.length}`);
 
         // EXIT
         // elements that aren't associated with data
@@ -116,33 +125,96 @@
       return update;
     }
 
+    function createPieChart(svgSelector) {
+      const margin = 10;
+      const radius = 100;
 
-    // Global variable for all data
-    let data;
+      // Creates sources <svg> element
+      const svg = d3.select(svgSelector)
+        .attr('width', radius * 2 + margin * 2)
+        .attr('height', radius * 2 + margin * 2);
+
+      // Group used to enforce margin
+      const g = svg.append('g')
+        .attr('transform', `translate(${radius + margin},${radius + margin})`);
+
+      const pie = d3.pie().value((d) => d.values.length);
+      const arc = d3.arc().outerRadius(radius);
+
+      const cscale = d3.scaleOrdinal(d3.schemeCategory10);
+      
+      function update(new_data) { //{key: string, values: IPerson[]}[]
+        const pied = pie(new_data);
+        // Render the chart with new data
+
+        cscale.domain(new_data.map((d) => d.key));
+
+        // DATA JOIN
+        const path = g.selectAll('path').data(pied, (d) => d.data.key);
+
+        // ENTER
+        // new elements
+        const path_enter = path.enter().append('path');
+        path_enter.append('title');
+
+        // ENTER + UPDATE
+        // both old and new elements
+        path.merge(path_enter).transition()
+          .attr('d', arc)
+          .style('fill', (d) => cscale(d.data.key));
+
+        path.merge(path_enter).select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
+
+        // EXIT
+        // elements that aren't associated with data
+        path.exit().remove();
+      }
+
+      return update;
+    }
 
     /////////////////////////
 
-    d3.json('weather.json').then((json) => {
-      data = json;
+    const ageHistogram = createHistogram('#age');
+    const sexPieChart = createPieChart('#sex');
 
-      update(data);
+    function filterData() {
+      if (state.passengerClass) {
+        return state.data.filter((d) => d.pclass === state.passengerClass);
+      }
+      return state.data;
+    }
+
+    function update() {
+      const filtered = filterData();
+            
+      const histogram = d3.histogram()
+        .domain([0, 100])
+        .thresholds(10)
+        .value((d) => d.age);
+
+      const histogramData = histogram(filtered);
+      const pieData = d3.nest().key((d) => d.sex).entries(filtered);
+
+      ageHistogram(histogramData);
+      sexPieChart(pieData);
+    }
+
+    d3.csv('titanic3.csv').then((parsed) => {
+      state.data = parsed.map((row) => {
+        row.age = parseInt(row.age, 10);
+        row.fare = parseFloat(row.fare);
+        return row;
+      });
+
+      update();
     });
 
     //interactivity
-    d3.select('#filter-us-only').on('change', function () {
-      // This will be triggered when the user selects or unselects the checkbox
-      const checked = d3.select(this).property('checked');
-      if (checked === true) {
-        // Checkbox was just checked
-
-        // Keep only data element whose country is US
-        const filtered_data = data.filter((d) => d.location.country === 'US');
-
-        update(filtered_data); // Update the chart with the filtered data
-      } else {
-        // Checkbox was just unchecked
-        update(data); // Update the chart with all the data we have
-      }
+    d3.select('#passenger-class').on('change', function () {
+      const selected = d3.select(this).property('value');
+      state.passengerClass = selected;
+      update();
     });
   </script>
 </body>
