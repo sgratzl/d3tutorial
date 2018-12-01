@@ -163,7 +163,7 @@
       return update;
     }
 
-    function createPieChart(svgSelector, stateAttr) {
+    function createPieChart(svgSelector, stateAttr, colorScheme) {
       const margin = 10;
       const radius = 100;
 
@@ -183,7 +183,7 @@
         {startAngle: 0, endAngle: 0, padAngle: 0}
       ];
 
-      const cscale = d3.scaleOrdinal(d3.schemeSet2);
+      const cscale = d3.scaleOrdinal(colorScheme);
       
       function update(new_data) { //{key: string, values: IPerson[]}[]
         const pied = pie(new_data);
@@ -239,9 +239,9 @@
     /////////////////////////
 
     const ageHistogram = createHistogram('#age');
-    const sexPieChart = createPieChart('#sex', 'selectedSex');
+    const sexPieChart = createPieChart('#sex', 'selectedSex', d3.schemeSet3);
     const fareHistogram = createHistogram('#fare');
-    const survivedPieChart = createPieChart('#survived', 'selectedSurvived');
+    const survivedPieChart = createPieChart('#survived', 'selectedSurvived', d3.schemeSet3.slice(2));
 
     function filterData() {
       return state.data.filter((d) => {
