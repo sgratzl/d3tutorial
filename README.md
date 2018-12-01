@@ -32,14 +32,23 @@ This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl
 -	[CSS - Cascading Style Sheets](#css)
 -	[SVG - Scalable Vector Graphics](#svg)
 -	[JS - JavaScript / JSON (JavaScript Object Notation)](#js)
+
+Part 1: Student's First Barchart
 -	[D3 - Data-Driven Documents](#d3)
-    - [Simple Selections and Manipulations](#d3-selections)
-    - [Data Join: Enter / Update / Exit](#d3-data-join)
-    - [Data Loading: d3.json, d3.csv](#d3-data-loading)
-    - [Scales and Axes](#d3-scales-axes)
-    - [Interactivity](#d3-interactivity)
-    - [Transitions](#d3-transitions)
+- [Simple Selections and Manipulations](#d3-selections)
+- [Data Join: Enter / Update / Exit](#d3-data-join)
+- [Data Loading: d3.json, d3.csv](#d3-data-loading)
+- [Scales and Axes](#d3-scales-axes)
+- [Interactivity](#d3-interactivity)
+- [Transitions](#d3-transitions)
+
+Part 2: Student's First Multiple Coordinated View
+- [Code Structure](#code-structure)
 -	[D3 Layouts](#layouts)
+- [Interactivity 2](#interaction2)
+- [Reuseability](#reuse)
+- [Transitions 2](#transitions2)
+
 -	[More D3](#more-d3)
 -	[D3 Boilerplate](#boilerplate)
 -	[What Else Besides D3](#beside-d3)
@@ -351,7 +360,7 @@ Further reading about JavaScript at [MDN](https://developer.mozilla.org/en-US/do
 ----
 
 <a id="d3"></a>
-# Dive into D3
+# Part 1: Dive into D3 aka. Student's First Barchart
 
 A fundamental concept in D3 is binding a DOM element to a data item and manipulate the attributes according to the bound data item. For example, you have a list of persons each having two numerical attributes (age, weight) and a categorical one (gender). You bind each person to an SVG circle element and set the circle's x-position according to the age and the y-position according to the weight. If you additionally fill the circle according to the person's gender, you end up with a simple colored scatterplot visualization.
 
@@ -785,26 +794,84 @@ Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in 
 
 ---
 
+<a id="part2"></a>
+# Part 2: Student's First Multiple Coordinated View
+
+<a id="code-structure"></a>
+## Code Structure
+
+One interactive visualization is nice multiple coordinated ones are better. Combined with filtering and linking and brushing it enables explore datasets in way more detail and discover new insights. Before creating a multiple coordinated view setup a proper code structure helps. A possible way to structure ones code is
+
+```js
+
+const state = {
+  data: [],
+  // e.g. user selection
+}
+
+function filterData() {
+  // filter the raw data according to user selection 
+}
+
+function wrangleData(filtered) {
+  // wrangles the given filtered data to the format required by the visualizations
+}
+
+function createVis() {
+  // initialized for creating the visualizations, e.g. setup SVG, init scales, ...
+
+  function update(new_data) {
+    // updates the specific visualization with the given data 
+  }
+
+  // return the update function to be called
+  return update;
+}
+
+// create a specific instance
+const vis = createVis();
+
+function updateApp() {
+  // updates the application
+
+  const filtered = filterData();
+  const new_data = wrangleData(filtered);
+
+  // update visualization
+  vis(new_data);
+}
+
+// init interaction, e.g. listen to click events
+d3.select(...).on('click', () => {
+  // update state
+  updateApp();
+})
+
+d3.json(...).then((data) => {
+  // load data, e.g. via d3.json and update app afterwards
+  state.data = data;
+  updateApp();
+});
+
+```
+
+Besides this functional approach an object oriented way is an valid alternative. 
+
+---
+
+**INTERACTIVE**
+
+MCV Inital Setup: [mcv01_initial.html](examples/mcv01_initial.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/bQzNBO))
+
+---
+
+
 <a id="layouts"></a>
-# Layouts
+## Layouts
 
-D3 provides a bunch of standard layouts. A layout does not actually render the visualization but prepares your data, such that you can render, e.g. a pie chart. Most of the time the work with helper tools for SVG from D3. e.g. the `d3.layout.pie()` works best with `d3.svg.arc()`.
+D3 provides a bunch of standard layouts. A layout does not actually render the visualization but prepares your data, such that you can render, e.g. a pie chart. Most of the time the work with helper tools for SVG from D3. e.g. the `d3.pie()` works best with `d3.arc()`.
 
-A full list of all available layouts can be found at: https://github.com/mbostock/d3/wiki/Layouts
-
-## Basic Setup
-
-![General Setup](i/CS171_Erklaerbaer_01_General.png)
-
-example including a feedback loop:
-
-![Interactive Setup](i/CS171_Erklaerbaer_02_HW1.png)
-
-example including a layout simulation:
-
-![Simulation Setup](i/CS171_Erklaerbaer_03_HW2.png)
-
-## Pie Layout
+### Pie Layout
 
 A pie-layout is a simple layout algorithm. It takes the data and a way to sort/compute the value per slice. It wraps the data and enhance it with additional attributes for the pie slice, such as start end end angle. *Hint* the angles and arcs are computed relatively to the pie's center. The computed attributes with another utility function `d3.svg.arc()` which converts the given values to a SVG path.
 
@@ -814,7 +881,7 @@ SEE: [pie.html](examples/pie.html) ([Open in Codepen](https://codepen.io/sgratzl
 
 ---
 
-## Force Layout
+### Force Layout
 
 A force layout is a graph layout algorithm, which uses a simulation for positioning nodes. The goal is to minimize the force applied on the system introduced by gravity, node repulsive force, and edge attraction forces. In this case it is not a one layout step, but a continuous one, where on each `tick` a new set of positions are available.
 
@@ -824,8 +891,74 @@ SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](https://code
 
 ---
 
+**INTERACTIVE**
+
+Pie chart layout: [mcv02_piechart.html](examples/mcv02_piechart.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/bQzNBO))
+
+---
+
+<a id="interaction2"></a>
+## Interaction And Filtering
+
+So far the visualizations doesn't influence each other and the user can only filter data using form elements (drop downs, checkboxes). More intuitive is to interact with the visualization directly, e.g. by clicking on a bar to select this bar and filter all other visualizations to this selected subset. 
+
+---
+
+**INTERACTIVE**
+
+Interactive Visualizations: [mcv03_interaction.html](examples/mcv03_interaction.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/BGMyWq))
+
+---
+
+<a id="reuse"></a>
+## Reuseability 
+
+An advantage of our code structure is that we can use the factory methods to create multiple instances of the same visualization kind showing different aspect of the data. This is a simple yet effective way to improve the overall multiple coordinated setup. 
+
+---
+
+**INTERACTIVE**
+
+Reuse Visualizations: [mcv04_morevisses.html](examples/mcv04_morevisses.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/PxVwKd))
+
+---
+
+<a id="transition2"></a>
+## Advanced Transitions
+
+In addition to the simple `.transition()` D3 provides a more fine granular way to define and transition elements. 
+
+ - `.duration()` to define the duration of the animation. 
+ - `.delay()` to delay the animation. 
+ - `.ease()` to define the way how the interpolation should be performed, e.g. linear with ease in/out, ... 
+
+Each variant allows like most D3 data bound functions either a constant as an argument (`.duration(2000)`) or a function that returns the value for the given data element  (`.duration((d, i) => i * 1000)`). By naming a transition `.transition(name)` multiple transitions of different bindings can be synchronized. `.interrupt()` can be used to abort a currently running animation. For more information see [D3-Transition](https://github.com/d3/d3-transition/)
+
+The biggest flexibility is to specify how attributes or styles should be tweened using interpolators [D3 Interpolator](https://github.com/d3/d3-interpolate). For example instead of `.attr('width', (d) => d * 10)`, one can use the `.attrTween('width', (d) => d3.interpolateNumber(0, d * 10))` to create a function that take a number of the range [0..1] (t) as argument and returns the interpolated value. This can become handy in cases in which the simple interpolation doesn't work anymore, such as when interpolating the `d` attribute of paths. 
+
+---
+
+**INTERACTIVE**
+
+Custom Transition: [mcv05_transitions.html](examples/mcv05_transitions.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/PxVwKd))
+
+---
+
+
+---
+
+**INTERACTIVE**
+
+Final Outcome: [mcv06_final.html](examples/mcv06_final.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/yQZyzL))
+
+---
+
+
+
 <a id="more-d3"></a>
 # More D3
+
+D3 provides way more that has not been covered in this tutorial including:
 
 - Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
 - Time: Scales, Formatting/Parsing, ...
@@ -845,12 +978,6 @@ SEE: [miserables.html](examples/miserables.html) ([Open in Codepen](https://code
 Online: https://codepen.io/sgratzl/pen/mOwrxO
 
 Github repository: https://github.com/sgratzl/d3boilerplate
-
-## Linking of two plots example
-
-Online: https://codepen.io/sgratzl/pen/zopEgX
-
-Github repository: https://github.com/sgratzl/d3boilerplate_linking
 
 ---
 
