@@ -919,7 +919,7 @@ An advantage of our code structure is that we can use the factory methods to cre
 
 **INTERACTIVE**
 
-Reuse Visualizations: [mcv04_morevisses.html](examples/mcv04_morevisses.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/PxVwKd))
+Reuse Visualizations: [mcv04_morevisses.html](examples/mcv04_morevisses.html) ([Open in Codepen](https://codepen.io/sgratzl/pen/VVgYqx))
 
 ---
 
