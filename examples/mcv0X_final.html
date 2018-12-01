@@ -36,7 +36,10 @@
 
     main {
       display: flex;
-      align-items: center;
+    }
+
+    h3 {
+      text-align: center;
     }
   </style>
 </head>
@@ -55,10 +58,14 @@
   </div>
 
   <main>
-    <svg id="sex">
-    </svg>
-    <svg id="age">
-    </svg>
+    <section>
+      <h3>Gender Distribution</h3>
+      <svg id="sex"></svg>
+    </section>
+    <section>
+      <h3>Age Histogram</h3>
+      <svg id="age"></svg>
+    </section>
   </main>
 
   <script type="text/javascript">
@@ -231,22 +238,27 @@
         return true;
       });
     }
-
-    function updateApp() {
-      const filtered = filterData();
-            
+    function wrangleData(filtered) {
       const histogram = d3.histogram()
         .domain([0, 100])
         .thresholds(10)
         .value((d) => d.age);
 
       const histogramData = histogram(filtered);
+
       // always the two categories
       const pieData = ['female', 'male'].map((key) => ({
         key,
         values: filtered.filter((d) => d.sex === key)
       }));
 
+      return {histogramData, pieData};
+    }
+
+    function updateApp() {
+      const filtered = filterData();
+            
+      const {histogramData, pieData} = wrangleData(filtered);
       ageHistogram(histogramData);
       sexPieChart(pieData);
     }
