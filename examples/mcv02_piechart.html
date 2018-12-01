@@ -60,6 +60,10 @@
 
   <main>
     <section>
+      <h3>Gender Distribution</h3>
+      <svg id="sex"></svg>
+    </section>
+    <section>
       <h3>Age Histogram</h3>
       <svg id="age"></svg>
     </section>
@@ -144,9 +148,32 @@
       return update;
     }
 
+    function createPieChart(svgSelector) {
+      const margin = 10;
+      const radius = 100;
+
+      // Creates sources <svg> element
+      const svg = d3.select(svgSelector)
+        .attr('width', radius * 2 + margin * 2)
+        .attr('height', radius * 2 + margin * 2);
+
+      // Group used to enforce margin
+      const g = svg.append('g')
+        .attr('transform', `translate(${radius + margin},${radius + margin})`);
+
+      // 1. TODO
+      
+      function update(new_data) { //{key: string, values: IPerson[]}[]
+        // TODO apply layout and render pie
+      }
+
+      return update;
+    }
+
     /////////////////////////
 
     const ageHistogram = createHistogram('#age');
+    const sexPieChart = createPieChart('#sex');
     
     function filterData() {
       return state.data.filter((d) => {
@@ -164,13 +191,22 @@
         .value((d) => d.age);
 
       const ageHistogramData = ageHistogram(filtered);
+
+      // always the two categories
+      const sexPieData = ['female', 'male'].map((key) => ({
+        key,
+        values: filtered.filter((d) => d.sex === key)
+      }));
+
+      return {ageHistogramData, sexPieData};
     }
 
     function updateApp() {
       const filtered = filterData();
             
-      const {ageHistogramData} = wrangleData(filtered);
+      const {ageHistogramData, sexPieData} = wrangleData(filtered);
       ageHistogram(ageHistogramData);
+      sexPieChart(sexPieData);
     }
 
     d3.csv('titanic3.csv').then((parsed) => {
