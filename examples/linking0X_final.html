@@ -25,6 +25,7 @@
       fill-opacity: 0.8;
     }
 
+    .selected,
     path:hover {
       fill-opacity: 1;
     }
@@ -64,8 +65,11 @@
 
     let state = {
       data: [],
-      passengerClass: ""
+      passengerClass: "",
+      selectedSex: null
     };
+
+    
     
     function createHistogram(svgSelector) {
       const margin = {
@@ -151,8 +155,12 @@
       const g = svg.append('g')
         .attr('transform', `translate(${radius + margin},${radius + margin})`);
 
-      const pie = d3.pie().value((d) => d.values.length);
+      const pie = d3.pie().value((d) => d.values.length).sortValues(null).sort(null);
       const arc = d3.arc().outerRadius(radius).innerRadius(0);
+      const noSlice = [
+        {startAngle: 0, endAngle: Math.PI * 2, padAngle: 0},
+        {startAngle: 0, endAngle: 0, padAngle: 0}
+      ];
 
       const cscale = d3.scaleOrdinal(d3.schemeSet2);
       
@@ -163,24 +171,45 @@
         cscale.domain(new_data.map((d) => d.key));
 
         // DATA JOIN
+        const old = g.selectAll('path').data();
         const path = g.selectAll('path').data(pied, (d) => d.data.key);
 
         // ENTER
         // new elements
         const path_enter = path.enter().append('path');
+        path_enter
+          .attr('d', (d, i) => arc(noSlice[i]))
+          .on('click', (d) => {
+            if (state.selectedSex === d.data.key) {
+              state.selectedSex = null;
+            } else {
+              state.selectedSex = d.data.key;
+            }
+            updateApp();
+          });
         path_enter.append('title');
+
+        function tweenArc(d, i) {
+          const interpolate = d3.interpolateObject(old[i], d);
+          return (t) => arc(interpolate(t));
+        }
 
         // ENTER + UPDATE
         // both old and new elements
-        path.merge(path_enter).transition()
-          .attr('d', arc)
-          .style('fill', (d) => cscale(d.data.key));
+        path.merge(path_enter)
+          .classed('selected', (d) => d.data.key === state.selectedSex)
+          .transition()
+            .attrTween('d', tweenArc)
+            .style('fill', (d) => cscale(d.data.key));
 
         path.merge(path_enter).select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
 
         // EXIT
         // elements that aren't associated with data
-        path.exit().remove();
+        path.exit()
+          .transition()
+          .attrTween('d', tweenArc)
+          .remove();
       }
 
       return update;
@@ -192,13 +221,18 @@
     const sexPieChart = createPieChart('#sex');
 
     function filterData() {
-      if (state.passengerClass) {
-        return state.data.filter((d) => d.pclass === state.passengerClass);
-      }
-      return state.data;
+      return state.data.filter((d) => {
+        if (state.passengerClass && d.pclass !== state.passengerClass) {
+          return false;
+        }
+        if (state.selectedSex && d.sex !== state.selectedSex) {
+          return false;
+        }
+        return true;
+      });
     }
 
-    function update() {
+    function updateApp() {
       const filtered = filterData();
             
       const histogram = d3.histogram()
@@ -207,7 +241,11 @@
         .value((d) => d.age);
 
       const histogramData = histogram(filtered);
-      const pieData = d3.nest().key((d) => d.sex).entries(filtered);
+      // always the two categories
+      const pieData = ['female', 'male'].map((key) => ({
+        key,
+        values: filtered.filter((d) => d.sex === key)
+      }));
 
       ageHistogram(histogramData);
       sexPieChart(pieData);
@@ -220,14 +258,14 @@
         return row;
       });
 
-      update();
+      updateApp();
     });
 
     //interactivity
     d3.select('#passenger-class').on('change', function () {
       const selected = d3.select(this).property('value');
       state.passengerClass = selected;
-      update();
+      updateApp();
     });
   </script>
 </body>
