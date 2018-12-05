@@ -873,7 +873,9 @@ D3 provides a bunch of standard layouts. A layout does not actually render the v
 
 ### Pie Layout
 
-A pie-layout is a simple layout algorithm. It takes the data and a way to sort/compute the value per slice. It wraps the data and enhance it with additional attributes for the pie slice, such as start end end angle. *Hint* the angles and arcs are computed relatively to the pie's center. The computed attributes with another utility function `d3.svg.arc()` which converts the given values to a SVG path.
+A pie-layout is a simple layout algorithm. It takes the data and a way to sort/compute the value per slice. It wraps the data and enhance it with additional attributes for the pie slice, such as start end end angle. *Hint* the angles and arcs are computed relatively to the pie's center. The computed attributes with another utility function `d3.arc()` which converts the given values to a SVG path.
+
+![D3 Pie Layout](./i/pie.png)
 
 ---
 
@@ -884,6 +886,8 @@ SEE: [pie.html](examples/pie.html) ([Open in Codepen](https://codepen.io/sgratzl
 ### Force Layout
 
 A force layout is a graph layout algorithm, which uses a simulation for positioning nodes. The goal is to minimize the force applied on the system introduced by gravity, node repulsive force, and edge attraction forces. In this case it is not a one layout step, but a continuous one, where on each `tick` a new set of positions are available.
+
+![D3 Pie Layout](./i/force.png)
 
 ---
 
