@@ -59,17 +59,21 @@
   g.append('g').classed('y.axis', true).call(yaxis);
   const group = g.append('g');
 
-  const marks = group.selectAll('circle').data(data);
-  const marks_enter = marks.enter().append('circle');
-  marks_enter.attr('r',5).append('title');
-  const marks_update = marks.merge(marks_enter)
+  const marks = group.selectAll('circle').data(data).join(
+    (enter) => {
+      const marks_enter = enter.append('circle');
+      marks_enter.attr('r',5).append('title')
+      return marks_enter;
+    },
+    (exit) => exit.remove()
+  );
+
+  marks
     .style('fill', (d) => color(d.gender))
     .attr('cx', (d) => xscale(d.age))
     .attr('cy', (d) => yscale(d.weight));
 
-  marks_update.select('title').text((d) => d.name);
-  marks.exit().remove();
-
+  marks.select('title').text((d) => d.name);
   </script>
 </body>
 </html>

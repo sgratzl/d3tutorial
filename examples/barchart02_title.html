@@ -51,25 +51,21 @@
   // Render the chart with new data
 
   // DATA JOIN
-  const rect = g.selectAll('rect').data(data);
-
-  // ENTER
-  // new elements
-  const rect_enter = rect.enter().append('rect')
-    .attr('x', 0);
+  const rect = g.selectAll('rect').data(data).join(
+    // ENTER 
+    // new elements
+    (enter) => enter.append('rect').attr('x', 0),
+    // EXIT
+    // elements that aren't associated with data
+    (exit) => exit.remove()
+    );
 
   // ENTER + UPDATE
   // both old and new elements
-  rect.merge(rect_enter)
+  rect
     .attr('height', bar_height)
     .attr('width', (d) => d * 7)
     .attr('y', (d, i) => i*(bar_height+5));
-
-
-  // EXIT
-  // elements that aren't associated with data
-  rect.exit().remove();
-
   </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 This is a short tutorial introducing the basic elements and concepts of D3. D3 stands for Data-Driven Documents and is a very popular JavaScript library written by [Mike Bostock](http://bost.ocks.org/mike/).
 
-Homepage: http://d3js.org/
+Homepage: https://d3js.org/
 
 Github: https://github.com/d3/d3
 
@@ -16,12 +16,12 @@ License: BSD-3-Clause license
 
 Download / Include:
 
-- `<script src="http://d3js.org/d3.v5.js" charset="utf-8"></script>`
+- `<script src="https://d3js.org/d3.v5.js" charset="utf-8"></script>`
 - https://github.com/d3/d3/releases/latest
 
 ## Credits
 
-This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl/d3tutorial), [Holger Stitz](https://github.com/thinkh/d3tutorial) and [Alexander Lex](http://dataviscourse.net/2016/tutorials/).
+This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl/d3tutorial), [Holger Stitz](https://github.com/thinkh/d3tutorial) and [Alexander Lex](https://dataviscourse.net/2016/tutorials/).
 
 ---
 
@@ -440,27 +440,31 @@ HTML boilerplate
 const data = [1, 2, 3];
 // select svg element
 // select all circles - even if there none yet - and bind the data array `data` onto them
-let circles = d3.select('svg').selectAll('circle').data(data);
+// call .join to specify the data binding / joining
+const circles = d3.select('svg').selectAll('circle')
+  .data(data)
+  .join(
+    (enter) => {
+      // append an element matching the selector and set constant attributes
+      const circles_enter = enter.append('circle');
+      circles_enter.attr('r', 10)
+      return circles_enter;
+    },
+    (exit) => {
+      // exit phase
+      return exit.remove();
+    }
+  );
 
-// enter phase
-// append an element matching the selector and set constant attributes
-let circles_enter = circles.enter().append('circle');
-circles_enter.attr('r', 10);
 
 // update phase ... actually update all including the newly created ones
-let circles_update = circles;
-let circles_update_and_enter = circles_update.merge(circles_enter);
 
 // function argument given two parameters:
 // 1. argument (common name: d): the current data item
 // 2. argument (common name: i): the index of the data item in the data array
 // this context: the current DOM element
-circles_update_and_enter.attr('cx', (d, i) => d * 10);
-circles_update_and_enter.attr('cy', (d, i) => i * 50);
-
-// exit phase
-let circles_exit = circles.exit();
-circles_exit.remove();
+circles.attr('cx', (d, i) => d * 10);
+circles.attr('cy', (d, i) => i * 50);
 ```
 [Open in CodePen](https://codepen.io/sgratzl/pen/XzOaZQ)
 
@@ -468,37 +472,31 @@ Common shortcut:
 
 ```js
 const data = [1, 2, 3];
-let circles = d3.select('svg').selectAll('circle').data(data);
-
-let circles_enter = circles.enter().append('circle')
-  .attr('r', 10);
-
-circles.merge(circles_enter)
+d3.select('svg').selectAll('circle')
+  .data(data)
+  .join((enter) => enter.append('circle').attr('r', 10))
   .attr('cx', (d, i) => d * 10)
   .attr('cy', (d, i) => i * 50);
-
-circles.exit().remove();
 ```
+
 [Open in CodePen](https://codepen.io/sgratzl/pen/QOYMQm)
 
-**Hint**: Common pitfall
+Even shorter:
 
 ```js
 const data = [1, 2, 3];
-let circles = d3.select('svg').selectAll('circle').data(data)
-  .enter().append('circle')
-  .attr('r', 10);
-
-// what is the difference to the previous one?
-circles
+d3.select('svg').selectAll('circle')
+  .data(data)
+  .join('circle')
+  .attr('r', 10))
   .attr('cx', (d, i) => d * 10)
   .attr('cy', (d, i) => i * 50);
-
-// exit is not defined?
-circles.exit().remove();
 ```
 
-This is a common pitfall when using D3 resulting from premature optimization. In this case it `circles` stores the *enter*-phase instead of the generic data-join selection. This happens quite often you just create a visualizations but don't think about updating your visualization. The first error is that the `exit` function is not defined. The severe problem is that the next time you run the same function even with modified dataset, the attributes `cx` and `cy` won't be updated. The reason is that the *enter*-phase selector is empty, since there is no need for new DOM elements.
+**Notes**
+ * if no `exit` function is given, the default `exit.remove()` will be used
+ * if instead of a `enter` function a string is given it is a shortcut for appending an element of this type. So `join('circle')` is similar to `.join((enter) => enter.append())`
+
 
 ---
 
@@ -518,45 +516,41 @@ Nested data join ([Open in CodePen](https://codepen.io/sgratzl/pen/wPNqyr)):
 // hierarchical data
 const data = [{ name: 'a', arr: [1, 2, 3]}, { name: 'b', arr: [3, 2, 4] }];
 
-let groups = d3.select('svg').selectAll('g').data(data);
+const groups = d3.select('svg').selectAll('g')
+  .data(data)
+  .join('g');
 
-let groups_enter = groups.enter().append('g');
-
-let groups_update = groups.merge(groups_enter)
+groups
   .attr('transform', (d, i) => `translate(${i * 20 + 10},10)`);
 
 // select all circles within each group and bind the inner array per data item
-let circles = groups_update.selectAll('circle').data((d) => d.arr);
+const circles = groups.selectAll('circle')
+  .data((d) => d.arr)
+  .join('circle');
 
-// normal data-join
-let circles_update = circles.enter().append('circle');
-
-circles.merge(circles_update)
+circles
   .attr('r', (d) => d * 2)
   .attr('cy',(d, i) => i * 20);
-
-circles.exit().remove();
-
-groups.exit().remove();
 ```
 
 Nested selection ([Open in CodePen](https://codepen.io/sgratzl/pen/vWbJdK)):
 
 ```js
 const data = [1, 2, 3];
-let circles = d3.select('svg').selectAll('circle').data(data);
+const circles = d3.select('svg').selectAll('circle')
+  .data(data)
+  .join((enter) => {
+    const circles_enter = enter.append('circle').attr('r', 10);
+    // need to be separate since .append returns the appended element
+    circles_enter.append('title');
+    return circles_enter;
+  });
 
-let circles_enter = circles.enter().append('circle')
-  .attr('r', 10);
-circles_enter.append('title');
-
-let circles_update = circles.merge(circles_enter)
+circles
   .attr('cx', (d, i) => d * 10)
   .attr('cy', (d, i) => i * 50);
 
-circles_update.select('title').text((d) => d);
-
-circles.exit().remove();
+circles.select('title').text((d) => d);
 ```
 
 ---
@@ -640,7 +634,7 @@ const cscale = d3.scaleLinear().domain([0, 5]).range(['black', 'white']);
 
 ...
 // the scale can be applied as a function
-circles_update
+circles
   .attr('cx', (d) => scale(d))
   .style('fill', (d) => cscale(d));
 ```
@@ -691,17 +685,19 @@ Interactivity is event-driven as in the usual DOM. However, you have easy access
 
 ```js
 const data = [1, 2, 3];
-let circles = d3.select('svg').selectAll('circle').data(data);
+const circles = d3.select('svg').selectAll('circle')
+  .data(data)
+  .join((enter) => enter.append('circle')
+    .attr('r', 10)
+    .attr('cy', 40)
+    .attr('cx', (d, i) => 30 + i * 30)
+    .on('click', function(d, i) {
+      console.log(`clicked on: ${d} (${i})`);
+      const circle = d3.select(this); // can't use arrow scoping
+      circle.style('stroke', 'orange');
+    })
+  );
 
-circles.enter().append('circle')
-  .attr('r', 10)
-  .attr('cy', 40)
-  .attr('cx', (d, i) => 30 + i * 30)
-  .on('click', function(d, i) {
-    console.log(`clicked on: ${d} (${i})`);
-    const circle = d3.select(this); // can't use arrow scoping
-    circle.style('stroke', 'orange');
-  });
 ```
 [Open in CodePen](https://codepen.io/sgratzl/pen/MOLvrP)
 
@@ -722,23 +718,21 @@ Animated transitions can help the user understanding changes and are just fun to
 
 ```js
 const data = [1, 2, 3];
-let circles = d3.select('svg').selectAll('circle').data(data);
+const circles = d3.select('svg').selectAll('circle')
+  .data(data)
+  .join((enter) => enter.append('circle')
+    .attr('r', 10)
+    .attr('cx', 100)
+    .attr('cy', 100) // useful default values for animation
+  );
 
-let circles_enter = circles.enter().append('circle')
-  .attr('r', 10)
-  .attr('cx', 100)
-  .attr('cy', 100); // useful default values for animation
-
-circles.merge(circles_enter)
-  .transition()
+circles.transition()
   .duration(1000) // duration of the animation
   .delay(200) // delay animation start
   .attr('cx', (d, i) => d * 50)
   .attr('cy', (d, i) => 40 + i *100)
     .transition() // start another transition after the first one ended
     .attr('r', 20);
-
-circles.exit().remove();
 ```
 [Open in CodePen](https://codepen.io/sgratzl/pen/WXPEdM)
 
@@ -749,21 +743,19 @@ const cscale = d3.scaleOrdinal(d3.schemeCategory10).domain(['a', 'b', 'c', 'd'])
 const xscale = d3.scaleBand().domain(['a', 'b', 'c', 'd']).range([10,200]);
 
 function update(data) {
-  let s = d3.select('svg');
+  const s = d3.select('svg');
   // key argument return a unique key/id per data-item (string)
-  let circles = s.selectAll('circle').data(data, (d) => d);
+  const circles = s.selectAll('circle')
+    .data(data, (d) => d)
+    .join((enter) => enter.append('circle')
+      .attr('r', 10)
+      .attr('cx', xscale)
+      .style('fill', cscale)
+    );
 
   // a will be bound to the first DOM element
-  let circles_enter = circles.enter().append('circle')
-    .attr('r', 10)
-    .attr('cx', xscale)
-    .style('fill', cscale);
-
-  circles.merge(circles_enter)
-    .transition()
-    .attr('cy', (d, i) => 10 + i * 20)
-
-  circles.exit().remove();
+  circles.transition()
+    .attr('cy', (d, i) => 10 + i * 20);
 }
 
 let data = ['a', 'b', 'c'];
