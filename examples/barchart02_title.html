@@ -55,6 +55,9 @@
     // ENTER 
     // new elements
     (enter) => enter.append('rect').attr('x', 0),
+    // UPDATE
+    // update existing elements
+    (update) => update,
     // EXIT
     // elements that aren't associated with data
     (exit) => exit.remove()

@@ -449,7 +449,9 @@ const circles = d3.select('svg').selectAll('circle')
       const circles_enter = enter.append('circle');
       circles_enter.attr('r', 10)
       return circles_enter;
-    },
+    },              
+    // update existing elements
+    (update) => update,
     (exit) => {
       // exit phase
       return exit.remove();
@@ -494,8 +496,9 @@ d3.select('svg').selectAll('circle')
 ```
 
 **Notes**
- * if no `exit` function is given, the default `exit.remove()` will be used
  * if instead of a `enter` function a string is given it is a shortcut for appending an element of this type. So `join('circle')` is similar to `.join((enter) => enter.append())`
+ * if no `update` function is given, nothing will be done
+ * if no `exit` function is given, the default `exit.remove()` will be used
 
 
 ---

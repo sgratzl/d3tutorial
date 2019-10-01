@@ -145,7 +145,10 @@
               .attr('height', 0);
             rect_enter.append('title');
             return rect_enter;
-          },
+          },          
+          // UPDATE
+          // update existing elements
+          (update) => update,
           // EXIT
           // elements that aren't associated with data
           (exit) => exit.remove()
@@ -212,7 +215,7 @@
         // ENTER + UPDATE
         // both old and new elements
         path
-        .classed('selected', (d) => d.data.key === state.selectedSex)
+          .classed('selected', (d) => d.data.key === state.selectedSex)
           .attr('d', arc) // TODO set the CSS class `selected` if the current data item is the selected sex in the state
           .style('fill', (d) => cscale(d.data.key));
 

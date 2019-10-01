@@ -1,26 +1,26 @@
 {
-  "_from": "d3@^5.7.0",
-  "_id": "d3@5.7.0",
+  "_from": "d3@^5.12.0",
+  "_id": "d3@5.12.0",
   "_inBundle": false,
-  "_integrity": "sha512-8KEIfx+dFm8PlbJN9PI0suazrZ41QcaAufsKE9PRcqYPWLngHIyWJZX96n6IQKePGgeSu0l7rtlueSSNq8Zc3g==",
+  "_integrity": "sha512-flYVMoVuhPFHd9zVCe2BxIszUWqBcd5fvQGMNRmSiBrgdnh6Vlruh60RJQTouAK9xPbOB0plxMvBm4MoyODXNg==",
   "_location": "/d3",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "d3@^5.7.0",
+    "raw": "d3@^5.12.0",
     "name": "d3",
     "escapedName": "d3",
-    "rawSpec": "^5.7.0",
+    "rawSpec": "^5.12.0",
     "saveSpec": null,
-    "fetchSpec": "^5.7.0"
+    "fetchSpec": "^5.12.0"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/d3/-/d3-5.7.0.tgz",
-  "_shasum": "f189d338bdde62acf02f308918e0ec34dd7568f9",
-  "_spec": "d3@^5.7.0",
+  "_resolved": "https://registry.npmjs.org/d3/-/d3-5.12.0.tgz",
+  "_shasum": "0ddeac879c28c882317cd439b495290acd59ab61",
+  "_spec": "d3@^5.12.0",
   "_where": "D:\\w\\d3tutorial",
   "author": {
     "name": "Mike Bostock",
@@ -68,12 +68,16 @@
   "devDependencies": {
     "json2module": "0.0",
     "rimraf": "2",
-    "rollup": "0.64",
+    "rollup": "1",
     "rollup-plugin-ascii": "0.0",
     "rollup-plugin-node-resolve": "3",
-    "rollup-plugin-terser": "1",
+    "rollup-plugin-terser": "5",
     "tape": "4"
   },
+  "files": [
+    "dist/**/*.js",
+    "index.js"
+  ],
   "homepage": "https://d3js.org",
   "jsdelivr": "dist/d3.min.js",
   "keywords": [
@@ -93,10 +97,10 @@
   },
   "scripts": {
     "postpublish": "git push && git push --tags && cd ../d3.github.com && git pull && cp ../d3/dist/d3.js d3.v5.js && cp ../d3/dist/d3.min.js d3.v5.min.js && git add d3.v5.js d3.v5.min.js && git commit -m \"d3 ${npm_package_version}\" && git push && cd - && cd ../d3-bower && git pull && cp ../d3/LICENSE ../d3/README.md ../d3/dist/d3.js ../d3/dist/d3.min.js . && git add -- LICENSE README.md d3.js d3.min.js && git commit -m \"${npm_package_version}\" && git tag -am \"${npm_package_version}\" v${npm_package_version} && git push && git push --tags && cd - && zip -j dist/d3.zip -- LICENSE README.md API.md CHANGES.md dist/d3.js dist/d3.min.js",
-    "prepublishOnly": "yarn test && rollup -c",
-    "pretest": "rimraf dist && mkdir dist && json2module package.json > dist/package.js && node rollup.node",
+    "prepublishOnly": "yarn test",
+    "pretest": "rimraf dist && mkdir dist && json2module package.json > dist/package.js && rollup -c",
     "test": "tape 'test/**/*-test.js'"
   },
   "unpkg": "dist/d3.min.js",
-  "version": "5.7.0"
+  "version": "5.12.0"
 }

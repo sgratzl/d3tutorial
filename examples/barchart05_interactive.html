@@ -82,7 +82,7 @@
     // Render the chart with new data
 
     // DATA JOIN
-    const rect = g.selectAll('rect').data(data).join(
+    const rect = g.selectAll('rect').data(new_data).join(
       // ENTER 
       // new elements
       (enter) => {
@@ -90,6 +90,9 @@
         rect_enter.append('title');
         return rect_enter;
       },
+      // UPDATE
+      // update existing elements
+      (update) => update,
       // EXIT
       // elements that aren't associated with data
       (exit) => exit.remove()
