@@ -498,7 +498,7 @@ d3.select('svg').selectAll('circle')
 [Open in CodePen](https://codepen.io/sgratzl/pen/GRRKKZq)
 
 **Notes**
- * if instead of a `enter` function a string is given it is a shortcut for appending an element of this type. So `join('circle')` is similar to `.join((enter) => enter.append())`
+ * if instead of a `enter` function a string is given it is a shortcut for appending an element of this type. So `join('circle')` is similar to `.join((enter) => enter.append('circle'))`
  * if no `update` function is given, nothing will be done
  * if no `exit` function is given, the default `exit.remove()` will be used
 
