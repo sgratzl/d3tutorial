@@ -53,27 +53,30 @@
   // Render the chart with new data
 
   // DATA JOIN
-  const rect = g.selectAll('rect').data(data);
-
-  // ENTER
-  // new elements
-  const rect_enter = rect.enter().append('rect')
-    .attr('x', 0);
-  rect_enter.append('title');
+  const rect = g.selectAll('rect').data(data).join(
+    // ENTER 
+    // new elements
+    (enter) => {
+      const rect_enter = enter.append('rect').attr('x', 0);
+      rect_enter.append('title');
+      return rect_enter;
+    },
+    // UPDATE
+    // update existing elements
+    (update) => update,
+    // EXIT
+    // elements that aren't associated with data
+    (exit) => exit.remove()
+    );
 
   // ENTER + UPDATE
   // both old and new elements
-  rect.merge(rect_enter)
+  rect
     .attr('height', bar_height)
     .attr('width', (d) => d * 7)
     .attr('y', (d, i) => i*(bar_height+5));
 
-  rect.merge(rect_enter).select('title').text((d) => `value: ${d}`);
-
-  // EXIT
-  // elements that aren't associated with data
-  rect.exit().remove();
-
+  rect.select('title').text((d) => `value: ${d}`);
   </script>
 </body>
 </html>

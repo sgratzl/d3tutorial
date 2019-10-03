@@ -43,16 +43,14 @@
 
     const pied_data = pie(data);
 
-    const arcs = g.selectAll('.arc').data(pied_data);
+    const arcs = g.selectAll('.arc').data(pied_data).join(
+      (enter) => enter.append('path')
+        .attr('class', 'arc')
+        .style('stroke', 'white')
+    );
 
-    const arcs_enter = arcs.enter().append('path')
-      .attr('class', 'arc')
-      .style('stroke', 'white');
-
-    arcs.merge(arcs_enter).attr('d', arc)
+    arcs.attr('d', arc)
       .style('fill', (d, i) => color(i));
-
-    arcs.exit().remove();
   </script>
 </body>
 

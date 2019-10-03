@@ -58,40 +58,35 @@
     d3.json('miserables.json').then((data) => {
 
       // Links data join
-      const link = svg.selectAll('.link').data(data.links);
-
-      const link_enter = link.enter().append('line')
-        .attr('class', 'link');
-      const link_update = link.merge(link_enter);
-
-      link.exit().remove();
-
+      const link = svg.selectAll('.link').data(data.links).join(
+        (enter) => enter.append('line').attr('class', 'link')
+      );
 
       // Nodes data join
-      const node = svg.selectAll('.node').data(data.nodes);
+      const node = svg.selectAll('.node').data(data.nodes).join(
+        (enter) => {
+          const node_enter = enter.append('circle')
+            .attr('class', 'node')
+            .attr('r', 10);
+          node_enter.append('title').text((d) => d.id);
+          return node_enter;
+        }
+      );
 
-      const node_enter = node.enter().append('circle')
-        .attr('class', 'node')
-        .attr('r', 10);
-      node_enter.append('title').text((d) => d.id);
-
-      const node_update = node.merge(node_enter);
-      node_update.style('fill', (d) => color(d.group));
-
-      node.exit().remove();
+      node.style('fill', (d) => color(d.group));
 
       simulation
         .nodes(data.nodes)
         .force('link').links(data.links);
 
       simulation.on('tick', (e) => {
-        link_update
+        link
           .attr('x1', (d) => d.source.x)
           .attr('y1', (d) => d.source.y)
           .attr('x2', (d) => d.target.x)
           .attr('y2', (d) => d.target.y);
 
-        node_update
+        node
           .attr('cx', (d) => d.x)
           .attr('cy', (d) => d.y);
       });

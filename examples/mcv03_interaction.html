@@ -122,29 +122,34 @@
         // Render the chart with new data
 
         // DATA JOIN
-        const rect = g.selectAll('rect').data(new_data);
-
-        // ENTER
-        // new elements
-        const rect_enter = rect.enter().append('rect')
-          .attr('x', 0) //set intelligent default values for animation
-          .attr('y', 0)
-          .attr('width', 0)
-          .attr('height', 0);
-        rect_enter.append('title');
+        const rect = g.selectAll('rect').data(new_data).join(
+          (enter) => {
+            // ENTER
+            // new elements
+            const rect_enter = enter.append('rect')
+              .attr('x', 0) //set intelligent default values for animation
+              .attr('y', 0)
+              .attr('width', 0)
+              .attr('height', 0);
+            rect_enter.append('title');
+            return rect_enter;
+          },
+          // UPDATE
+          // update existing elements
+          (update) => update,
+          // EXIT
+          // elements that aren't associated with data
+          (exit) => exit.remove()
+        );      
 
         // ENTER + UPDATE
         // both old and new elements
-        rect.merge(rect_enter).transition()
+        rect.transition()
           .attr('height', (d) => yscale(d.x1) - yscale(d.x0) - 2)
           .attr('width', (d) => xscale(d.length))
           .attr('y', (d) => yscale(d.x0) + 1);
 
-        rect.merge(rect_enter).select('title').text((d) => `${d.x0}: ${d.length}`);
-
-        // EXIT
-        // elements that aren't associated with data
-        rect.exit().remove();
+        rect.select('title').text((d) => `${d.x0}: ${d.length}`);
       }
 
       return update;
@@ -175,25 +180,24 @@
         cscale.domain(new_data.map((d) => d.key));
 
         // DATA JOIN
-        const path = g.selectAll('path').data(pied, (d) => d.data.key);
-
-        // ENTER
-        // new elements
-        const path_enter = path.enter().append('path');
-        // TODO register click handler to change selected sex in state and call updateApp()
-        path_enter.append('title');
+        const path = g.selectAll('path').data(pied, (d) => d.data.key).join(
+          // ENTER
+          // new elements
+          (enter) => {
+            const path_enter = enter.append('path');
+            // TODO register click handler to change selected sex in state and call updateApp()
+            path_enter.append('title');
+            return path_enter;
+          }
+        );
 
         // ENTER + UPDATE
         // both old and new elements
-        path.merge(path_enter)
+        path
           .attr('d', arc) // TODO set the CSS class `selected` if the current data item is the selected sex in the state
           .style('fill', (d) => cscale(d.data.key));
 
-        path.merge(path_enter).select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
-
-        // EXIT
-        // elements that aren't associated with data
-        path.exit().remove();
+        path.select('title').text((d) => `${d.data.key}: ${d.data.values.length}`);
       }
 
       return update;

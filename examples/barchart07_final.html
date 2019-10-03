@@ -46,7 +46,7 @@
               .attr('transform', `translate(${margin.left},${margin.top})`);
 
   // Global variable for all data
-  var data;
+  let data;
 
   // Scales setup
   const xscale = d3.scaleLinear().range([0, width]);
@@ -78,30 +78,30 @@
     // Render the chart with new data
 
     // DATA JOIN use the key argument for ensurign that the same DOM element is bound to the same data-item
-    const rect = g.selectAll('rect').data(new_data, (d) => d.location.city);
-
-    // ENTER
-    // new elements
-    const rect_enter = rect.enter().append('rect')
-      .attr('x', 0) //set intelligent default values for animation
-      .attr('y', 0)
-      .attr('width', 0)
-      .attr('height', 0);
-    rect_enter.append('title');
+    const rect = g.selectAll('rect').data(new_data, (d) => d.location.city).join(
+      // ENTER 
+      // new elements
+      (enter) => {
+        const rect_enter = enter.append('rect').attr('x', 0);
+        rect_enter.append('title');
+        return rect_enter;
+      },
+      // UPDATE
+      // update existing elements
+      (update) => update,
+      // EXIT
+      // elements that aren't associated with data
+      (exit) => exit.remove()
+      );
 
     // ENTER + UPDATE
     // both old and new elements
-    rect.merge(rect_enter).transition()
+    rect.transition()
       .attr('height', yscale.bandwidth())
       .attr('width', (d) => xscale(d.temperature))
       .attr('y', (d) => yscale(d.location.city));
 
-    rect.merge(rect_enter).select('title').text((d) => d.location.city);
-
-    // EXIT
-    // elements that aren't associated with data
-    rect.exit().remove();
-
+    rect.select('title').text((d) => d.location.city);
   }
 
   //interactivity
