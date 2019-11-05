@@ -27,14 +27,14 @@ This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl
 
 # Content
 
--	[Development Environment](#dev-environment)
+- [Development Environment](#dev-environment)
 - [HTML - Hypertext Markup Language](#html)
--	[CSS - Cascading Style Sheets](#css)
--	[SVG - Scalable Vector Graphics](#svg)
--	[JS - JavaScript / JSON (JavaScript Object Notation)](#js)
+- [CSS - Cascading Style Sheets](#css)
+- [SVG - Scalable Vector Graphics](#svg)
+- [JS - JavaScript / JSON (JavaScript Object Notation)](#js)
 
 Part 1: Student's First Barchart
--	[D3 - Data-Driven Documents](#d3)
+- [D3 - Data-Driven Documents](#d3)
 - [Simple Selections and Manipulations](#d3-selections)
 - [Data Join: Enter / Update / Exit](#d3-data-join)
 - [Data Loading: d3.json, d3.csv](#d3-data-loading)
@@ -44,14 +44,15 @@ Part 1: Student's First Barchart
 
 Part 2: Student's First Multiple Coordinated View
 - [Code Structure](#code-structure)
--	[D3 Layouts](#layouts)
+- [D3 Layouts](#layouts)
 - [Interactivity 2](#interaction2)
 - [Reuseability](#reuse)
 - [Transitions 2](#transitions2)
 
--	[More D3](#more-d3)
--	[D3 Boilerplate](#boilerplate)
--	[What Else Besides D3](#beside-d3)
+Extras
+- [More D3](#more-d3)
+- [D3 Boilerplate](#boilerplate)
+- [What Else Besides D3](#beside-d3)
 
 > SURVEY: What do you guys already know?
 
