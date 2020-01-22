@@ -181,7 +181,8 @@ Great way to spearate the style from the actual content. In addition, the select
 
 Good overview of CSS Selectors: https://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
 
-Most important selectors explained in an example ([Open in CodePen](https://codepen.io/thinkh/pen/rybJVE)):
+Most important selectors explained in an example
+[![Open in CodePen][codepen]](https://codepen.io/thinkh/pen/rybJVE):
 
 ```html
 <!DOCTYPE html>
@@ -309,7 +310,8 @@ JavaScript can be used with imperative/procedural, object-oriented, and function
 
 It is a dynamically typed language, which can be strange for developers who mainly work with strongly typed languages such as C/C++ and Java.
 
-**Note** To follow the examples below, you can open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or [open in CodePen](http://codepen.io/thinkh/pen/qrwxdb?editors=0012).
+**Note** To follow the examples below, you can open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or
+[![Open in CodePen][codepen]](https://codepen.io/thinkh/pen/qrwxdb).
 
 ```js
 // variables
@@ -411,7 +413,7 @@ d3.select("text").text("Hello");
 d3.select("div").html(`<strong>Hello</strong>`);
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/POVKRj)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/POVKRj)
 
 The function come in different shapes: as setter (previous examples) as in a getter version. In the later case the value of the first element in the list will be returned. e.g. `circle.attr('cx')`
 
@@ -429,7 +431,7 @@ body
 d3.select("svg").remove();
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/YEBxaW)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/YEBxaW)
 
 <a id="d3-data-join"></a>
 
@@ -485,7 +487,7 @@ circles.attr("cx", (d, i) => d * 10);
 circles.attr("cy", (d, i) => i * 50);
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/poozzga)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/poozzga)
 
 Common shortcut:
 
@@ -499,7 +501,7 @@ d3.select("svg")
   .attr("cy", (d, i) => i * 50);
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/oNNvvxv)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/oNNvvxv)
 
 Even shorter:
 
@@ -514,7 +516,7 @@ d3.select("svg")
   .attr("cy", (d, i) => i * 50);
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/GRRKKZq)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/GRRKKZq)
 
 **Notes**
 
@@ -526,7 +528,7 @@ d3.select("svg")
 
 **INTERACTIVE**
 
-Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/xRrrgp))
+Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/xRrrgp)
 
 ---
 
@@ -534,7 +536,7 @@ Creating a bar chart: [barchart01_initial.html](examples/barchart01_initial.html
 
 Nested selections can be used for adding inner elements. A common approach is creating one `g` element for each data item and add several sub DOM elements. The sub element will be created during the enter-phase and updated using `select`. By using `select` function the data-join remains using `selectAll` a nested data join will be created. Nested data joins are useful for hierarchical data.
 
-Nested data join ([Open in CodePen](https://codepen.io/sgratzl/pen/yLLBBOj)):
+Nested data join [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/yLLBBOj):
 
 ```js
 // hierarchical data
@@ -560,7 +562,7 @@ const circles = groups
 circles.attr("r", d => d * 2).attr("cy", (d, i) => i * 20);
 ```
 
-Nested selection ([Open in CodePen](https://codepen.io/sgratzl/pen/VwwZZjY)):
+Nested selection [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/VwwZZjY):
 
 ```js
 const data = [1, 2, 3];
@@ -584,7 +586,7 @@ circles.select("title").text(d => d);
 
 **INTERACTIVE**
 
-Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/PooYYzb))
+Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/PooYYzb)
 
 ---
 
@@ -626,7 +628,7 @@ See also: https://github.com/d3/d3-request/blob/master/README.md#csv for formatt
 
 **INTERACTIVE**
 
-Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/poozzbL))
+Loading [weather.json](examples/weather.json): [barchart03_json.html](examples/barchart03_json.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/poozzbL)
 
 ---
 
@@ -709,13 +711,13 @@ const axis_container = d3
 axis_container.call(axis);
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/zPedpX)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/zPedpX)
 
 ---
 
 **INTERACTIVE**
 
-Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/oNNvvzv))
+Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_scale.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/oNNvvzv)
 
 ---
 
@@ -745,7 +747,7 @@ const circles = d3
   );
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/zYYOOKe)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/zYYOOKe)
 
 Commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `change`, `input`
 
@@ -753,7 +755,7 @@ Commonly used events: `click`, `mouseover/mouseout`, `mouseenter/mouseleave`, `c
 
 **INTERACTIVE**
 
-Filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/JjjPPRQ))
+Filter US cities: [barchart05_interactive.html](examples/barchart05_interactive.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/JjjPPRQ)
 
 ---
 
@@ -788,7 +790,7 @@ circles
   .attr("r", 20);
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/QWWLLGa)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/QWWLLGa)
 
 D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn't take the order into account. So, if element 'a' was previously at the first position and now on the third it will bind it to the third element. However, this hampers animations, i.e. animated sorting. By using the _key_ argument of the `data` function, one can force that the same DOM element is bound to the same data item regardless of the item order.
 
@@ -832,13 +834,13 @@ setTimeout(() => {
 }, 2000);
 ```
 
-[Open in CodePen](https://codepen.io/sgratzl/pen/ExxYYNM)
+[![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/ExxYYNM)
 
 ---
 
 **INTERACTIVE**
 
-Animated filter: [barchart06_animation.html](examples/barchart06_animation.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/dyybbNP))
+Animated filter: [barchart06_animation.html](examples/barchart06_animation.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/dyybbNP)
 
 ---
 
@@ -846,7 +848,7 @@ Animated filter: [barchart06_animation.html](examples/barchart06_animation.html)
 
 **INTERACTIVE**
 
-Final results [barchart07_final.html](examples/barchart07_final.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/NWWKKda))
+Final results [barchart07_final.html](examples/barchart07_final.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/NWWKKda)
 
 ---
 
@@ -919,7 +921,7 @@ Besides this functional approach an object oriented way is an valid alternative.
 
 **INTERACTIVE**
 
-MCV Inital Setup: [mcv01_initial.html](examples/mcv01_initial.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/bQzNBO))
+MCV Inital Setup: [mcv01_initial.html](examples/mcv01_initial.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/bQzNBO)
 
 ---
 
@@ -937,7 +939,7 @@ A pie-layout is a simple layout algorithm. It takes the data and a way to sort/c
 
 ---
 
-SEE: [pie.html](examples/pie.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/BaaBBdZ))
+SEE: [pie.html](examples/pie.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/BaaBBdZ)
 
 ---
 
@@ -949,13 +951,13 @@ A force layout is a graph layout algorithm, which uses a simulation for position
 
 ---
 
-SEE: [miserables.html](examples/miserables.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/poozzrK))
+SEE: [miserables.html](examples/miserables.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/poozzrK)
 
 ---
 
 **INTERACTIVE**
 
-Pie chart layout: [mcv02_piechart.html](examples/mcv02_piechart.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/abbooyg))
+Pie chart layout: [mcv02_piechart.html](examples/mcv02_piechart.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/abbooyg)
 
 ---
 
@@ -969,7 +971,7 @@ So far the visualizations doesn't influence each other and the user can only fil
 
 **INTERACTIVE**
 
-Interactive Visualizations: [mcv03_interaction.html](examples/mcv03_interaction.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/QWWLLqm))
+Interactive Visualizations: [mcv03_interaction.html](examples/mcv03_interaction.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/QWWLLqm)
 
 ---
 
@@ -983,7 +985,7 @@ An advantage of our code structure is that we can use the factory methods to cre
 
 **INTERACTIVE**
 
-Reuse Visualizations: [mcv04_morevisses.html](examples/mcv04_morevisses.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/VVgYqx))
+Reuse Visualizations: [mcv04_morevisses.html](examples/mcv04_morevisses.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/VVgYqx)
 
 ---
 
@@ -1005,7 +1007,7 @@ The biggest flexibility is to specify how attributes or styles should be tweened
 
 **INTERACTIVE**
 
-Custom Transition: [mcv05_transitions.html](examples/mcv05_transitions.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/WNNeeXM))
+Custom Transition: [mcv05_transitions.html](examples/mcv05_transitions.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/WNNeeXM)
 
 ---
 
@@ -1013,7 +1015,7 @@ Custom Transition: [mcv05_transitions.html](examples/mcv05_transitions.html) ([O
 
 **INTERACTIVE**
 
-Final Outcome: [mcv06_final.html](examples/mcv06_final.html) ([Open in CodePen](https://codepen.io/sgratzl/pen/yLLBBPx))
+Final Outcome: [mcv06_final.html](examples/mcv06_final.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/yLLBBPx)
 
 ---
 
@@ -1104,3 +1106,5 @@ free and commerical charting library.
 - ...
 
 Thank You
+
+[codepen]: https://img.shields.io/badge/CodePen-open-blue?logo=codepen
