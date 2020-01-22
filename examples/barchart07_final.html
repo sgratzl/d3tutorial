@@ -27,10 +27,7 @@
 
     <div>
       <strong>Filter:</strong>
-      <label
-        ><input type="checkbox" name="US" value="1" id="filter-us-only" />US
-        only</label
-      >
+      <label><input type="checkbox" name="US" value="1" id="filter-us-only" />US only</label>
     </div>
 
     <script>
@@ -46,9 +43,7 @@
         .attr("height", height + margin.top + margin.bottom);
 
       // Group used to enforce margin
-      const g = svg
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+      const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
       // Global variable for all data
       let data;

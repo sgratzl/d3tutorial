@@ -4,14 +4,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Student's First Multiple Coordinated View</title>
-    <meta
-      name="description"
-      content="Student's First Multiple Coordinated View"
-    />
+    <meta name="description" content="Student's First Multiple Coordinated View" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
     <script src="../web_modules/d3/dist/d3.js"></script>
-    <link href="./style.css" rel="stylesheet" />
+    <link href="./mvc.css" rel="stylesheet" />
     <style>
       rect {
         fill: steelblue;
@@ -107,9 +104,7 @@
           .attr("height", height + margin.top + margin.bottom);
 
         // Group used to enforce margin
-        const g = svg
-          .append("g")
-          .attr("transform", `translate(${margin.left},${margin.top})`);
+        const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
         // Scales setup
         const xscale = d3.scaleLinear().range([0, width]);
@@ -182,12 +177,7 @@
           .attr("height", radius * 2 + margin * 2);
 
         // Group used to enforce margin
-        const g = svg
-          .append("g")
-          .attr(
-            "transform",
-            `translate(${radius + margin},${radius + margin})`
-          );
+        const g = svg.append("g").attr("transform", `translate(${radius + margin},${radius + margin})`);
 
         const pie = d3
           .pie()
@@ -258,9 +248,7 @@
             .attrTween("d", tweenArc)
             .style("fill", d => cscale(d.data.key));
 
-          path
-            .select("title")
-            .text(d => `${d.data.key}: ${d.data.values.length}`);
+          path.select("title").text(d => `${d.data.key}: ${d.data.values.length}`);
         }
         return update;
       }
@@ -270,11 +258,7 @@
       const ageHistogram = createHistogram("#age");
       const sexPieChart = createPieChart("#sex", "selectedSex", d3.schemeSet3);
       const fareHistogram = createHistogram("#fare");
-      const survivedPieChart = createPieChart(
-        "#survived",
-        "selectedSurvived",
-        d3.schemeSet3.slice(2)
-      );
+      const survivedPieChart = createPieChart("#survived", "selectedSurvived", d3.schemeSet3.slice(2));
 
       function filterData() {
         return state.data.filter(d => {
@@ -330,12 +314,7 @@
       function updateApp() {
         const filtered = filterData();
 
-        const {
-          ageHistogramData,
-          sexPieData,
-          fareHistogramData,
-          survivedPieData
-        } = wrangleData(filtered);
+        const { ageHistogramData, sexPieData, fareHistogramData, survivedPieData } = wrangleData(filtered);
         ageHistogram(ageHistogramData);
         sexPieChart(sexPieData);
         fareHistogram(fareHistogramData);

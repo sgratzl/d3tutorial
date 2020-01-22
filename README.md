@@ -795,9 +795,7 @@ circles
 D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn't take the order into account. So, if element 'a' was previously at the first position and now on the third it will bind it to the third element. However, this hampers animations, i.e. animated sorting. By using the _key_ argument of the `data` function, one can force that the same DOM element is bound to the same data item regardless of the item order.
 
 ```js
-const cscale = d3
-  .scaleOrdinal(d3.schemeCategory10)
-  .domain(["a", "b", "c", "d"]);
+const cscale = d3.scaleOrdinal(d3.schemeCategory10).domain(["a", "b", "c", "d"]);
 const xscale = d3
   .scaleBand()
   .domain(["a", "b", "c", "d"])

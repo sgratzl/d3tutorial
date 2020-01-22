@@ -38,9 +38,7 @@
         .attr("height", height + margin.top + margin.bottom);
 
       // Group used to enforce margin
-      const g = svg
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+      const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
       // Global variable for all data
       let data;

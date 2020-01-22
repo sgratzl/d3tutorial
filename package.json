@@ -7,7 +7,7 @@
   "scripts": {
     "start": "http-server",
     "postinstall": "rm -rf web_modules/d3 && cp -r node_modules/d3 web_modules/",
-    "format": "prettier --write examples/*.html index.html README.md package.json"
+    "format": "prettier --print-width 120 --write examples/*.html index.html README.md package.json"
   },
   "repository": {
     "type": "git",
