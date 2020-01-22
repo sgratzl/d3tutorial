@@ -1,48 +1,52 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>CSS Example</title>
-  <style>
-    /* select all `div` elements */
-    div {
-      border: 1px solid blue;
-      margin: 10px;
-    }
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>CSS Example</title>
+    <meta name="description" content="simple CSS selectors" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      /* select all `div` elements */
+      div {
+        border: 1px solid blue;
+        margin: 10px;
+      }
 
-    /* select elements having class `header` */
-    .header {
-      background: steelblue;
-      color: white;
-    }
+      /* select elements having class `header` */
+      .header {
+        background: steelblue;
+        color: white;
+      }
 
-    /* select the element with the id `main` */
-    #main {
-      border: 1px solid red; /* Overrides the rules from `div`, because `#main` is more specific */
-    }
+      /* select the element with the id `main` */
+      #main {
+        border: 1px solid red; /* Overrides the rules from `div`, because `#main` is more specific */
+      }
 
-    /* select all `div` with class `header` */
-    div.header {
-      background: green; /* Overrides the rules from `.header`, because `div.header` is more specific */
-    }
+      /* select all `div` with class `header` */
+      div.header {
+        background: green; /* Overrides the rules from `.header`, because `div.header` is more specific */
+      }
 
-    /* select all descendent `p` within a `div` */
-    div p {
-      font-size: 200%;
-    }
+      /* select all descendent `p` within a `div` */
+      div p {
+        font-size: 200%;
+      }
 
-    /* matches when the mouse hovers a `div` */
-    div:hover {
-      background-color: orange;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    D3 Test
-  </div>
-  <div id="main">
-    <p class="header">Lorem Impsum Header</p>
-    <p>Lorem Impsum</p>
-  </div>
-</body>
+      /* matches when the mouse hovers a `div` */
+      div:hover {
+        background-color: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      D3 Test
+    </div>
+    <div id="main">
+      <p class="header">Lorem Impsum Header</p>
+      <p>Lorem Impsum</p>
+    </div>
+  </body>
 </html>

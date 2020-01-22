@@ -1,237 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Student's First Multiple Coordinated View</title>
+    <meta
+      name="description"
+      content="Student's First Multiple Coordinated View"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script src="../web_modules/d3/dist/d3.js"></script>
+    <link href="./style.css" rel="stylesheet" />
+    <style>
+      rect {
+        fill: steelblue;
+        fill-opacity: 0.8;
+      }
 
-<head>
-  <meta charset="utf-8">
-  <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-  <script src="../web_modules/d3/dist/d3.js"></script>
-  <style type="text/css">
-    body {
-      width: 100vw;
-      margin: 25px auto;
-      font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    }
+      rect:hover {
+        fill-opacity: 1;
+      }
 
-    rect {
-      fill: steelblue;
-      fill-opacity: 0.8;
-    }
+      path {
+        fill-opacity: 0.8;
+      }
 
-    rect:hover {
-      fill-opacity: 1;
-    }
+      .selected,
+      path:hover {
+        fill-opacity: 1;
+      }
 
-    path {
-      fill-opacity: 0.8;
-    }
+      .axis {
+        font-size: smaller;
+      }
 
-    .selected,
-    path:hover {
-      fill-opacity: 1;
-    }
+      main {
+        display: flex;
+        flex-wrap: wrap;
+      }
 
-    .axis {
-      font-size: smaller;
-    }
+      h3 {
+        text-align: center;
+      }
+    </style>
+  </head>
 
-    main {
-      display: flex;
-      flex-wrap: wrap;
-    }
+  <body>
+    <h1>Student's First Multiple Coordinated View</h1>
 
-    h3 {
-      text-align: center;
-    }
-  </style>
-</head>
+    <div>
+      <label for="passenger-class"><strong>Passenger Class:</strong></label>
+      <select id="passenger-class">
+        <option value="" selected>All Classes</option>
+        <option value="1">First Class</option>
+        <option value="2">2nd Class</option>
+        <option value="3">3rd Class</option>
+      </select>
+    </div>
 
-<body>
-  <h1>Student's First Multiple Coordinated View</h1>
+    <main>
+      <section>
+        <h3>Gender Distribution</h3>
+        <svg id="sex"></svg>
+      </section>
+      <section>
+        <h3>Age Histogram</h3>
+        <svg id="age"></svg>
+      </section>
+    </main>
 
-  <div>
-    <label for="passenger-class"><strong>Passenger Class:</strong></label>
-    <select id="passenger-class">
-      <option value="" selected>All Classes</option>
-      <option value="1">First Class</option>
-      <option value="2">2nd Class</option>
-      <option value="3">3rd Class</option>
-    </select>
-  </div>
-
-  <main>
-    <section>
-      <h3>Gender Distribution</h3>
-      <svg id="sex"></svg>
-    </section>
-    <section>
-      <h3>Age Histogram</h3>
-      <svg id="age"></svg>
-    </section>
-  </main>
-
-  <script type="text/javascript">
-
-    const state = {
-      data: [],
-      passengerClass: ''
-    };
-
-    
-    
-    function createHistogram(svgSelector) {
-      const margin = {
-        top: 40,
-        bottom: 10,
-        left: 120,
-        right: 20
+    <script>
+      const state = {
+        data: [],
+        passengerClass: ""
       };
-      const width = 600 - margin.left - margin.right;
-      const height = 400 - margin.top - margin.bottom;
 
-      // Creates sources <svg> element
-      const svg = d3.select(svgSelector)
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom);
+      function createHistogram(svgSelector) {
+        const margin = {
+          top: 40,
+          bottom: 10,
+          left: 120,
+          right: 20
+        };
+        const width = 600 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
 
-      // Group used to enforce margin
-      const g = svg.append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
+        // Creates sources <svg> element
+        const svg = d3
+          .select(svgSelector)
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom);
 
+        // Group used to enforce margin
+        const g = svg
+          .append("g")
+          .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Scales setup
-      const xscale = d3.scaleLinear().range([0, width]);
-      const yscale = d3.scaleLinear().range([0, height]);
+        // Scales setup
+        const xscale = d3.scaleLinear().range([0, width]);
+        const yscale = d3.scaleLinear().range([0, height]);
 
-      // Axis setup
-      const xaxis = d3.axisTop().scale(xscale);
-      const g_xaxis = g.append('g').attr('class', 'x axis');
-      const yaxis = d3.axisLeft().scale(yscale);
-      const g_yaxis = g.append('g').attr('class', 'y axis');
+        // Axis setup
+        const xaxis = d3.axisTop().scale(xscale);
+        const g_xaxis = g.append("g").attr("class", "x axis");
+        const yaxis = d3.axisLeft().scale(yscale);
+        const g_yaxis = g.append("g").attr("class", "y axis");
 
-      
-      function update(new_data) { //: (IPerson[] & {x0: number, x1: number})[]
-        //update the scales
-        xscale.domain([0, d3.max(new_data, (d) => d.length)]);
-        yscale.domain([new_data[0].x0, new_data[new_data.length - 1].x1]);
-        //render the axis
-        g_xaxis.transition().call(xaxis);
-        g_yaxis.transition().call(yaxis);
+        function update(new_data) {
+          //: (IPerson[] & {x0: number, x1: number})[]
+          //update the scales
+          xscale.domain([0, d3.max(new_data, d => d.length)]);
+          yscale.domain([new_data[0].x0, new_data[new_data.length - 1].x1]);
+          //render the axis
+          g_xaxis.transition().call(xaxis);
+          g_yaxis.transition().call(yaxis);
 
-        // Render the chart with new data
+          // Render the chart with new data
 
-        // DATA JOIN
-        // DATA JOIN
-        const rect = g.selectAll('rect').data(new_data).join(
-          (enter) => {
-            // ENTER
-            // new elements
-            const rect_enter = enter.append('rect')
-              .attr('x', 0) //set intelligent default values for animation
-              .attr('y', 0)
-              .attr('width', 0)
-              .attr('height', 0);
-            rect_enter.append('title');
-            return rect_enter;
-          },
-          // UPDATE
-          // update existing elements
-          (update) => update,
-          // EXIT
-          // elements that aren't associated with data
-          (exit) => exit.remove()
-        );      
+          // DATA JOIN
+          // DATA JOIN
+          const rect = g
+            .selectAll("rect")
+            .data(new_data)
+            .join(
+              enter => {
+                // ENTER
+                // new elements
+                const rect_enter = enter
+                  .append("rect")
+                  .attr("x", 0) //set intelligent default values for animation
+                  .attr("y", 0)
+                  .attr("width", 0)
+                  .attr("height", 0);
+                rect_enter.append("title");
+                return rect_enter;
+              },
+              // UPDATE
+              // update existing elements
+              update => update,
+              // EXIT
+              // elements that aren't associated with data
+              exit => exit.remove()
+            );
 
-        // ENTER + UPDATE
-        // both old and new elements
-        rect.transition()
-          .attr('height', (d) => yscale(d.x1) - yscale(d.x0) - 2)
-          .attr('width', (d) => xscale(d.length))
-          .attr('y', (d) => yscale(d.x0) + 1);
+          // ENTER + UPDATE
+          // both old and new elements
+          rect
+            .transition()
+            .attr("height", d => yscale(d.x1) - yscale(d.x0) - 2)
+            .attr("width", d => xscale(d.length))
+            .attr("y", d => yscale(d.x0) + 1);
 
-        rect.select('title').text((d) => `${d.x0}: ${d.length}`);
-      }
-
-      return update;
-    }
-
-    function createPieChart(svgSelector) {
-      const margin = 10;
-      const radius = 100;
-
-      // Creates sources <svg> element
-      const svg = d3.select(svgSelector)
-        .attr('width', radius * 2 + margin * 2)
-        .attr('height', radius * 2 + margin * 2);
-
-      // Group used to enforce margin
-      const g = svg.append('g')
-        .attr('transform', `translate(${radius + margin},${radius + margin})`);
-
-      // 1. TODO
-      
-      function update(new_data) { //{key: string, values: IPerson[]}[]
-        // TODO apply layout and render pie
-      }
-
-      return update;
-    }
-
-    /////////////////////////
-
-    const ageHistogram = createHistogram('#age');
-    const sexPieChart = createPieChart('#sex');
-    
-    function filterData() {
-      return state.data.filter((d) => {
-        if (state.passengerClass && d.pclass !== state.passengerClass) {
-          return false;
+          rect.select("title").text(d => `${d.x0}: ${d.length}`);
         }
-        return true;
+
+        return update;
+      }
+
+      function createPieChart(svgSelector) {
+        const margin = 10;
+        const radius = 100;
+
+        // Creates sources <svg> element
+        const svg = d3
+          .select(svgSelector)
+          .attr("width", radius * 2 + margin * 2)
+          .attr("height", radius * 2 + margin * 2);
+
+        // Group used to enforce margin
+        const g = svg
+          .append("g")
+          .attr(
+            "transform",
+            `translate(${radius + margin},${radius + margin})`
+          );
+
+        // 1. TODO
+
+        function update(new_data) {
+          //{key: string, values: IPerson[]}[]
+          // TODO apply layout and render pie
+        }
+
+        return update;
+      }
+
+      /////////////////////////
+
+      const ageHistogram = createHistogram("#age");
+      const sexPieChart = createPieChart("#sex");
+
+      function filterData() {
+        return state.data.filter(d => {
+          if (state.passengerClass && d.pclass !== state.passengerClass) {
+            return false;
+          }
+          return true;
+        });
+      }
+
+      function wrangleData(filtered) {
+        const ageHistogram = d3
+          .histogram()
+          .domain([0, 100])
+          .thresholds(10)
+          .value(d => d.age);
+
+        const ageHistogramData = ageHistogram(filtered);
+
+        // always the two categories
+        const sexPieData = ["female", "male"].map(key => ({
+          key,
+          values: filtered.filter(d => d.sex === key)
+        }));
+
+        return { ageHistogramData, sexPieData };
+      }
+
+      function updateApp() {
+        const filtered = filterData();
+
+        const { ageHistogramData, sexPieData } = wrangleData(filtered);
+        ageHistogram(ageHistogramData);
+        sexPieChart(sexPieData);
+      }
+
+      d3.csv("titanic3.csv").then(parsed => {
+        state.data = parsed.map(row => {
+          row.age = parseInt(row.age, 10);
+          row.fare = parseFloat(row.fare);
+          return row;
+        });
+
+        updateApp();
       });
-    }
 
-    function wrangleData(filtered) {
-      const ageHistogram = d3.histogram()
-        .domain([0, 100])
-        .thresholds(10)
-        .value((d) => d.age);
-
-      const ageHistogramData = ageHistogram(filtered);
-
-      // always the two categories
-      const sexPieData = ['female', 'male'].map((key) => ({
-        key,
-        values: filtered.filter((d) => d.sex === key)
-      }));
-
-      return {ageHistogramData, sexPieData};
-    }
-
-    function updateApp() {
-      const filtered = filterData();
-            
-      const {ageHistogramData, sexPieData} = wrangleData(filtered);
-      ageHistogram(ageHistogramData);
-      sexPieChart(sexPieData);
-    }
-
-    d3.csv('titanic3.csv').then((parsed) => {
-      state.data = parsed.map((row) => {
-        row.age = parseInt(row.age, 10);
-        row.fare = parseFloat(row.fare);
-        return row;
+      //interactivity
+      d3.select("#passenger-class").on("change", function() {
+        const selected = d3.select(this).property("value");
+        state.passengerClass = selected;
+        updateApp();
       });
-
-      updateApp();
-    });
-
-    //interactivity
-    d3.select('#passenger-class').on('change', function () {
-      const selected = d3.select(this).property('value');
-      state.passengerClass = selected;
-      updateApp();
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
