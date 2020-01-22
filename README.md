@@ -56,6 +56,7 @@ Extras
 - [More D3](#more-d3)
 - [D3 Boilerplate](#boilerplate)
 - [What Else Besides D3](#beside-d3)
+- [TypeScript and D3][#typescript]
 
 > SURVEY: What do you guys already know?
 
@@ -1102,6 +1103,90 @@ free and commerical charting library.
 - Vega (https://vega.github.io/vega/) - declarative description of plots
 - Crossfilter (https://square.github.io/crossfilter/) - Fast Multidimensional Filtering for Coordinated Views
 - ...
+
+
+<a id="typescript"></a>
+
+# TypeScript and D3
+
+[TypeScript](https://www.typescriptlang.org/) is a programming language on top of JavaScript. Foremost it allows to specify types to variables and parameters similar to other typed langugages such as Java, C#, and so on. The TypeScript compiler compiles the TypeScript code to regular JavaScript code and also performs checks on it. Every JavaScript code is valid TypeScript code.
+
+Examples
+
+The following JavaScript code can be rewritten to TypeScript
+
+```js
+let x = 5;
+
+function add(a, b) {
+  return a + b;
+}
+
+console.log(add(x, 3));
+console.log(add("text", 3))ö
+```
+
+```ts
+let x: number = 5;
+
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+console.log(add(x, 3));
+console.log(add("text", 3)); // will result in a compile error
+```
+
+Moreover, the TypeScript compiler is able to derive a lot which one can use to omit type declarations in some cases.
+
+```ts
+let x = 5; // can be derived from the assignment
+
+function add(a: number, b: number) { // same for return type
+  return a + b;
+}
+
+console.log(add(x, 3));
+console.log(add("text", 3)); // will result in a compile error
+```
+
+One can declare the types of variables and functions in ones own code. However, for external libraries, such as D3, the TypeScript compiler needs additional information such just the untyped JavaScript code is available. These are so called typings. [Definitely Typed](https://definitelytyped.org/) is a collection of typings for various JavaScript libraries including D3.
+
+So, when installing D3 using NPM one can install the typings alongside. Usually it is just by prepending the `@types/` scope.
+
+```bash
+npm install d3 @types/d3
+```
+
+Due to some heavy typing a D3 Selection (such as returned by `d3.select` or `d3.selectAll`) has four generic arguments:
+ 1. the element type of the selected element, e.g. `d3.selectAll("div")` will be a `HTMLDivElement`.
+ 1. the data type bound to this element, e.g. `d3.selectAll("div").data([1, 2, 3])` will be a `number`.
+ 1. the element type of the parent element, e.g. `d3.select("body").selectAll("div").data([1, 2, 3])` will be a `HTMLBodyElement`.
+ 1. the data type of the parent element, e.g. `d3.select("body").datum("data").selectAll("div").data([1, 2, 3])` will be a `string`.
+
+In my experience the third and fourth argument are barely of any use of which it can be simplified and set to e.g. `unknown` or `any`.
+
+One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g. `d3.select<SVGGElement>(".chart")`
+
+TODO
+ * proper full binding example
+ * convert the bar chart to full TypeScript
+ * this context specification and usage
+ * 
+
+## Hints
+
+### Axis
+
+The typings declare that an axis `d3.axisLeft` can just be called on a `SVGGElement` thus one has to make sure that the typings are correct of the selection. For example:
+
+```ts
+const axis = d3.axisLeft();
+d3.select<SVGGElement>('.axis.x').call(axis);
+```
+
+
+
 
 Thank You
 
