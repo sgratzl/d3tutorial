@@ -1165,9 +1165,17 @@ Due to some heavy typing a D3 Selection (such as returned by `d3.select` or `d3.
 1.  the element type of the parent element, e.g. `d3.select("body").selectAll("div").data([1, 2, 3])` will be a `HTMLBodyElement`.
 1.  the data type of the parent element, e.g. `d3.select("body").datum("data").selectAll("div").data([1, 2, 3])` will be a `string`.
 
-In my experience the third and fourth argument are barely of any use of which it can be simplified and set to e.g. `unknown` or `any`.
+In my experience the third and fourth argument are barely of any use of which it can be simplified and set to e.g. `unknown` or `any`. However, one has to fully define a selection if you wanna explicitly define a variable containing a D3 selection,
 
-One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g. `d3.select<SVGGElement, unknown>(".chart")`
+```ts
+import * as d3 from "d3";
+
+let rects: Selection<SVGRectElement, number, SVGGElement, unknown>;
+
+rects = d3.select("g").selectAll("rect").data([1, 2, 3]);
+```
+
+One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g. `d3.select<SVGGElement, unknown>(".chart")`. One also has to specify the generic arguments when using scales that are not just numbers but e.g. a linear scale for generating colors. `d3.scaleLinear<string, number>().domain([0, 1]).range(["white", "black"]);
 
 ---
 
