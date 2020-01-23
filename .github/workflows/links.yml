@@ -1,4 +1,8 @@
-on: push
+name: links
+
+on:
+ - push
+
 jobs:
   linkChecker:
     runs-on: ubuntu-latest
