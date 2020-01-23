@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Student's First Barchart</title>
+    <meta name="description" content="Student's First Barchart" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script src="../web_modules/d3/dist/d3.js"></script>
+    <link href="./style.css" rel="stylesheet" />
+    <style>
+      rect {
+        fill: steelblue;
+        fill-opacity: 0.8;
+      }
+      rect:hover {
+        fill-opacity: 1;
+      }
+      .axis {
+        font-size: smaller;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Student's First Barchart</h1>
+
+    <div>
+      <strong>Filter:</strong>
+      <label><input type="checkbox" name="US" value="1" id="filter-us-only" />US only</label>
+    </div>
+
+    <script src="./barchart07_final_ts.js"></script>
+  </body>
+</html>

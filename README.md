@@ -1104,7 +1104,6 @@ free and commerical charting library.
 - Crossfilter (https://square.github.io/crossfilter/) - Fast Multidimensional Filtering for Coordinated Views
 - ...
 
-
 <a id="typescript"></a>
 
 # TypeScript and D3
@@ -1142,7 +1141,8 @@ Moreover, the TypeScript compiler is able to derive a lot which one can use to o
 ```ts
 let x = 5; // can be derived from the assignment
 
-function add(a: number, b: number) { // same for return type
+function add(a: number, b: number) {
+  // same for return type
   return a + b;
 }
 
@@ -1154,39 +1154,38 @@ One can declare the types of variables and functions in ones own code. However, 
 
 So, when installing D3 using NPM one can install the typings alongside. Usually it is just by prepending the `@types/` scope.
 
-```bash
+```sh
 npm install d3 @types/d3
 ```
 
 Due to some heavy typing a D3 Selection (such as returned by `d3.select` or `d3.selectAll`) has four generic arguments:
- 1. the element type of the selected element, e.g. `d3.selectAll("div")` will be a `HTMLDivElement`.
- 1. the data type bound to this element, e.g. `d3.selectAll("div").data([1, 2, 3])` will be a `number`.
- 1. the element type of the parent element, e.g. `d3.select("body").selectAll("div").data([1, 2, 3])` will be a `HTMLBodyElement`.
- 1. the data type of the parent element, e.g. `d3.select("body").datum("data").selectAll("div").data([1, 2, 3])` will be a `string`.
+
+1.  the element type of the selected element, e.g. `d3.selectAll("div")` will be a `HTMLDivElement`.
+1.  the data type bound to this element, e.g. `d3.selectAll("div").data([1, 2, 3])` will be a `number`.
+1.  the element type of the parent element, e.g. `d3.select("body").selectAll("div").data([1, 2, 3])` will be a `HTMLBodyElement`.
+1.  the data type of the parent element, e.g. `d3.select("body").datum("data").selectAll("div").data([1, 2, 3])` will be a `string`.
 
 In my experience the third and fourth argument are barely of any use of which it can be simplified and set to e.g. `unknown` or `any`.
 
-One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g. `d3.select<SVGGElement>(".chart")`
+One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g. `d3.select<SVGGElement, unknown>(".chart")`
 
-TODO
- * proper full binding example
- * convert the bar chart to full TypeScript
- * this context specification and usage
- * 
+---
+
+Barchart final results in TypeScript [barchart07_final_ts.html](examples/barchart07_final_ts.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/gObqdEG)
 
 ## Hints
 
 ### Axis
 
-The typings declare that an axis `d3.axisLeft` can just be called on a `SVGGElement` thus one has to make sure that the typings are correct of the selection. For example:
+The typings declare that an axis `d3.axisLeft`, ... can just be called on a `SVGGElement` thus one has to make sure that the typings are correct of the selection. For example:
 
 ```ts
 const axis = d3.axisLeft();
-d3.select<SVGGElement>('.axis.x').call(axis);
+d3.select<SVGGElement, unknown>(".axis.x").call(axis);
 ```
 
 
-
+---
 
 Thank You
 

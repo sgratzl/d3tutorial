@@ -6,8 +6,10 @@
   "main": "index.js",
   "scripts": {
     "start": "http-server",
-    "postinstall": "rm -rf web_modules/d3 && cp -r node_modules/d3 web_modules/",
-    "format": "prettier --print-width 120 --write examples/*.html index.html README.md package.json"
+    "postinstall": "rm -rf web_modules/d3 && cp -r node_modules/d3 web_modules/ && npm run compile",
+    "compile": "tsc -p .",
+    "watch": "tsc -w -p .",
+    "format": "prettier --print-width 120 --write examples/*.html examples/*.ts index.html README.md package.json"
   },
   "repository": {
     "type": "git",
@@ -23,7 +25,9 @@
     "d3": "^5.15.0"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.2",
     "http-server": "^0.12.1",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "^3.7.5"
   }
 }
