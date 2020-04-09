@@ -76,7 +76,6 @@ Appendix
 
 - [TypeScript and D3](#typescript)
 
-
 > SURVEY: What do you guys already know?
 
 ---
@@ -931,7 +930,7 @@ SEE: [pie.html](examples/pie.html) [![Open in CodePen][codepen]](https://codepen
 
 A force layout is a graph layout algorithm, which uses a simulation for positioning nodes. The goal is to minimize the force applied on the system introduced by gravity, node repulsive force, and edge attraction forces. In this case it is not a one layout step, but a continuous one, where on each `tick` a new set of positions are available.
 
-![D3 Pie Layout](./i/force.png)
+![D3 Force Layout](./i/force.png)
 
 ---
 

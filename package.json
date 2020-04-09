@@ -9,7 +9,7 @@
     "postinstall": "rm -rf web_modules/d3 && cp -r node_modules/d3 web_modules/ && npm run compile",
     "compile": "tsc -p .",
     "watch": "tsc -w -p .",
-    "format": "prettier --print-width 120 --write examples/*.html examples/*.ts index.html README.md package.json"
+    "format": "prettier --print-width 120 --write \"examples/*.(html|ts|css|json)\" index.html README.md package.json"
   },
   "repository": {
     "type": "git",
