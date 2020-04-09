@@ -59,7 +59,7 @@ Extras
 
 Appendix
 
-- [TypeScript and D3][#typescript]
+- [TypeScript and D3](#typescript)
 
 
 > SURVEY: What do you guys already know?
