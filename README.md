@@ -417,7 +417,7 @@ d3.select("div").html(`<strong>Hello</strong>`);
 
 [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/POVKRj)
 
-The function come in different shapes: as setter (previous examples) as in a getter version. In the later case the value of the first element in the list will be returned. e.g. `circle.attr('cx')`
+The function come in different shapes: as setter (previous examples) as in a getter version. In the later case the value of the first element in the list will be returned. e.g., `circle.attr('cx')`
 
 ### DOM Manipulation
 
@@ -442,7 +442,7 @@ The basic idea of D3 is binding data items to DOM elements and manipulate them a
 
 ![D3 Data Join Set Relationship](i/join_types.png)
 
-For each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the _enter_ phase and need to specify a way how to create the remaining ones. Similarly if we have more DOM elements than data items we are in the _exit_ phase and need to take care of removing the superfluous ones.
+For each of the cases we have to tell D3 what to do. e.g., when we have more data items than DOM elements, we are in the _enter_ phase and need to specify a way how to create the remaining ones. Similarly if we have more DOM elements than data items we are in the _exit_ phase and need to take care of removing the superfluous ones.
 
 Basic workflow:
 
@@ -652,7 +652,7 @@ D3 provides different scales:
 ### Colors
 
 With version 5 D3 extracted the color schemes to it on repository located at
-https://github.com/d3/d3-scale-chromatic. Including both D3 standard schemes (e.g. `d3.schemeCategory10`) but also the ones from [ColorBrewer](https://colorbrewer2.org/) (e.g. `d3.schemeSet3`). These can be used as `range` for an ordinal scale.
+https://github.com/d3/d3-scale-chromatic. Including both D3 standard schemes (e.g., `d3.schemeCategory10`) but also the ones from [ColorBrewer](https://colorbrewer2.org/) (e.g., `d3.schemeSet3`). These can be used as `range` for an ordinal scale.
 
 ```js
 const cscale = d3.scaleOrdinal().domain(["a", "b", "c"]).range(d3.schemeCategory10);
@@ -835,7 +835,7 @@ One interactive visualization is nice multiple coordinated ones are better. Comb
 
 const state = {
   data: [],
-  // e.g. user selection
+  // e.g., user selection
 }
 
 function filterData() {
@@ -847,7 +847,7 @@ function wrangleData(filtered) {
 }
 
 function createVis() {
-  // initialized for creating the visualizations, e.g. setup SVG, init scales, ...
+  // initialized for creating the visualizations, e.g., setup SVG, init scales, ...
 
   function update(new_data) {
     // updates the specific visualization with the given data
@@ -870,14 +870,14 @@ function updateApp() {
   vis(new_data);
 }
 
-// init interaction, e.g. listen to click events
+// init interaction, e.g., listen to click events
 d3.select(...).on('click', () => {
   // update state
   updateApp();
 })
 
 d3.json(...).then((data) => {
-  // load data, e.g. via d3.json and update app afterwards
+  // load data, e.g., via d3.json and update app afterwards
   state.data = data;
   updateApp();
 });
@@ -898,7 +898,7 @@ MCV Inital Setup: [mcv01_initial.html](examples/mcv01_initial.html) [![Open in C
 
 ## Layouts
 
-D3 provides a bunch of standard layouts. A layout does not actually render the visualization but prepares your data, such that you can render, e.g. a pie chart. Most of the time the work with helper tools for SVG from D3. e.g. the `d3.pie()` works best with `d3.arc()`.
+D3 provides a bunch of standard layouts. A layout does not actually render the visualization but prepares your data, such that you can render, e.g., a pie chart. Most of the time the work with helper tools for SVG from D3. e.g., the `d3.pie()` works best with `d3.arc()`.
 
 ### Pie Layout
 
@@ -934,7 +934,7 @@ Pie chart layout: [mcv02_piechart.html](examples/mcv02_piechart.html) [![Open in
 
 ## Interaction And Filtering
 
-So far the visualizations doesn't influence each other and the user can only filter data using form elements (drop downs, checkboxes). More intuitive is to interact with the visualization directly, e.g. by clicking on a bar to select this bar and filter all other visualizations to this selected subset.
+So far the visualizations doesn't influence each other and the user can only filter data using form elements (drop downs, checkboxes). More intuitive is to interact with the visualization directly, e.g., by clicking on a bar to select this bar and filter all other visualizations to this selected subset.
 
 ---
 
@@ -966,7 +966,7 @@ In addition to the simple `.transition()` D3 provides a more fine granular way t
 
 - `.duration()` to define the duration of the animation.
 - `.delay()` to delay the animation.
-- `.ease()` to define the way how the interpolation should be performed, e.g. linear with ease in/out, ...
+- `.ease()` to define the way how the interpolation should be performed, e.g., linear with ease in/out, ...
 
 Each variant allows like most D3 data bound functions either a constant as an argument (`.duration(2000)`) or a function that returns the value for the given data element (`.duration((d, i) => i * 1000)`). By naming a transition `.transition(name)` multiple transitions of different bindings can be synchronized. `.interrupt()` can be used to abort a currently running animation. For more information see [D3-Transition](https://github.com/d3/d3-transition/)
 
@@ -1138,12 +1138,12 @@ npm install d3 @types/d3
 
 Due to some heavy typing a D3 Selection (such as returned by `d3.select` or `d3.selectAll`) has four generic arguments:
 
-1.  the element type of the selected element, e.g. `d3.selectAll("div")` will be a `HTMLDivElement`.
-1.  the data type bound to this element, e.g. `d3.selectAll("div").data([1, 2, 3])` will be a `number`.
-1.  the element type of the parent element, e.g. `d3.select("body").selectAll("div").data([1, 2, 3])` will be a `HTMLBodyElement`.
-1.  the data type of the parent element, e.g. `d3.select("body").datum("data").selectAll("div").data([1, 2, 3])` will be a `string`.
+1.  the element type of the selected element, e.g., `d3.selectAll("div")` will be a `HTMLDivElement`.
+1.  the data type bound to this element, e.g., `d3.selectAll("div").data([1, 2, 3])` will be a `number`.
+1.  the element type of the parent element, e.g., `d3.select("body").selectAll("div").data([1, 2, 3])` will be a `HTMLBodyElement`.
+1.  the data type of the parent element, e.g., `d3.select("body").datum("data").selectAll("div").data([1, 2, 3])` will be a `string`.
 
-In my experience the third and fourth argument are barely of any use of which it can be simplified and set to e.g. `unknown` or `any`. However, one has to fully define a selection if you wanna explicitly define a variable containing a D3 selection,
+In my experience the third and fourth argument are barely of any use of which it can be simplified and set to e.g., `unknown` or `any`. However, one has to fully define a selection if you wanna explicitly define a variable containing a D3 selection,
 
 ```ts
 import * as d3 from "d3";
@@ -1153,15 +1153,15 @@ let rects: Selection<SVGRectElement, number, SVGGElement, unknown>;
 rects = d3.select("g").selectAll("rect").data([1, 2, 3]);
 ```
 
-One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g. `d3.select<SVGGElement, unknown>(".chart")`. One also has to specify the generic arguments when using scales that are not just numbers but e.g. a linear scale for generating colors. `d3.scaleLinear<string, number>().domain([0, 1]).range(["white", "black"]);
+One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g., `d3.select<SVGGElement, unknown>(".chart")`. One also has to specify the generic arguments when using scales that are not just numbers but e.g., a linear scale for generating colors as `d3.scaleLinear<string, number>().domain([0, 1]).range(["white", "black"]);`.
 
 ---
 
 Barchart final results in TypeScript [barchart07_final_ts.html](examples/barchart07_final_ts.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/gObqdEG)
 
-## Hints
+### Hints
 
-### Axis
+#### Axis
 
 The typings declare that an axis `d3.axisLeft`, ... can just be called on a `SVGGElement` thus one has to make sure that the typings are correct of the selection. For example:
 
