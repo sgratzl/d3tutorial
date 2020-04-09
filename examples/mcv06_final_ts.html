@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Student's First Multiple Coordinated View</title>
+    <meta name="description" content="Student's First Multiple Coordinated View" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script src="../web_modules/d3/dist/d3.js"></script>
+    <link href="./mvc.css" rel="stylesheet" />
+    <style>
+      rect {
+        fill: steelblue;
+        fill-opacity: 0.8;
+      }
+
+      rect:hover {
+        fill-opacity: 1;
+      }
+
+      path {
+        fill-opacity: 0.8;
+      }
+
+      .selected,
+      path:hover {
+        fill-opacity: 1;
+      }
+
+      .axis {
+        font-size: smaller;
+      }
+
+      main {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      h3 {
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Student's First Multiple Coordinated View</h1>
+
+    <div>
+      <label for="passenger-class"><strong>Passenger Class:</strong></label>
+      <select id="passenger-class">
+        <option value="" selected>All Classes</option>
+        <option value="1">First Class</option>
+        <option value="2">2nd Class</option>
+        <option value="3">3rd Class</option>
+      </select>
+      <strong>Selected Gender: </strong>
+      <span id="selectedSex"></span>
+      <strong>Selected Survived: </strong>
+      <span id="selectedSurvived"></span>
+    </div>
+
+    <main>
+      <section>
+        <h3>Gender Distribution</h3>
+        <svg id="sex"></svg>
+      </section>
+      <section>
+        <h3>Age Histogram</h3>
+        <svg id="age"></svg>
+      </section>
+      <section>
+        <h3>Fare Histogram</h3>
+        <svg id="fare"></svg>
+      </section>
+      <section>
+        <h3>Survived Distribution</h3>
+        <svg id="survived"></svg>
+      </section>
+    </main>
+
+    <script src="./mcv06_final_ts.js"></script>
+  </body>
+</html>

@@ -1172,6 +1172,7 @@ One can specify the type in more detail by specifing the generic argument of the
 ---
 
 Barchart final results in TypeScript [barchart07_final_ts.ts](examples/barchart07_final_ts.ts) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/gObqdEG)
+MCV final results in TypeScript [mcv06_final_ts.ts](examples/mcv06_final_ts.ts) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/pojoNNL)
 
 ### Hints
 
