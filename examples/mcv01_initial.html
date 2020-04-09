@@ -66,7 +66,7 @@
     <script>
       const state = {
         data: [],
-        passengerClass: ""
+        passengerClass: "",
       };
 
       function createHistogram(svgSelector) {
@@ -74,7 +74,7 @@
           top: 40,
           bottom: 10,
           left: 120,
-          right: 20
+          right: 20,
         };
         const width = 600 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
@@ -101,7 +101,7 @@
         function update(new_data) {
           //: (IPerson[] & {x0: number, x1: number})[]
           //update the scales
-          xscale.domain([0, d3.max(new_data, d => d.length)]);
+          xscale.domain([0, d3.max(new_data, (d) => d.length)]);
           yscale.domain([new_data[0].x0, new_data[new_data.length - 1].x1]);
           //render the axis
           g_xaxis.transition().call(xaxis);
@@ -114,7 +114,7 @@
             .selectAll("rect")
             .data(new_data)
             .join(
-              enter => {
+              (enter) => {
                 // ENTER
                 // new elements
                 const rect_enter = enter
@@ -128,21 +128,21 @@
               },
               // UPDATE
               // update existing elements
-              update => update,
+              (update) => update,
               // EXIT
               // elements that aren't associated with data
-              exit => exit.remove()
+              (exit) => exit.remove()
             );
 
           // ENTER + UPDATE
           // both old and new elements
           rect
             .transition()
-            .attr("height", d => yscale(d.x1) - yscale(d.x0) - 2)
-            .attr("width", d => xscale(d.length))
-            .attr("y", d => yscale(d.x0) + 1);
+            .attr("height", (d) => yscale(d.x1) - yscale(d.x0) - 2)
+            .attr("width", (d) => xscale(d.length))
+            .attr("y", (d) => yscale(d.x0) + 1);
 
-          rect.select("title").text(d => `${d.x0}: ${d.length}`);
+          rect.select("title").text((d) => `${d.x0}: ${d.length}`);
         }
 
         return update;
@@ -153,7 +153,7 @@
       const ageHistogram = createHistogram("#age");
 
       function filterData() {
-        return state.data.filter(d => {
+        return state.data.filter((d) => {
           if (state.passengerClass && d.pclass !== state.passengerClass) {
             return false;
           }
@@ -166,7 +166,7 @@
           .histogram()
           .domain([0, 100])
           .thresholds(10)
-          .value(d => d.age);
+          .value((d) => d.age);
 
         const ageHistogramData = ageHistogram(filtered);
 
@@ -180,8 +180,8 @@
         ageHistogram(ageHistogramData);
       }
 
-      d3.csv("titanic3.csv").then(parsed => {
-        state.data = parsed.map(row => {
+      d3.csv("titanic3.csv").then((parsed) => {
+        state.data = parsed.map((row) => {
           row.age = parseInt(row.age, 10);
           row.fare = parseFloat(row.fare);
           return row;
@@ -191,7 +191,7 @@
       });
 
       //interactivity
-      d3.select("#passenger-class").on("change", function() {
+      d3.select("#passenger-class").on("change", function () {
         const selected = d3.select(this).property("value");
         state.passengerClass = selected;
         updateApp();

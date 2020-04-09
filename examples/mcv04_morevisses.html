@@ -75,7 +75,7 @@
       const state = {
         data: [],
         passengerClass: "",
-        selectedSex: null
+        selectedSex: null,
         // TODO store selected survived state
       };
 
@@ -84,7 +84,7 @@
           top: 40,
           bottom: 10,
           left: 120,
-          right: 20
+          right: 20,
         };
         const width = 600 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
@@ -111,7 +111,7 @@
         function update(new_data) {
           //: (IPerson[] & {x0: number, x1: number})[]
           //update the scales
-          xscale.domain([0, d3.max(new_data, d => d.length)]);
+          xscale.domain([0, d3.max(new_data, (d) => d.length)]);
           yscale.domain([new_data[0].x0, new_data[new_data.length - 1].x1]);
           //render the axis
           g_xaxis.transition().call(xaxis);
@@ -124,7 +124,7 @@
             .selectAll("rect")
             .data(new_data)
             .join(
-              enter => {
+              (enter) => {
                 // ENTER
                 // new elements
                 const rect_enter = enter
@@ -138,21 +138,21 @@
               },
               // UPDATE
               // update existing elements
-              update => update,
+              (update) => update,
               // EXIT
               // elements that aren't associated with data
-              exit => exit.remove()
+              (exit) => exit.remove()
             );
 
           // ENTER + UPDATE
           // both old and new elements
           rect
             .transition()
-            .attr("height", d => yscale(d.x1) - yscale(d.x0) - 2)
-            .attr("width", d => xscale(d.length))
-            .attr("y", d => yscale(d.x0) + 1);
+            .attr("height", (d) => yscale(d.x1) - yscale(d.x0) - 2)
+            .attr("width", (d) => xscale(d.length))
+            .attr("y", (d) => yscale(d.x0) + 1);
 
-          rect.select("title").text(d => `${d.x0}: ${d.length}`);
+          rect.select("title").text((d) => `${d.x0}: ${d.length}`);
         }
 
         return update;
@@ -173,13 +173,10 @@
 
         const pie = d3
           .pie()
-          .value(d => d.values.length)
+          .value((d) => d.values.length)
           .sortValues(null)
           .sort(null);
-        const arc = d3
-          .arc()
-          .outerRadius(radius)
-          .innerRadius(0);
+        const arc = d3.arc().outerRadius(radius).innerRadius(0);
         const cscale = d3.scaleOrdinal(d3.schemeSet3);
 
         function update(new_data) {
@@ -187,20 +184,20 @@
           const pied = pie(new_data);
           // Render the chart with new data
 
-          cscale.domain(new_data.map(d => d.key));
+          cscale.domain(new_data.map((d) => d.key));
 
           // DATA JOIN
           const path = g
             .selectAll("path")
-            .data(pied, d => d.data.key)
+            .data(pied, (d) => d.data.key)
             .join(
               // ENTER
               // new elements
-              enter => {
+              (enter) => {
                 const path_enter = enter.append("path");
                 // TODO register click handler to change selected sex in state and call updateApp()
                 path_enter.append("title");
-                path_enter.on("click", d => {
+                path_enter.on("click", (d) => {
                   if (state.selectedSex === d.data.key) {
                     state.selectedSex = null;
                   } else {
@@ -215,11 +212,11 @@
           // ENTER + UPDATE
           // both old and new elements
           path
-            .classed("selected", d => d.data.key === state.selectedSex)
+            .classed("selected", (d) => d.data.key === state.selectedSex)
             .attr("d", arc) // TODO set the CSS class `selected` if the current data item is the selected sex in the state
-            .style("fill", d => cscale(d.data.key));
+            .style("fill", (d) => cscale(d.data.key));
 
-          path.select("title").text(d => `${d.data.key}: ${d.data.values.length}`);
+          path.select("title").text((d) => `${d.data.key}: ${d.data.values.length}`);
         }
 
         return update;
@@ -232,7 +229,7 @@
       // TODO create two new visualzations for fare and survived
 
       function filterData() {
-        return state.data.filter(d => {
+        return state.data.filter((d) => {
           if (state.passengerClass && d.pclass !== state.passengerClass) {
             return false;
           }
@@ -249,14 +246,14 @@
           .histogram()
           .domain([0, 100])
           .thresholds(10)
-          .value(d => d.age);
+          .value((d) => d.age);
 
         const ageHistogramData = ageHistogram(filtered);
 
         // always the two categories
-        const sexPieData = ["female", "male"].map(key => ({
+        const sexPieData = ["female", "male"].map((key) => ({
           key,
-          values: filtered.filter(d => d.sex === key)
+          values: filtered.filter((d) => d.sex === key),
         }));
 
         // TODO wrangle also for fare and survived state
@@ -276,8 +273,8 @@
         // TODO also update the label for the selected survived state
       }
 
-      d3.csv("titanic3.csv").then(parsed => {
-        state.data = parsed.map(row => {
+      d3.csv("titanic3.csv").then((parsed) => {
+        state.data = parsed.map((row) => {
           row.age = parseInt(row.age, 10);
           row.fare = parseFloat(row.fare);
           return row;
@@ -287,7 +284,7 @@
       });
 
       //interactivity
-      d3.select("#passenger-class").on("change", function() {
+      d3.select("#passenger-class").on("change", function () {
         const selected = d3.select(this).property("value");
         state.passengerClass = selected;
         updateApp();

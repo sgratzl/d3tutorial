@@ -84,7 +84,7 @@
         data: [],
         passengerClass: "",
         selectedSex: null,
-        selectedSurvived: null
+        selectedSurvived: null,
       };
 
       function createHistogram(svgSelector) {
@@ -92,7 +92,7 @@
           top: 40,
           bottom: 10,
           left: 120,
-          right: 20
+          right: 20,
         };
         const width = 600 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
@@ -119,7 +119,7 @@
         function update(new_data) {
           //: (IPerson[] & {x0: number, x1: number})[]
           //update the scales
-          xscale.domain([0, d3.max(new_data, d => d.length)]);
+          xscale.domain([0, d3.max(new_data, (d) => d.length)]);
           yscale.domain([new_data[0].x0, new_data[new_data.length - 1].x1]);
           //render the axis
           g_xaxis.transition().call(xaxis);
@@ -132,7 +132,7 @@
             .selectAll("rect")
             .data(new_data)
             .join(
-              enter => {
+              (enter) => {
                 // ENTER
                 // new elements
                 const rect_enter = enter
@@ -146,21 +146,21 @@
               },
               // UPDATE
               // update existing elements
-              update => update,
+              (update) => update,
               // EXIT
               // elements that aren't associated with data
-              exit => exit.remove()
+              (exit) => exit.remove()
             );
 
           // ENTER + UPDATE
           // both old and new elements
           rect
             .transition()
-            .attr("height", d => yscale(d.x1) - yscale(d.x0) - 2)
-            .attr("width", d => xscale(d.length))
-            .attr("y", d => yscale(d.x0) + 1);
+            .attr("height", (d) => yscale(d.x1) - yscale(d.x0) - 2)
+            .attr("width", (d) => xscale(d.length))
+            .attr("y", (d) => yscale(d.x0) + 1);
 
-          rect.select("title").text(d => `${d.x0}: ${d.length}`);
+          rect.select("title").text((d) => `${d.x0}: ${d.length}`);
         }
 
         return update;
@@ -181,16 +181,13 @@
 
         const pie = d3
           .pie()
-          .value(d => d.values.length)
+          .value((d) => d.values.length)
           .sortValues(null)
           .sort(null);
-        const arc = d3
-          .arc()
-          .outerRadius(radius)
-          .innerRadius(0);
+        const arc = d3.arc().outerRadius(radius).innerRadius(0);
         const noSlice = [
           { startAngle: 0, endAngle: Math.PI * 2, padAngle: 0 },
-          { startAngle: 0, endAngle: 0, padAngle: 0 }
+          { startAngle: 0, endAngle: 0, padAngle: 0 },
         ];
 
         const cscale = d3.scaleOrdinal(colorScheme);
@@ -200,28 +197,28 @@
           const pied = pie(new_data);
           // Render the chart with new data
 
-          cscale.domain(new_data.map(d => d.key));
+          cscale.domain(new_data.map((d) => d.key));
 
           // DATA JOIN
           const old = g.selectAll("path").data();
 
           function tweenArc(d, i) {
             const interpolate = d3.interpolateObject(old[i], d);
-            return t => arc(interpolate(t));
+            return (t) => arc(interpolate(t));
           }
 
           // DATA JOIN
           const path = g
             .selectAll("path")
-            .data(pied, d => d.data.key)
+            .data(pied, (d) => d.data.key)
             .join(
               // ENTER
               // new elements
-              enter => {
+              (enter) => {
                 const path_enter = enter
                   .append("path")
                   .attr("d", (d, i) => arc(noSlice[i]))
-                  .on("click", d => {
+                  .on("click", (d) => {
                     if (state[stateAttr] === d.data.key) {
                       state[stateAttr] = null;
                     } else {
@@ -232,23 +229,19 @@
                 path_enter.append("title");
                 return path_enter;
               },
-              update => update,
-              exit =>
-                exit
-                  .transition()
-                  .attrTween("d", tweenArc)
-                  .remove()
+              (update) => update,
+              (exit) => exit.transition().attrTween("d", tweenArc).remove()
             );
 
           // ENTER + UPDATE
           // both old and new elements
           path
-            .classed("selected", d => d.data.key === state.selectedSex)
+            .classed("selected", (d) => d.data.key === state.selectedSex)
             .transition()
             .attrTween("d", tweenArc)
-            .style("fill", d => cscale(d.data.key));
+            .style("fill", (d) => cscale(d.data.key));
 
-          path.select("title").text(d => `${d.data.key}: ${d.data.values.length}`);
+          path.select("title").text((d) => `${d.data.key}: ${d.data.values.length}`);
         }
         return update;
       }
@@ -261,7 +254,7 @@
       const survivedPieChart = createPieChart("#survived", "selectedSurvived", d3.schemeSet3.slice(2));
 
       function filterData() {
-        return state.data.filter(d => {
+        return state.data.filter((d) => {
           if (state.passengerClass && d.pclass !== state.passengerClass) {
             return false;
           }
@@ -280,34 +273,34 @@
           .histogram()
           .domain([0, 100])
           .thresholds(10)
-          .value(d => d.age);
+          .value((d) => d.age);
 
         const ageHistogramData = ageHistogram(filtered);
 
         // always the two categories
-        const sexPieData = ["female", "male"].map(key => ({
+        const sexPieData = ["female", "male"].map((key) => ({
           key,
-          values: filtered.filter(d => d.sex === key)
+          values: filtered.filter((d) => d.sex === key),
         }));
 
         const fareHistogram = d3
           .histogram()
-          .domain([0, d3.max(filtered, d => d.fare)])
-          .value(d => d.fare);
+          .domain([0, d3.max(filtered, (d) => d.fare)])
+          .value((d) => d.fare);
 
         const fareHistogramData = fareHistogram(filtered);
 
         // always the two categories
-        const survivedPieData = ["0", "1"].map(key => ({
+        const survivedPieData = ["0", "1"].map((key) => ({
           key,
-          values: filtered.filter(d => d.survived === key)
+          values: filtered.filter((d) => d.survived === key),
         }));
 
         return {
           ageHistogramData,
           sexPieData,
           fareHistogramData,
-          survivedPieData
+          survivedPieData,
         };
       }
 
@@ -324,8 +317,8 @@
         d3.select("#selectedSurvived").text(state.selectedSurvived || "None");
       }
 
-      d3.csv("titanic3.csv").then(parsed => {
-        state.data = parsed.map(row => {
+      d3.csv("titanic3.csv").then((parsed) => {
+        state.data = parsed.map((row) => {
           row.age = parseInt(row.age, 10);
           row.fare = parseFloat(row.fare);
           return row;
@@ -335,7 +328,7 @@
       });
 
       //interactivity
-      d3.select("#passenger-class").on("change", function() {
+      d3.select("#passenger-class").on("change", function () {
         const selected = d3.select(this).property("value");
         state.passengerClass = selected;
         updateApp();

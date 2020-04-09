@@ -1,6 +1,6 @@
 # D3 Tutorial
 
-This is a short tutorial introducing the basic elements and concepts of D3. D3 stands for Data-Driven Documents and is a very popular JavaScript library written by [Mike Bostock](http://bost.ocks.org/mike/).
+This is a short tutorial introducing the basic elements and concepts of D3. D3 stands for Data-Driven Documents and is a very popular JavaScript library written by [Mike Bostock](https://bost.ocks.org/mike/).
 
 Homepage: https://d3js.org/
 
@@ -21,7 +21,7 @@ Download / Include:
 
 ## Credits
 
-This tutorial is based on the work of [Samuel Gratzl](https://github.com/sgratzl/d3tutorial), [Holger Stitz](https://github.com/thinkh/d3tutorial) and [Alexander Lex](https://dataviscourse.net/2016/tutorials/).
+This tutorial is created and maintained by [Samuel Gratzl](https://github.com/sgratzl/d3tutorial), with contributions from [Holger Stitz](https://github.com/thinkh/d3tutorial), and based on a tutorial by [Alexander Lex](https://dataviscourse.net/2016/tutorials/).
 
 ---
 
@@ -57,6 +57,11 @@ Extras
 - [D3 Boilerplate](#boilerplate)
 - [What Else Besides D3](#beside-d3)
 
+Appendix
+
+- [TypeScript and D3][#typescript]
+
+
 > SURVEY: What do you guys already know?
 
 ---
@@ -65,7 +70,7 @@ Extras
 
 # Development Environment
 
-Using a good development environment can save you time and prevent you from pain. Editors like [Visual Studio Code](https://code.visualstudio.com), [Sublime](http://www.sublimetext.com/), or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](http://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
+Using a good development environment can save you time and prevent you from pain. Editors like [Visual Studio Code](https://code.visualstudio.com), [Sublime](https://www.sublimetext.com/), or [Atom](https://atom.io) are a good start. Fully fledged integrated development environments such as [WebStorm](https://www.jetbrains.com/webstorm/) or [Eclipse](https://www.eclipse.org/webtools/) may be complex at a first glance but provide a bunch of useful features.
 
 ## Chrome Developer Tools
 
@@ -132,7 +137,7 @@ HTML elements can be nested:
 The opening tag of an element can contain extra information as attributes:
 
 ```html
-<a href="http://www.google.com">A link to Google's main page</a>
+<a href="https://www.google.com">A link to Google's main page</a>
 ```
 
 The `a` element (which stood for "anchor") describes a link. The attribute `href` means "HTML reference". The meaning given to each attribute changes from element to element.
@@ -186,7 +191,7 @@ Most important selectors explained in an example
 
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>CSS Example</title>
     <style>
@@ -356,9 +361,9 @@ const sub = (a, b) => {
 console.log(add(10, 30), sub(10, 5));
 
 // functional style programming
-arr.forEach(d => (x += d));
-const arr2 = arr.map(d => d * 10);
-const arrf = arr.filter(d => d < 3);
+arr.forEach((d) => (x += d));
+const arr2 = arr.map((d) => d * 10);
+const arrf = arr.filter((d) => d < 3);
 // function are first-level objects
 function compute(f, a, b) {
   return f(a, b);
@@ -397,10 +402,7 @@ circle.attr("cx", 20);
 circle.attr("cy", 23);
 
 // alternative syntax via chaining
-circle
-  .attr("r", 10)
-  .attr("cx", 20)
-  .attr("cy", 23);
+circle.attr("r", 10).attr("cx", 20).attr("cy", 23);
 
 // set css styles
 circle.style("stroke-width", 2);
@@ -423,10 +425,7 @@ The DOM elements can be manipulated using. `append` and `remove`
 
 ```js
 const body = d3.select("body");
-body
-  .append("svg")
-  .attr("width", 800)
-  .attr("height", 600);
+body.append("svg").attr("width", 800).attr("height", 600);
 
 d3.select("svg").remove();
 ```
@@ -443,7 +442,7 @@ The basic idea of D3 is binding data items to DOM elements and manipulate them a
 
 ![D3 Data Join Set Relationship](i/join_types.png)
 
-For each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the _enter_ phase and need to specify a way how to create the remaining ones. Similarly if we more DOM elements than data items we are in the _exit_ phase and need to take care of removing the superfluous ones.
+For each of the cases we have to tell D3 what to do. e.g. when we have more data items than DOM elements, we are in the _enter_ phase and need to specify a way how to create the remaining ones. Similarly if we have more DOM elements than data items we are in the _exit_ phase and need to take care of removing the superfluous ones.
 
 Basic workflow:
 
@@ -463,15 +462,15 @@ const circles = d3
   .selectAll("circle")
   .data(data)
   .join(
-    enter => {
+    (enter) => {
       // append an element matching the selector and set constant attributes
       const circles_enter = enter.append("circle");
       circles_enter.attr("r", 10);
       return circles_enter;
     },
     // update existing elements
-    update => update,
-    exit => {
+    (update) => update,
+    (exit) => {
       // exit phase
       return exit.remove();
     }
@@ -496,7 +495,7 @@ const data = [1, 2, 3];
 d3.select("svg")
   .selectAll("circle")
   .data(data)
-  .join(enter => enter.append("circle").attr("r", 10))
+  .join((enter) => enter.append("circle").attr("r", 10))
   .attr("cx", (d, i) => d * 10)
   .attr("cy", (d, i) => i * 50);
 ```
@@ -542,24 +541,20 @@ Nested data join [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/yL
 // hierarchical data
 const data = [
   { name: "a", arr: [1, 2, 3] },
-  { name: "b", arr: [3, 2, 4] }
+  { name: "b", arr: [3, 2, 4] },
 ];
 
-const groups = d3
-  .select("svg")
-  .selectAll("g")
-  .data(data)
-  .join("g");
+const groups = d3.select("svg").selectAll("g").data(data).join("g");
 
 groups.attr("transform", (d, i) => `translate(${i * 20 + 10},10)`);
 
 // select all circles within each group and bind the inner array per data item
 const circles = groups
   .selectAll("circle")
-  .data(d => d.arr)
+  .data((d) => d.arr)
   .join("circle");
 
-circles.attr("r", d => d * 2).attr("cy", (d, i) => i * 20);
+circles.attr("r", (d) => d * 2).attr("cy", (d, i) => i * 20);
 ```
 
 Nested selection [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/VwwZZjY):
@@ -570,7 +565,7 @@ const circles = d3
   .select("svg")
   .selectAll("circle")
   .data(data)
-  .join(enter => {
+  .join((enter) => {
     const circles_enter = enter.append("circle").attr("r", 10);
     // need to be separate since .append returns the appended element
     circles_enter.append("title");
@@ -579,7 +574,7 @@ const circles = d3
 
 circles.attr("cx", (d, i) => d * 10).attr("cy", (d, i) => i * 50);
 
-circles.select("title").text(d => d);
+circles.select("title").text((d) => d);
 ```
 
 ---
@@ -596,26 +591,26 @@ Adding a title attribute: [barchart02_title.html](examples/barchart02_title.html
 
 In the current version we have static hard-coded data in our files. D3 provides a bunch of function for loading external files. The most important ones are `d3.json` for loading JSON files and `d3.csv` for CSV files respectively. Both return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) that will resolve when the file has been loaded.
 
-**Important: Data Loading is asynchronous**! That means you won't get the data immediately as a return value. But you get a Promise that will be resolved , as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
+**Important: Data loading is asynchronous**! That means you won't get the data immediately as a return value. But you get a Promise that will be resolved , as soon as the data are ready. You can't predict when this happens. You have to structure your code accordingly.
 
 ```js
 d3.json("file_to_load.json")
-  .then(data => {
+  .then((data) => {
     // do something with the data
   })
-  .catch(error => {
+  .catch((error) => {
     console.error("Error loading the data");
   });
 ```
 
 ```js
 d3.csv("file_to_load.csv")
-  .then(data => {
+  .then((data) => {
     // array of objects
     console.log(data.length);
     // do something with the data
   })
-  .catch(error => {
+  .catch((error) => {
     console.error("Error loading the data");
   });
 ```
@@ -657,13 +652,10 @@ D3 provides different scales:
 ### Colors
 
 With version 5 D3 extracted the color schemes to it on repository located at
-https://github.com/d3/d3-scale-chromatic. Including both D3 standard schemes (e.g. `d3.schemeCategory10`) but also the ones from [ColorBrewer](http://colorbrewer2.org/) (e.g. `d3.schemeSet3`). These can be used as `range` for an ordinal scale.
+https://github.com/d3/d3-scale-chromatic. Including both D3 standard schemes (e.g. `d3.schemeCategory10`) but also the ones from [ColorBrewer](https://colorbrewer2.org/) (e.g. `d3.schemeSet3`). These can be used as `range` for an ordinal scale.
 
 ```js
-const cscale = d3
-  .scaleOrdinal()
-  .domain(["a", "b", "c"])
-  .range(d3.schemeCategory10);
+const cscale = d3.scaleOrdinal().domain(["a", "b", "c"]).range(d3.schemeCategory10);
 ```
 
 ```js
@@ -693,19 +685,12 @@ circles.attr('cx', (d) => scale(d));
 In addition, it is quite common adding a axis for your charts. D3 provides a utility function for this case : `d3.axisBottom()`, `d3.axisLeft()`, `d3.axisRight()`, `d3.axisTop()`. It uses a scale as input and the necessary SVG elements for you.
 
 ```js
-const scale = d3
-  .scaleLinear()
-  .domain([0, 5])
-  .range([0, 200]);
+const scale = d3.scaleLinear().domain([0, 5]).range([0, 200]);
 
 const axis = d3.axisBottom().scale(scale);
 
 // create a container to put the axis
-const axis_container = d3
-  .select("svg")
-  .append("g")
-  .attr("class", "axis")
-  .attr("transform", "translate(0,200)");
+const axis_container = d3.select("svg").append("g").attr("class", "axis").attr("transform", "translate(0,200)");
 
 // call axis to create the SVG elements for you
 axis_container.call(axis);
@@ -733,13 +718,13 @@ const circles = d3
   .select("svg")
   .selectAll("circle")
   .data(data)
-  .join(enter =>
+  .join((enter) =>
     enter
       .append("circle")
       .attr("r", 10)
       .attr("cy", 40)
       .attr("cx", (d, i) => 30 + i * 30)
-      .on("click", function(d, i) {
+      .on("click", function (d, i) {
         console.log(`clicked on: ${d} (${i})`);
         const circle = d3.select(this); // can't use arrow scoping
         circle.style("stroke", "orange");
@@ -772,12 +757,7 @@ const circles = d3
   .selectAll("circle")
   .data(data)
   .join(
-    enter =>
-      enter
-        .append("circle")
-        .attr("r", 10)
-        .attr("cx", 100)
-        .attr("cy", 100) // useful default values for animation
+    (enter) => enter.append("circle").attr("r", 10).attr("cx", 100).attr("cy", 100) // useful default values for animation
   );
 
 circles
@@ -796,24 +776,15 @@ D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn'
 
 ```js
 const cscale = d3.scaleOrdinal(d3.schemeCategory10).domain(["a", "b", "c", "d"]);
-const xscale = d3
-  .scaleBand()
-  .domain(["a", "b", "c", "d"])
-  .range([10, 200]);
+const xscale = d3.scaleBand().domain(["a", "b", "c", "d"]).range([10, 200]);
 
 function update(data) {
   const s = d3.select("svg");
   // key argument return a unique key/id per data-item (string)
   const circles = s
     .selectAll("circle")
-    .data(data, d => d)
-    .join(enter =>
-      enter
-        .append("circle")
-        .attr("r", 10)
-        .attr("cx", xscale)
-        .style("fill", cscale)
-    );
+    .data(data, (d) => d)
+    .join((enter) => enter.append("circle").attr("r", 10).attr("cx", xscale).style("fill", cscale));
 
   // a will be bound to the first DOM element
   circles.transition().attr("cy", (d, i) => 10 + i * 20);
@@ -858,7 +829,7 @@ Final results [barchart07_final.html](examples/barchart07_final.html) [![Open in
 
 ## Code Structure
 
-One interactive visualization is nice multiple coordinated ones are better. Combined with filtering and linking and brushing it enables explore datasets in way more detail and discover new insights. Before creating a multiple coordinated view setup a proper code structure helps. A possible way to structure ones code is
+One interactive visualization is nice multiple coordinated ones are better. Combined with filtering and linking and brushing it enables explore datasets in way more detail and discover new insights. Before creating a multiple coordinated view setup a proper code structure helps. A possible way to structure ones code based on its function is
 
 ```js
 
@@ -1023,7 +994,7 @@ Final Outcome: [mcv06_final.html](examples/mcv06_final.html) [![Open in CodePen]
 
 D3 provides way more that has not been covered in this tutorial including:
 
-- Geo Projection: GeoJSON, TopoJSON, Projection: https://github.com/mbostock/d3/wiki/Geo-Projections
+- Geo Projection: GeoJSON, TopoJSON, Projection: https://observablehq.com/collection/@d3/d3-geo
 - Time: Scales, Formatting/Parsing, ...
 - Behaviors:
   - Zoom
@@ -1049,6 +1020,12 @@ Github repository: https://github.com/sgratzl/d3boilerplate
 
 # What Else Besides D3?
 
+## Vega
+
+[Vega](https://vega.github.io/vega/) is a visualization grammar, a declarative language for creating, saving, and sharing interactive visualization designs. With Vega, you can describe the visual appearance and interactive behavior of a visualization in a JSON format, and generate web-based views using Canvas or SVG.
+
+![Vega Examples](./i/vega.png)
+
 ## Tableau
 
 https://www.tableau.com/
@@ -1057,11 +1034,11 @@ The big player for commercial fat client data visualization.
 
 ![Tableau Screenshot](./i/tableau.png)
 
-(c) http://www.marketwatch.ro
+(c) https://www.marketwatch.ro
 
 ## Processing
 
-https://processing.org/ and http://processingjs.org/ for a web-version
+https://processing.org/ and https://processingjs.org/ for a web-version
 
 Own programming language for visualizations with OpenGL backend
 
@@ -1097,11 +1074,103 @@ free and commerical charting library.
 
 ## Frameworks on top of D3:
 
-- NVD3 (http://nvd3.org/) - reusable plots on top of D3
+- NVD3 (https://nvd3.org/) - reusable plots on top of D3
 - Cubism (https://square.github.io/cubism/) - Time Series Data
 - Vega (https://vega.github.io/vega/) - declarative description of plots
 - Crossfilter (https://square.github.io/crossfilter/) - Fast Multidimensional Filtering for Coordinated Views
 - ...
+
+<a id="typescript"></a>
+
+# Appendix
+
+## TypeScript and D3
+
+[TypeScript](https://www.typescriptlang.org/) is a programming language on top of JavaScript. Foremost it allows to specify types to variables and parameters similar to other typed langugages such as Java, C#, and so on. The TypeScript compiler compiles the TypeScript code to regular JavaScript code and also performs checks on it. Every JavaScript code is valid TypeScript code.
+
+Examples
+
+The following JavaScript code can be rewritten to TypeScript
+
+```js
+let x = 5;
+
+function add(a, b) {
+  return a + b;
+}
+
+console.log(add(x, 3));
+console.log(add("text", 3))ö
+```
+
+```ts
+let x: number = 5;
+
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+console.log(add(x, 3));
+console.log(add("text", 3)); // will result in a compile error
+```
+
+Moreover, the TypeScript compiler is able to derive a lot which one can use to omit type declarations in some cases.
+
+```ts
+let x = 5; // can be derived from the assignment
+
+function add(a: number, b: number) {
+  // same for return type
+  return a + b;
+}
+
+console.log(add(x, 3));
+console.log(add("text", 3)); // will result in a compile error
+```
+
+One can declare the types of variables and functions in ones own code. However, for external libraries, such as D3, the TypeScript compiler needs additional information such just the untyped JavaScript code is available. These are so called typings. [Definitely Typed](https://definitelytyped.org/) is a collection of typings for various JavaScript libraries including D3.
+
+So, when installing D3 using NPM one can install the typings alongside. Usually it is just by prepending the `@types/` scope.
+
+```sh
+npm install d3 @types/d3
+```
+
+Due to some heavy typing a D3 Selection (such as returned by `d3.select` or `d3.selectAll`) has four generic arguments:
+
+1.  the element type of the selected element, e.g. `d3.selectAll("div")` will be a `HTMLDivElement`.
+1.  the data type bound to this element, e.g. `d3.selectAll("div").data([1, 2, 3])` will be a `number`.
+1.  the element type of the parent element, e.g. `d3.select("body").selectAll("div").data([1, 2, 3])` will be a `HTMLBodyElement`.
+1.  the data type of the parent element, e.g. `d3.select("body").datum("data").selectAll("div").data([1, 2, 3])` will be a `string`.
+
+In my experience the third and fourth argument are barely of any use of which it can be simplified and set to e.g. `unknown` or `any`. However, one has to fully define a selection if you wanna explicitly define a variable containing a D3 selection,
+
+```ts
+import * as d3 from "d3";
+
+let rects: Selection<SVGRectElement, number, SVGGElement, unknown>;
+
+rects = d3.select("g").selectAll("rect").data([1, 2, 3]);
+```
+
+One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g. `d3.select<SVGGElement, unknown>(".chart")`. One also has to specify the generic arguments when using scales that are not just numbers but e.g. a linear scale for generating colors. `d3.scaleLinear<string, number>().domain([0, 1]).range(["white", "black"]);
+
+---
+
+Barchart final results in TypeScript [barchart07_final_ts.html](examples/barchart07_final_ts.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/gObqdEG)
+
+## Hints
+
+### Axis
+
+The typings declare that an axis `d3.axisLeft`, ... can just be called on a `SVGGElement` thus one has to make sure that the typings are correct of the selection. For example:
+
+```ts
+const axis = d3.axisLeft();
+d3.select<SVGGElement, unknown>(".axis.x").call(axis);
+```
+
+---
 
 Thank You
 

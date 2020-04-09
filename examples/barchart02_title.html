@@ -57,20 +57,20 @@
         .join(
           // ENTER
           // new elements
-          enter => enter.append("rect").attr("x", 0),
+          (enter) => enter.append("rect").attr("x", 0),
           // UPDATE
           // update existing elements
-          update => update,
+          (update) => update,
           // EXIT
           // elements that aren't associated with data
-          exit => exit.remove()
+          (exit) => exit.remove()
         );
 
       // ENTER + UPDATE
       // both old and new elements
       rect
         .attr("height", bar_height)
-        .attr("width", d => d * 7)
+        .attr("width", (d) => d * 7)
         .attr("y", (d, i) => i * (bar_height + 5));
     </script>
   </body>

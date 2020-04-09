@@ -1,5 +1,5 @@
 export var name = "d3";
-export var version = "5.15.0";
+export var version = "5.15.1";
 export var description = "Data-Driven Documents";
 export var keywords = ["dom","visualization","svg","animation","canvas"];
 export var homepage = "https://d3js.org";
