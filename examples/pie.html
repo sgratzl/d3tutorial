@@ -20,11 +20,7 @@
       const height = 600;
 
       // Creates sources <svg> element
-      const svg = d3
-        .select("body")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+      const svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
       const g = svg.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
 
@@ -46,12 +42,7 @@
       const arcs = g
         .selectAll(".arc")
         .data(pied_data)
-        .join(enter =>
-          enter
-            .append("path")
-            .attr("class", "arc")
-            .style("stroke", "white")
-        );
+        .join((enter) => enter.append("path").attr("class", "arc").style("stroke", "white"));
 
       arcs.attr("d", arc).style("fill", (d, i) => color(i));
     </script>

@@ -357,9 +357,9 @@ const sub = (a, b) => {
 console.log(add(10, 30), sub(10, 5));
 
 // functional style programming
-arr.forEach(d => (x += d));
-const arr2 = arr.map(d => d * 10);
-const arrf = arr.filter(d => d < 3);
+arr.forEach((d) => (x += d));
+const arr2 = arr.map((d) => d * 10);
+const arrf = arr.filter((d) => d < 3);
 // function are first-level objects
 function compute(f, a, b) {
   return f(a, b);
@@ -398,10 +398,7 @@ circle.attr("cx", 20);
 circle.attr("cy", 23);
 
 // alternative syntax via chaining
-circle
-  .attr("r", 10)
-  .attr("cx", 20)
-  .attr("cy", 23);
+circle.attr("r", 10).attr("cx", 20).attr("cy", 23);
 
 // set css styles
 circle.style("stroke-width", 2);
@@ -424,10 +421,7 @@ The DOM elements can be manipulated using. `append` and `remove`
 
 ```js
 const body = d3.select("body");
-body
-  .append("svg")
-  .attr("width", 800)
-  .attr("height", 600);
+body.append("svg").attr("width", 800).attr("height", 600);
 
 d3.select("svg").remove();
 ```
@@ -464,15 +458,15 @@ const circles = d3
   .selectAll("circle")
   .data(data)
   .join(
-    enter => {
+    (enter) => {
       // append an element matching the selector and set constant attributes
       const circles_enter = enter.append("circle");
       circles_enter.attr("r", 10);
       return circles_enter;
     },
     // update existing elements
-    update => update,
-    exit => {
+    (update) => update,
+    (exit) => {
       // exit phase
       return exit.remove();
     }
@@ -497,7 +491,7 @@ const data = [1, 2, 3];
 d3.select("svg")
   .selectAll("circle")
   .data(data)
-  .join(enter => enter.append("circle").attr("r", 10))
+  .join((enter) => enter.append("circle").attr("r", 10))
   .attr("cx", (d, i) => d * 10)
   .attr("cy", (d, i) => i * 50);
 ```
@@ -543,24 +537,20 @@ Nested data join [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/yL
 // hierarchical data
 const data = [
   { name: "a", arr: [1, 2, 3] },
-  { name: "b", arr: [3, 2, 4] }
+  { name: "b", arr: [3, 2, 4] },
 ];
 
-const groups = d3
-  .select("svg")
-  .selectAll("g")
-  .data(data)
-  .join("g");
+const groups = d3.select("svg").selectAll("g").data(data).join("g");
 
 groups.attr("transform", (d, i) => `translate(${i * 20 + 10},10)`);
 
 // select all circles within each group and bind the inner array per data item
 const circles = groups
   .selectAll("circle")
-  .data(d => d.arr)
+  .data((d) => d.arr)
   .join("circle");
 
-circles.attr("r", d => d * 2).attr("cy", (d, i) => i * 20);
+circles.attr("r", (d) => d * 2).attr("cy", (d, i) => i * 20);
 ```
 
 Nested selection [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/VwwZZjY):
@@ -571,7 +561,7 @@ const circles = d3
   .select("svg")
   .selectAll("circle")
   .data(data)
-  .join(enter => {
+  .join((enter) => {
     const circles_enter = enter.append("circle").attr("r", 10);
     // need to be separate since .append returns the appended element
     circles_enter.append("title");
@@ -580,7 +570,7 @@ const circles = d3
 
 circles.attr("cx", (d, i) => d * 10).attr("cy", (d, i) => i * 50);
 
-circles.select("title").text(d => d);
+circles.select("title").text((d) => d);
 ```
 
 ---
@@ -601,22 +591,22 @@ In the current version we have static hard-coded data in our files. D3 provides 
 
 ```js
 d3.json("file_to_load.json")
-  .then(data => {
+  .then((data) => {
     // do something with the data
   })
-  .catch(error => {
+  .catch((error) => {
     console.error("Error loading the data");
   });
 ```
 
 ```js
 d3.csv("file_to_load.csv")
-  .then(data => {
+  .then((data) => {
     // array of objects
     console.log(data.length);
     // do something with the data
   })
-  .catch(error => {
+  .catch((error) => {
     console.error("Error loading the data");
   });
 ```
@@ -661,10 +651,7 @@ With version 5 D3 extracted the color schemes to it on repository located at
 https://github.com/d3/d3-scale-chromatic. Including both D3 standard schemes (e.g. `d3.schemeCategory10`) but also the ones from [ColorBrewer](http://colorbrewer2.org/) (e.g. `d3.schemeSet3`). These can be used as `range` for an ordinal scale.
 
 ```js
-const cscale = d3
-  .scaleOrdinal()
-  .domain(["a", "b", "c"])
-  .range(d3.schemeCategory10);
+const cscale = d3.scaleOrdinal().domain(["a", "b", "c"]).range(d3.schemeCategory10);
 ```
 
 ```js
@@ -694,19 +681,12 @@ circles.attr('cx', (d) => scale(d));
 In addition, it is quite common adding a axis for your charts. D3 provides a utility function for this case : `d3.axisBottom()`, `d3.axisLeft()`, `d3.axisRight()`, `d3.axisTop()`. It uses a scale as input and the necessary SVG elements for you.
 
 ```js
-const scale = d3
-  .scaleLinear()
-  .domain([0, 5])
-  .range([0, 200]);
+const scale = d3.scaleLinear().domain([0, 5]).range([0, 200]);
 
 const axis = d3.axisBottom().scale(scale);
 
 // create a container to put the axis
-const axis_container = d3
-  .select("svg")
-  .append("g")
-  .attr("class", "axis")
-  .attr("transform", "translate(0,200)");
+const axis_container = d3.select("svg").append("g").attr("class", "axis").attr("transform", "translate(0,200)");
 
 // call axis to create the SVG elements for you
 axis_container.call(axis);
@@ -734,13 +714,13 @@ const circles = d3
   .select("svg")
   .selectAll("circle")
   .data(data)
-  .join(enter =>
+  .join((enter) =>
     enter
       .append("circle")
       .attr("r", 10)
       .attr("cy", 40)
       .attr("cx", (d, i) => 30 + i * 30)
-      .on("click", function(d, i) {
+      .on("click", function (d, i) {
         console.log(`clicked on: ${d} (${i})`);
         const circle = d3.select(this); // can't use arrow scoping
         circle.style("stroke", "orange");
@@ -773,12 +753,7 @@ const circles = d3
   .selectAll("circle")
   .data(data)
   .join(
-    enter =>
-      enter
-        .append("circle")
-        .attr("r", 10)
-        .attr("cx", 100)
-        .attr("cy", 100) // useful default values for animation
+    (enter) => enter.append("circle").attr("r", 10).attr("cx", 100).attr("cy", 100) // useful default values for animation
   );
 
 circles
@@ -797,24 +772,15 @@ D3 is rather dumb when it comes to mapping data items to DOM elements. It doesn'
 
 ```js
 const cscale = d3.scaleOrdinal(d3.schemeCategory10).domain(["a", "b", "c", "d"]);
-const xscale = d3
-  .scaleBand()
-  .domain(["a", "b", "c", "d"])
-  .range([10, 200]);
+const xscale = d3.scaleBand().domain(["a", "b", "c", "d"]).range([10, 200]);
 
 function update(data) {
   const s = d3.select("svg");
   // key argument return a unique key/id per data-item (string)
   const circles = s
     .selectAll("circle")
-    .data(data, d => d)
-    .join(enter =>
-      enter
-        .append("circle")
-        .attr("r", 10)
-        .attr("cx", xscale)
-        .style("fill", cscale)
-    );
+    .data(data, (d) => d)
+    .join((enter) => enter.append("circle").attr("r", 10).attr("cx", xscale).style("fill", cscale));
 
   // a will be bound to the first DOM element
   circles.transition().attr("cy", (d, i) => 10 + i * 20);
@@ -1191,7 +1157,6 @@ The typings declare that an axis `d3.axisLeft`, ... can just be called on a `SVG
 const axis = d3.axisLeft();
 d3.select<SVGGElement, unknown>(".axis.x").call(axis);
 ```
-
 
 ---
 

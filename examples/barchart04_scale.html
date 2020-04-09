@@ -50,7 +50,7 @@
       // x a linear scale with range: [0, width] and domain from 0 max temperature
       // y a band ordinal scale range: [0, height] and domain the different cities
 
-      d3.json("weather.json").then(json => {
+      d3.json("weather.json").then((json) => {
         data = json;
 
         update(data);
@@ -66,27 +66,27 @@
           .join(
             // ENTER
             // new elements
-            enter => {
+            (enter) => {
               const rect_enter = enter.append("rect").attr("x", 0);
               rect_enter.append("title");
               return rect_enter;
             },
             // UPDATE
             // update existing elements
-            update => update,
+            (update) => update,
             // EXIT
             // elements that aren't associated with data
-            exit => exit.remove()
+            (exit) => exit.remove()
           );
 
         // ENTER + UPDATE
         // both old and new elements
         rect
           .attr("height", bar_height)
-          .attr("width", d => d.temperature * 7)
+          .attr("width", (d) => d.temperature * 7)
           .attr("y", (d, i) => i * (bar_height + 5));
 
-        rect.select("title").text(d => d.location.city);
+        rect.select("title").text((d) => d.location.city);
       }
     </script>
   </body>

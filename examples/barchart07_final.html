@@ -50,10 +50,7 @@
 
       // Scales setup
       const xscale = d3.scaleLinear().range([0, width]);
-      const yscale = d3
-        .scaleBand()
-        .rangeRound([0, height])
-        .paddingInner(0.1);
+      const yscale = d3.scaleBand().rangeRound([0, height]).paddingInner(0.1);
 
       // Axis setup
       const xaxis = d3.axisTop().scale(xscale);
@@ -63,7 +60,7 @@
 
       /////////////////////////
 
-      d3.json("weather.json").then(json => {
+      d3.json("weather.json").then((json) => {
         data = json;
 
         update(data);
@@ -71,8 +68,8 @@
 
       function update(new_data) {
         //update the scales
-        xscale.domain([0, d3.max(new_data, d => d.temperature)]);
-        yscale.domain(new_data.map(d => d.location.city));
+        xscale.domain([0, d3.max(new_data, (d) => d.temperature)]);
+        yscale.domain(new_data.map((d) => d.location.city));
         //render the axis
         g_xaxis.transition().call(xaxis);
         g_yaxis.transition().call(yaxis);
@@ -82,21 +79,21 @@
         // DATA JOIN use the key argument for ensurign that the same DOM element is bound to the same data-item
         const rect = g
           .selectAll("rect")
-          .data(new_data, d => d.location.city)
+          .data(new_data, (d) => d.location.city)
           .join(
             // ENTER
             // new elements
-            enter => {
+            (enter) => {
               const rect_enter = enter.append("rect").attr("x", 0);
               rect_enter.append("title");
               return rect_enter;
             },
             // UPDATE
             // update existing elements
-            update => update,
+            (update) => update,
             // EXIT
             // elements that aren't associated with data
-            exit => exit.remove()
+            (exit) => exit.remove()
           );
 
         // ENTER + UPDATE
@@ -104,21 +101,21 @@
         rect
           .transition()
           .attr("height", yscale.bandwidth())
-          .attr("width", d => xscale(d.temperature))
-          .attr("y", d => yscale(d.location.city));
+          .attr("width", (d) => xscale(d.temperature))
+          .attr("y", (d) => yscale(d.location.city));
 
-        rect.select("title").text(d => d.location.city);
+        rect.select("title").text((d) => d.location.city);
       }
 
       //interactivity
-      d3.select("#filter-us-only").on("change", function() {
+      d3.select("#filter-us-only").on("change", function () {
         // This will be triggered when the user selects or unselects the checkbox
         const checked = d3.select(this).property("checked");
         if (checked === true) {
           // Checkbox was just checked
 
           // Keep only data element whose country is US
-          const filtered_data = data.filter(d => d.location.country === "US");
+          const filtered_data = data.filter((d) => d.location.country === "US");
 
           update(filtered_data); // Update the chart with the filtered data
         } else {

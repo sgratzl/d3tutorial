@@ -34,72 +34,64 @@
           name: "Steve",
           age: 10,
           weight: 30,
-          gender: "male"
+          gender: "male",
         },
         {
           name: "Stan",
           age: 15,
           weight: 60,
-          gender: "male"
+          gender: "male",
         },
         {
           name: "Tom",
           age: 18,
           weight: 70,
-          gender: "male"
+          gender: "male",
         },
         {
           name: "Marie",
           age: 18,
           weight: 58,
-          gender: "female"
-        }
+          gender: "female",
+        },
       ];
 
-      const color = d3
-        .scaleOrdinal()
-        .domain(["female", "male"])
-        .range(["red", "blue"]);
+      const color = d3.scaleOrdinal().domain(["female", "male"]).range(["red", "blue"]);
       const xscale = d3
         .scaleLinear()
-        .domain([0, d3.max(data, d => d.age)])
+        .domain([0, d3.max(data, (d) => d.age)])
         .range([0, width]);
       const yscale = d3
         .scaleLinear()
-        .domain([0, d3.max(data, d => d.weight)])
+        .domain([0, d3.max(data, (d) => d.weight)])
         .range([height, 0]);
 
       const xaxis = d3.axisBottom().scale(xscale);
       const yaxis = d3.axisLeft().scale(yscale);
 
-      g.append("g")
-        .classed("x.axis", true)
-        .attr("transform", `translate(0,${height})`)
-        .call(xaxis);
-      g.append("g")
-        .classed("y.axis", true)
-        .call(yaxis);
+      g.append("g").classed("x.axis", true).attr("transform", `translate(0,${height})`).call(xaxis);
+      g.append("g").classed("y.axis", true).call(yaxis);
       const group = g.append("g");
 
       const marks = group
         .selectAll("circle")
         .data(data)
         .join(
-          enter => {
+          (enter) => {
             const marks_enter = enter.append("circle");
             marks_enter.attr("r", 5).append("title");
             return marks_enter;
           },
-          update => update,
-          exit => exit.remove()
+          (update) => update,
+          (exit) => exit.remove()
         );
 
       marks
-        .style("fill", d => color(d.gender))
-        .attr("cx", d => xscale(d.age))
-        .attr("cy", d => yscale(d.weight));
+        .style("fill", (d) => color(d.gender))
+        .attr("cx", (d) => xscale(d.age))
+        .attr("cy", (d) => yscale(d.weight));
 
-      marks.select("title").text(d => d.name);
+      marks.select("title").text((d) => d.name);
     </script>
   </body>
 </html>
