@@ -938,6 +938,20 @@ SEE: [miserables.html](examples/miserables.html) [![Open in CodePen][codepen]](h
 
 ---
 
+### D3 Geo
+
+D3 Geo is the D3 package for creating maps and other geo location based visualization. Similar to the other layouts D3 only helps to create the data structure and transformations but one has to render the map itself using SVG path elements. D3 provides numerous different geo projection methods, commonly used are `d3.geoAlbersUsa` and `d3.geoMercator`. A `d3.geoPath` uses a geo projection to transform geographical shape data in [GeoJSON](http://geojson.org/) or its derivative [TopoJSON](https://github.com/topojson/topojson) to SVG Path descriptions. 
+
+For example using `d3.geoAlbersUsa` and the [US Atlas](https://github.com/topojson/us-atlas) shape data one can create a simple Choropleth chart in which each US state is encoded using a continuous colored value. 
+
+![D3 Choropleth](./i/choropleth.png)
+
+---
+
+SEE: [choropleth.html](examples/choropleth.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/LYGbObX)
+
+---
+
 **INTERACTIVE**
 
 Pie chart layout: [mcv02_piechart.html](examples/mcv02_piechart.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/abbooyg)
