@@ -5,7 +5,7 @@ This is a short interactive tutorial introducing the basic elements and concepts
 Then, the basic principles of D3 and its functions are introduced by incrementally implementing an interactive bar chart.
 The example can be implemented manually or directly by editing the [CodePen](https://codepen.io) examples.
 
-In the second part of this tutorial a more complex multiple coordinated view (MCV) setup is incrementally implemented. A multiple coordinated view setup consists of multiple visualizations that are interactivly linked together such
+In the second part of this tutorial a more complex multiple coordinated view (MCV) setup is incrementally implemented. A multiple coordinated view setup consists of multiple visualizations that are interactively linked together such
 as selecting an element in one visualization filters the data in a second one. This is also called linking and brushing. Along with this example some guidelines
 regarding code structure and advanced D3 transitions are given.
 
@@ -63,7 +63,7 @@ Part 2: Student's First Multiple Coordinated View
 - [Code Structure](#code-structure)
 - [D3 Layouts](#layouts)
 - [Interactivity 2](#interaction2)
-- [Reuseability](#reuse)
+- [Reusability](#reuse)
 - [Transitions 2](#transitions2)
 
 Extras
@@ -196,7 +196,7 @@ More important than styling, however, are the rules on how we identify elements 
 
 ## Selectors
 
-Great way to spearate the style from the actual content. In addition, the selector notation is used for navigation and selections in D3.
+Great way to separate the style from the actual content. In addition, the selector notation is used for navigation and selections in D3.
 
 Good overview of CSS Selectors: https://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
 
@@ -329,7 +329,7 @@ JavaScript can be used with imperative/procedural, object-oriented, and function
 
 It is a dynamically typed language, which can be strange for developers who mainly work with strongly typed languages such as C/C++ and Java.
 
-**Note** To follow the examples below, you can open the Developer Tools’s JavaScript console on a browser window, and type the examples to see what they do. Or
+**Note** To follow the examples below, you can open the JavaScript console on a browser window, and type the examples to see what they do. Or
 [![Open in CodePen][codepen]](https://codepen.io/thinkh/pen/qrwxdb).
 
 ```js
@@ -904,7 +904,7 @@ Besides this functional approach an object oriented way is an valid alternative.
 
 **INTERACTIVE**
 
-MCV Inital Setup: [mcv01_initial.html](examples/mcv01_initial.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/bQzNBO)
+MCV Initial Setup: [mcv01_initial.html](examples/mcv01_initial.html) [![Open in CodePen][codepen]](https://codepen.io/sgratzl/pen/bQzNBO)
 
 ---
 
@@ -940,9 +940,9 @@ SEE: [miserables.html](examples/miserables.html) [![Open in CodePen][codepen]](h
 
 ### D3 Geo
 
-D3 Geo is the D3 package for creating maps and other geo location based visualization. Similar to the other layouts D3 only helps to create the data structure and transformations but one has to render the map itself using SVG path elements. D3 provides numerous different geo projection methods, commonly used are `d3.geoAlbersUsa` and `d3.geoMercator`. A `d3.geoPath` uses a geo projection to transform geographical shape data in [GeoJSON](http://geojson.org/) or its derivative [TopoJSON](https://github.com/topojson/topojson) to SVG Path descriptions. 
+D3 Geo is the D3 package for creating maps and other geo location based visualization. Similar to the other layouts D3 only helps to create the data structure and transformations but one has to render the map itself using SVG path elements. D3 provides numerous different geo projection methods, commonly used are `d3.geoAlbersUsa` and `d3.geoMercator`. A `d3.geoPath` uses a geo projection to transform geographical shape data in [GeoJSON](http://geojson.org/) or its derivative [TopoJSON](https://github.com/topojson/topojson) to SVG Path descriptions.
 
-For example using `d3.geoAlbersUsa` and the [US Atlas](https://github.com/topojson/us-atlas) shape data one can create a simple Choropleth chart in which each US state is encoded using a continuous colored value. 
+For example using `d3.geoAlbersUsa` and the [US Atlas](https://github.com/topojson/us-atlas) shape data one can create a simple Choropleth chart in which each US state is encoded using a continuous colored value.
 
 ![D3 Choropleth](./i/choropleth.png)
 
@@ -974,7 +974,7 @@ Interactive Visualizations: [mcv03_interaction.html](examples/mcv03_interaction.
 
 <a id="reuse"></a>
 
-## Reuseability
+## Reusability
 
 An advantage of our code structure is that we can use the factory methods to create multiple instances of the same visualization kind showing different aspect of the data. This is a simple yet effective way to improve the overall multiple coordinated setup.
 
@@ -1054,15 +1054,43 @@ Github repository: https://github.com/sgratzl/d3boilerplate
 
 ![Vega Examples](./i/vega.png)
 
+## PowerBI
+
+https://powerbi.microsoft.com/
+
+The big player for commercial data visualization.
+
+![PowerBI Screenshot](./i/powerbi.png)
+
+(c) https://docs.microsoft.com
+
 ## Tableau
 
 https://www.tableau.com/
 
-The big player for commercial fat client data visualization.
+Another big player for commercial data visualization.
 
 ![Tableau Screenshot](./i/tableau.png)
 
 (c) https://www.marketwatch.ro
+
+## Plot.ly
+
+https://plot.ly
+
+free and commercial charting library.
+
+![Plot.ly Screenshot](./i/plotly.png)
+
+(c) https://aperiodical.com/
+
+## Chart.js
+
+https://chartjs.org
+
+Open source canvas based charting library
+
+![Chart.js Screenshot](./i/chartjs.png)
 
 ## Processing
 
@@ -1082,24 +1110,6 @@ Commercial JavaScript Plot library
 
 (c) https://www.webdesignbooth.com
 
-## Chart.js
-
-https://chartjs.org
-
-Open source canvas based charting library
-
-![Chart.js Screenshot](./i/chartjs.png)
-
-## Plot.ly
-
-https://plot.ly
-
-free and commerical charting library.
-
-![Plot.ly Screenshot](./i/plotly.png)
-
-(c) https://aperiodical.com/
-
 ## Frameworks on top of D3:
 
 - NVD3 (https://nvd3.org/) - reusable plots on top of D3
@@ -1114,7 +1124,7 @@ free and commerical charting library.
 
 ## TypeScript and D3
 
-[TypeScript](https://www.typescriptlang.org/) is a programming language on top of JavaScript. Foremost it allows to specify types to variables and parameters similar to other typed langugages such as Java, C#, and so on. The TypeScript compiler compiles the TypeScript code to regular JavaScript code and also performs checks on it. Every JavaScript code is valid TypeScript code.
+[TypeScript](https://www.typescriptlang.org/) is a programming language on top of JavaScript. Foremost it allows to specify types to variables and parameters similar to other typed languages such as Java, C#, and so on. The TypeScript compiler compiles the TypeScript code to regular JavaScript code and also performs checks on it. Every JavaScript code is valid TypeScript code.
 
 Examples
 
@@ -1181,7 +1191,7 @@ let rects: Selection<SVGRectElement, number, SVGGElement, unknown>;
 rects = d3.select("g").selectAll("rect").data([1, 2, 3]);
 ```
 
-One can specify the type in more detail by specifing the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g., `d3.select<SVGGElement, unknown>(".chart")`. One also has to specify the generic arguments when using scales that are not just numbers but e.g., a linear scale for generating colors as `d3.scaleLinear<string, number>().domain([0, 1]).range(["white", "black"]);`.
+One can specify the type in more detail by specifying the generic argument of the function. This is useful when the selector is more complex that just the element type. e.g., `d3.select<SVGGElement, unknown>(".chart")`. One also has to specify the generic arguments when using scales that are not just numbers but e.g., a linear scale for generating colors as `d3.scaleLinear<string, number>().domain([0, 1]).range(["white", "black"]);`.
 
 ---
 
