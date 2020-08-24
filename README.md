@@ -1110,6 +1110,14 @@ Commercial JavaScript Plot library
 
 (c) https://www.webdesignbooth.com
 
+## Vis.gl and Deck.gl
+
+https://vis.gl/
+
+Open Source Visualization suite by Uber with a focus on high-performance big data visualizations.
+
+![Deck.gl Screenshot](./i/deck-gl.jpg)
+
 ## Frameworks on top of D3:
 
 - NVD3 (https://nvd3.org/) - reusable plots on top of D3
