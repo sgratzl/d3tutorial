@@ -6,9 +6,9 @@ var d3Array = require('d3-array');
 var d3Axis = require('d3-axis');
 var d3Brush = require('d3-brush');
 var d3Chord = require('d3-chord');
-var d3Collection = require('d3-collection');
 var d3Color = require('d3-color');
 var d3Contour = require('d3-contour');
+var d3Delaunay = require('d3-delaunay');
 var d3Dispatch = require('d3-dispatch');
 var d3Drag = require('d3-drag');
 var d3Dsv = require('d3-dsv');
@@ -31,10 +31,9 @@ var d3Time = require('d3-time');
 var d3TimeFormat = require('d3-time-format');
 var d3Timer = require('d3-timer');
 var d3Transition = require('d3-transition');
-var d3Voronoi = require('d3-voronoi');
 var d3Zoom = require('d3-zoom');
 
-var version = "5.15.1";
+var version = "6.0.0";
 
 Object.keys(d3Array).forEach(function (k) {
 	if (k !== 'default') Object.defineProperty(exports, k, {
@@ -68,14 +67,6 @@ Object.keys(d3Chord).forEach(function (k) {
 		}
 	});
 });
-Object.keys(d3Collection).forEach(function (k) {
-	if (k !== 'default') Object.defineProperty(exports, k, {
-		enumerable: true,
-		get: function () {
-			return d3Collection[k];
-		}
-	});
-});
 Object.keys(d3Color).forEach(function (k) {
 	if (k !== 'default') Object.defineProperty(exports, k, {
 		enumerable: true,
@@ -89,6 +80,14 @@ Object.keys(d3Contour).forEach(function (k) {
 		enumerable: true,
 		get: function () {
 			return d3Contour[k];
+		}
+	});
+});
+Object.keys(d3Delaunay).forEach(function (k) {
+	if (k !== 'default') Object.defineProperty(exports, k, {
+		enumerable: true,
+		get: function () {
+			return d3Delaunay[k];
 		}
 	});
 });
@@ -265,14 +264,6 @@ Object.keys(d3Transition).forEach(function (k) {
 		enumerable: true,
 		get: function () {
 			return d3Transition[k];
-		}
-	});
-});
-Object.keys(d3Voronoi).forEach(function (k) {
-	if (k !== 'default') Object.defineProperty(exports, k, {
-		enumerable: true,
-		get: function () {
-			return d3Voronoi[k];
 		}
 	});
 });
