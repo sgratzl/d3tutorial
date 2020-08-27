@@ -218,7 +218,7 @@
                 const path_enter = enter
                   .append("path")
                   .attr("d", (d, i) => arc(noSlice[i]))
-                  .on("click", (d) => {
+                  .on("click", (e, d) => {
                     if (state[stateAttr] === d.data.key) {
                       state[stateAttr] = null;
                     } else {
@@ -270,7 +270,7 @@
 
       function wrangleData(filtered) {
         const ageHistogram = d3
-          .histogram()
+          .bin()
           .domain([0, 100])
           .thresholds(10)
           .value((d) => d.age);
@@ -284,7 +284,7 @@
         }));
 
         const fareHistogram = d3
-          .histogram()
+          .bin()
           .domain([0, d3.max(filtered, (d) => d.fare)])
           .value((d) => d.fare);
 

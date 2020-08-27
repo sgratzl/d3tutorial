@@ -14,7 +14,7 @@ const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.t
 g.append("g").attr("class", "x axis");
 g.append("g").attr("class", "y axis");
 
-// delcare the Data Element Type for proper typing
+// declare the data element type for proper typing
 interface IElem {
   temperature: number;
   location: {
@@ -36,7 +36,7 @@ const yaxis = d3.axisLeft(yscale);
 
 /////////////////////////
 
-d3.json("weather.json").then((json: IElem[]) => {
+d3.json<IElem[]>("weather.json").then((json: IElem[]) => {
   data = json;
 
   update(data);
@@ -48,13 +48,13 @@ function update(new_data: IElem[]) {
   xscale.domain([0, d3.max(new_data, (d) => d.temperature)!]);
   yscale.domain(new_data.map((d) => d.location.city));
   //render the axis
-  // specify the generic argument to enforce being a SVGGEelement
+  // specify the generic argument to enforce being a SVGGElement
   g.select<SVGGElement>(".x.axis").transition().call(xaxis);
   g.select<SVGGElement>(".y.axis").transition().call(yaxis);
 
   // Render the chart with new data
 
-  // DATA JOIN use the key argument for ensurign that the same DOM element is bound to the same data-item
+  // DATA JOIN use the key argument for ensuring that the same DOM element is bound to the same data-item
   const rect = g
     .selectAll("rect")
     .data(new_data, (d) => (d as IElem).location.city) // key argument cannot be properly typed
@@ -85,7 +85,7 @@ function update(new_data: IElem[]) {
   rect.select("title").text((d) => d.location.city);
 }
 
-//interactivity
+// interactivity
 d3.select<HTMLInputElement, unknown>("#filter-us-only").on("change", function () {
   // This will be triggered when the user selects or unselects the checkbox
   // since we typed the select such that this is a HTMLInputElement we can just use the this context and have proper autocompletion

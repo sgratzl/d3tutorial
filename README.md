@@ -243,9 +243,7 @@ Most important selectors explained in an example
     </style>
   </head>
   <body>
-    <div class="header">
-      D3 Test
-    </div>
+    <div class="header">D3 Test</div>
     <div id="main">
       <p class="header">Lorem Impsum Header</p>
       <p>Lorem Impsum</p>
@@ -724,7 +722,7 @@ Adding linear and ordinal scale: [barchart04_scale.html](examples/barchart04_sca
 
 ## Interactivity
 
-Interactivity is event-driven as in the usual DOM. However, you have easy access to the currently bound data-item. The raw DOM event is hidden but can be accessed using `d3.event`. This is useful for stopping the event propagation (bubbling) `d3.event.stopPropagation()` or preventing the default behavior `d3.event.preventDefault()`. Moreover, the current context of the function `this` is the current DOM element.
+Interactivity is event-driven as in the usual DOM. However, you have easy access to the currently bound data-item as the second argument to the event listener. The first argument is the DOM event itself, which is useful for stopping the event propagation (bubbling) or preventing the default behavior. Moreover, the current context of the function `this` is the current DOM element.
 
 ```js
 const data = [1, 2, 3];
@@ -738,8 +736,8 @@ const circles = d3
       .attr("r", 10)
       .attr("cy", 40)
       .attr("cx", (d, i) => 30 + i * 30)
-      .on("click", function (d, i) {
-        console.log(`clicked on: ${d} (${i})`);
+      .on("click", function (event, d) {
+        console.log(`clicked on: ${d}`);
         const circle = d3.select(this); // can't use arrow scoping
         circle.style("stroke", "orange");
       })
