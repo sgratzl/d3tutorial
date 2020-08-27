@@ -192,7 +192,7 @@
 
       function wrangleData(filtered) {
         const ageHistogram = d3
-          .histogram()
+          .bin()
           .domain([0, 100])
           .thresholds(10)
           .value((d) => d.age);

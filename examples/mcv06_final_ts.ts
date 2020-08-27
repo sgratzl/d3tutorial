@@ -1,3 +1,6 @@
+/// <reference types="d3" />
+/// <reference path="../tsd.d.ts" />
+
 declare type Sex = "female" | "male";
 declare type Survival = "0" | "1";
 
@@ -168,11 +171,12 @@ function createPieChart(
           const path_enter = enter
             .append("path")
             .attr("d", (_d, i) => arc(noSlice[i]))
-            .on("click", (d) => {
-              if (state[stateAttr] === d.data.key) {
+            .on("click", (_e, d) => {
+              // note: because of missing D3 v6 typings
+              if (state[stateAttr] === ((d as unknown) as d3.PieArcDatum<IPersonGroup>).data.key) {
                 state[stateAttr] = null;
               } else {
-                state[stateAttr] = d.data.key as any;
+                state[stateAttr] = ((d as unknown) as d3.PieArcDatum<IPersonGroup>).data.key as any;
               }
               updateApp();
             });
@@ -220,7 +224,7 @@ function filterData() {
 
 function wrangleData(filtered: IPerson[]) {
   const ageHistogram = d3
-    .histogram<IPerson, number>()
+    .bin<IPerson, number>()
     .domain([0, 100])
     .thresholds(10)
     .value((d) => d.age);
@@ -234,7 +238,7 @@ function wrangleData(filtered: IPerson[]) {
   }));
 
   const fareHistogram = d3
-    .histogram<IPerson, number>()
+    .bin<IPerson, number>()
     .domain([0, d3.max(filtered, (d) => d.fare)!])
     .value((d) => d.fare);
 

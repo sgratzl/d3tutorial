@@ -206,7 +206,7 @@
                 const path_enter = enter.append("path");
                 // TODO register click handler to change selected sex in state and call updateApp()
                 path_enter.append("title");
-                path_enter.on("click", (d) => {
+                path_enter.on("click", (e, d) => {
                   if (state.selectedSex === d.data.key) {
                     state.selectedSex = null;
                   } else {
@@ -255,7 +255,7 @@
 
       function wrangleData(filtered) {
         const ageHistogram = d3
-          .histogram()
+          .bin()
           .domain([0, 100])
           .thresholds(10)
           .value((d) => d.age);
@@ -269,7 +269,7 @@
         }));
 
         const fareHistogram = d3
-          .histogram()
+          .bin()
           .domain([0, d3.max(filtered, (d) => d.fare)])
           .value((d) => d.fare);
 

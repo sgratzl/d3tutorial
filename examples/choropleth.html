@@ -47,7 +47,7 @@
       const path = d3.geoPath(projection);
       const color = d3.scaleSequential(d3.interpolateBlues);
 
-      d3.json('https://cdn.jsdelivr.net/npm/us-atlas/states-10m.json').then((us) => {
+      d3.json("https://cdn.jsdelivr.net/npm/us-atlas/states-10m.json").then((us) => {
         const states = topojson.feature(us, us.objects.states).features;
         const nation = topojson.feature(us, us.objects.nation).features[0];
 
@@ -57,22 +57,24 @@
         const data = states.map((feature) => ({
           feature: feature,
           name: feature.properties.name,
-          value: Math.random() // random value
+          value: Math.random(), // random value
         }));
 
-        const paths = svg.selectAll('path').data(data)
+        const paths = svg
+          .selectAll("path")
+          .data(data)
           .join((enter) => {
-            const p = enter.append('path');
-            p.on('mouseenter', function() { 
+            const p = enter.append("path");
+            p.on("mouseenter", function () {
               // move the SVG element after all other elements to be on the top
               d3.select(this).raise();
             });
-            p.append('title');
+            p.append("title");
             return p;
           })
-          .attr('d', (d) => path(d.feature))
-          .style('fill', (d) => color(d.value));
-        paths.select('title').text((d) => d.name);
+          .attr("d", (d) => path(d.feature))
+          .style("fill", (d) => color(d.value));
+        paths.select("title").text((d) => d.name);
       });
     </script>
   </body>
