@@ -5,9 +5,17 @@ This is a short interactive tutorial introducing the basic elements and concepts
 Then, the basic principles of D3 and its functions are introduced by incrementally implementing an interactive bar chart.
 The example can be implemented manually or directly by editing the [CodePen](https://codepen.io) examples.
 
+The final result looks like:
+
+![barchart](https://user-images.githubusercontent.com/4129778/92122056-49442b80-edfb-11ea-9591-756680f36bc5.gif)
+
 In the second part of this tutorial a more complex multiple coordinated view (MCV) setup is incrementally implemented. A multiple coordinated view setup consists of multiple visualizations that are interactively linked together such
 as selecting an element in one visualization filters the data in a second one. This is also called linking and brushing. Along with this example some guidelines
 regarding code structure and advanced D3 transitions are given.
+
+The final result looks like:
+
+![mcv](https://user-images.githubusercontent.com/4129778/92122327-94f6d500-edfb-11ea-9856-6c8770c1400b.gif)
 
 This tutorial concludes with a brief introduction into other visualization libraries and hints about how to use D3 with [TypeScript](https://www.typescriptlang.org/).
 
