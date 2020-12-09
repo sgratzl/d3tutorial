@@ -1,6 +1,5 @@
 export var name = "d3";
-export var version = "6.0.0";
-export var publishConfig = {"tag":"next"};
+export var version = "6.3.1";
 export var description = "Data-Driven Documents";
 export var keywords = ["dom","visualization","svg","animation","canvas"];
 export var homepage = "https://d3js.org";
