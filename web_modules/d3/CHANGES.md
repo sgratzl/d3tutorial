@@ -4,52 +4,235 @@
 
 *This document covers only major changes. For minor and patch changes, please see the [release notes](https://github.com/d3/d3/releases).*
 
+D3 now **uses native collections** (Map and Set) and **accepts iterables**. [d3.group and d3.rollup](https://observablehq.com/@d3/d3-group) are powerful new aggregation functions that replace d3.nest and work great [with d3-hierarchy](https://observablehq.com/d/9a453665f405eebf) and d3-selection. There are lots of new helpers in d3-array, too, such as [d3.greatest](https://observablehq.com/@d3/d3-least), [d3.quickselect](https://observablehq.com/@d3/d3-quickselect), and [d3.fsum](https://observablehq.com/@d3/d3-fsum).
+
+D3 now **passes events directly to listeners**, replacing the d3.event global and bringing D3 inline with vanilla JavaScript and most other frameworks.
+
+**d3-delaunay** (based on Vladimir Agafonkin’s excellent [Delaunator](https://github.com/mapbox/delaunator)) replaces d3-voronoi, offering dramatic improvements to performance, robustness, and [search](https://observablehq.com/@d3/delaunay-find). And there’s a new [d3-geo-voronoi](https://github.com/Fil/d3-geo-voronoi) for spherical (geographical) data! **d3-random** is [greatly expanded](https://github.com/d3/d3-random/blob/master/README.md) and includes a fast [linear congruential generator](https://observablehq.com/@d3/d3-randomlcg) for seeded randomness. **d3-chord** has new layouts for [directed](https://observablehq.com/@d3/directed-chord-diagram) and transposed chord diagrams. **d3-scale** adds a new [radial scale](https://observablehq.com/@d3/radial-stacked-bar-chart-ii) type.
+
+… and a variety of other small enhancements. [More than 450 examples](https://observablehq.com/@d3/gallery) have been updated to D3 6.0!
+
+### d3-array
+
+* Accept iterables.
+* Add [d3.group](https://github.com/d3/d3-array/blob/master/README.md#group).
+* Add [d3.groups](https://github.com/d3/d3-array/blob/master/README.md#groups).
+* Add [d3.index](https://github.com/d3/d3-array/blob/master/README.md#index).
+* Add [d3.indexes](https://github.com/d3/d3-array/blob/master/README.md#indexes).
+* Add [d3.rollup](https://github.com/d3/d3-array/blob/master/README.md#rollup).
+* Add [d3.rollups](https://github.com/d3/d3-array/blob/master/README.md#rollups).
+* Add [d3.maxIndex](https://github.com/d3/d3-array/blob/master/README.md#maxIndex).
+* Add [d3.minIndex](https://github.com/d3/d3-array/blob/master/README.md#minIndex).
+* Add [d3.greatest](https://github.com/d3/d3-array/blob/master/README.md#greatest).
+* Add [d3.greatestIndex](https://github.com/d3/d3-array/blob/master/README.md#greatestIndex).
+* Add [d3.least](https://github.com/d3/d3-array/blob/master/README.md#least).
+* Add [d3.leastIndex](https://github.com/d3/d3-array/blob/master/README.md#leastIndex).
+* Add [d3.bin](https://github.com/d3/d3-array/blob/master/README.md#bin).
+* Add [d3.count](https://github.com/d3/d3-array/blob/master/README.md#count).
+* Add [d3.cumsum](https://github.com/d3/d3-array/blob/master/README.md#cumsum).
+* Add [d3.fsum](https://github.com/d3/d3-array/blob/master/README.md#fsum).
+* Add [d3.Adder](https://github.com/d3/d3-array/blob/master/README.md#Adder).
+* Add [d3.quantileSorted](https://github.com/d3/d3-array/blob/master/README.md#quantileSorted).
+* Add [d3.quickselect](https://github.com/d3/d3-array/blob/master/README.md#quickselect).
+* Add [*bisector*.center](https://github.com/d3/d3-array/blob/master/README.md#bisector_center).
+* Allow more than two iterables for [d3.cross](https://github.com/d3/d3-array/blob/master/README.md#cross).
+* Accept non-sorted input with [d3.quantile](https://github.com/d3/d3-array/blob/master/README.md#quantile).
+* Fix a *array*.sort bug in Safari.
+* Fix bin thresholds to ignore NaN input.
+* Fix [d3.ticks](https://github.com/d3/d3-array/blob/master/README.md#ticks) to not return ticks outside the domain.
+* Improve the performance of [d3.median](https://github.com/d3/d3-array/blob/master/README.md#median).
+
+See https://observablehq.com/@d3/d3-array-2-0 for details.
+
+### d3-brush
+
+* Add [*event*.mode](https://github.com/d3/d3-brush/blob/master/README.md#brush-events).
+* Change [*brush*.on](https://github.com/d3/d3-brush/blob/master/README.md#brush_on) to pass the *event* directly to listeners.
+* Improve multitouch (two-touch) interaction.
+
+### d3-chord
+
+* Add [d3.chordDirected](https://github.com/d3/d3-chord/blob/master/README.md#chordDirected).
+* Add [d3.chordTranspose](https://github.com/d3/d3-chord/blob/master/README.md#chordTranspose).
+* Add [d3.ribbonArrow](https://github.com/d3/d3-chord/blob/master/README.md#ribbonArrow).
+* Add [*ribbon*.padAngle](https://github.com/d3/d3-chord/blob/master/README.md#ribbon_padAngle).
+* Add [*ribbon*.sourceRadius](https://github.com/d3/d3-chord/blob/master/README.md#ribbon_sourceRadius).
+* Add [*ribbon*.targetRadius](https://github.com/d3/d3-chord/blob/master/README.md#ribbon_targetRadius).
+
+### d3-delaunay
+
+* Add [d3.Delaunay](https://github.com/d3/d3-delaunay/blob/master/README.md).
+
+### d3-drag
+
+* Change [*drag*.on](https://github.com/d3/d3-drag/blob/master/README.md#drag_on) to pass the *event* directly to listeners.
+
+### d3-force
+
+* Add *iterations* argument to [*simulation*.tick](https://github.com/d3/d3-force/blob/master/README.md#simulation_tick).
+* Add [*forceCenter*.strength](https://github.com/d3/d3-force/blob/master/README.md#center_strength).
+* Add [*forceSimulation*.randomSource](https://github.com/d3/d3-force/blob/master/README.md#simulation_randomSource).
+* All built-in forces are now fully deterministic (including “jiggling” coincident nodes).
+* Improve the default phyllotaxis layout slightly by offsetting by one half-radius.
+* Improve the error message when a link references an unknown node.
+* [*force*.initialize](https://github.com/d3/d3-force/blob/master/README.md#force_initialize) is now passed a random source.
+* Fix bug when initializing nodes with fixed positions.
+
+### d3-format
+
+* Change the default minus sign to the minus sign (−) instead of hyphen-minus (-).
+* Fix decimal `d` formatting of numbers greater than or equal to 1e21.
+
+### d3-geo
+
+* Fix clipping of some degenerate polygons.
+
+### d3-hierarchy
+
+* Accept iterables.
+* Add [*node*[Symbol.iterator]](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_iterator); hierarchies are now iterable.
+* Add [*node*.find](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_find).
+* Change [*node*.each](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_each) to pass the traversal index.
+* Change [*node*.eachAfter](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_eachAfter) to pass the traversal index.
+* Change [*node*.eachBefore](https://github.com/d3/d3-hierarchy/blob/master/README.md#node_eachBefore) to pass the traversal index.
+* Fix [d3.packSiblings](https://github.com/d3/d3-hierarchy/blob/master/README.md#packSiblings) for huge circles.
+* Fix divide-by-zero bug in [d3.treemapBinary](https://github.com/d3/d3-hierarchy/blob/master/README.md#treemapBinary).
+* Fix divide-by-zero bug in [d3.treemapResquarify](https://github.com/d3/d3-hierarchy/blob/master/README.md#treemapResquarify).
+
+### d3-interpolate
+
+* Add [*interpolateZoom*.rho](https://github.com/d3/d3-interpolate/blob/master/README.md#interpolateZoom_rho). (#25)
+* Allow [d3.piecewise](https://github.com/d3/d3-interpolate/blob/master/README.md#piecewise) to default to using d3.interpolate. #90
+* Change [d3.interpolateTransformCss](https://github.com/d3/d3-interpolate/blob/master/README.md#interpolateTransformCss) to use DOMMatrix and require absolute units. #83
+
+### d3-quadtree
+
+* Fix an infinite loop when coordinates diverge to huge values.
+
+### d3-random
+
+* Add [d3.randomLcg](https://github.com/d3/d3-random/blob/master/README.md#randomLcg).
+* Add [d3.randomGamma](https://github.com/d3/d3-random/blob/master/README.md#randomGamma).
+* Add [d3.randomBeta](https://github.com/d3/d3-random/blob/master/README.md#randomBeta).
+* Add [d3.randomWeibull](https://github.com/d3/d3-random/blob/master/README.md#randomWeibull).
+* Add [d3.randomCauchy](https://github.com/d3/d3-random/blob/master/README.md#randomCauchy).
+* Add [d3.randomLogistic](https://github.com/d3/d3-random/blob/master/README.md#randomLogistic).
+* Add [d3.randomPoisson](https://github.com/d3/d3-random/blob/master/README.md#randomPoisson).
+* Add [d3.randomInt](https://github.com/d3/d3-random/blob/master/README.md#randomInt).
+* Add [d3.randomBinomial](https://github.com/d3/d3-random/blob/master/README.md#randomBinomial).
+* Add [d3.randomGeometric](https://github.com/d3/d3-random/blob/master/README.md#randomGeometric).
+* Add [d3.randomPareto](https://github.com/d3/d3-random/blob/master/README.md#randomPareto).
+* Add [d3.randomBernoulli](https://github.com/d3/d3-random/blob/master/README.md#randomBernoulli).
+* Allow [d3.randomBates](https://github.com/d3/d3-random/blob/master/README.md#randomBates) to take fractional *n*.
+* Allow [d3.randomIrwinHall](https://github.com/d3/d3-random/blob/master/README.md#randomIrwinHall) to take fractional *n*.
+* Don’t wrap Math.random in the default source.
+
+Thanks to @Lange, @p-v-d-Veeken, @svanschooten, @Parcly-Taxel and @jrus for your contributions!
+
+### d3-scale
+
+* Accept iterables.
+* Add [*diverging*.rangeRound](https://github.com/d3/d3-scale/blob/master/README.md#diverging_rangeRound).
+* Add [*sequential*.range](https://github.com/d3/d3-scale/blob/master/README.md#sequential_range) (for compatibility with d3-axis).
+* Add [*sequential*.rangeRound](https://github.com/d3/d3-scale/blob/master/README.md#sequential_rangeRound).
+* Add [*sequentialQuantile*.quantiles](https://github.com/d3/d3-scale/blob/master/README.md#sequentialQuantile_quantiles).
+* Add [d3.scaleRadial](https://github.com/d3/d3-scale/blob/master/README.md#radial-scales).
+* [*diverging*.range](https://github.com/d3/d3-scale/blob/master/README.md#diverging_range) can now be used to set the interpolator.
+* [*sequential*.range](https://github.com/d3/d3-scale/blob/master/README.md#sequential_range) can now be used to set the interpolator.
+* [d3.scaleDiverging](https://github.com/d3/d3-scale/blob/master/README.md#diverging-scales) can now accept a range array in place of an interpolator.
+* [d3.scaleSequential](https://github.com/d3/d3-scale/blob/master/README.md#sequential-scales) can now accept a range array in place of an interpolator.
+* Fix [*continuous*.nice](https://github.com/d3/d3-scale/blob/master/README.md#continuous_nice) to ensure that niced domains always span ticks.
+* Fix [*log*.ticks](https://github.com/d3/d3-scale/blob/master/README.md#log_ticks) for small domains.
+* Fix [*log*.ticks](https://github.com/d3/d3-scale/blob/master/README.md#log_ticks) for small domains. #44
+* Fix [*scale*.clamp](https://github.com/d3/d3-scale/blob/master/README.md#continuous_clamp) for [sequential quantile scales](https://github.com/d3/d3-scale/blob/master/README.md#scaleSequentialQuantile). Thanks, @Fil!
+* Fix [*scale*.clamp](https://github.com/d3/d3-scale/blob/master/README.md#continuous_clamp) for continuous scales with more domain values than range values.
+* Fix [diverging scales](https://github.com/d3/d3-scale/blob/master/README.md#diverging-scales) with descending domains.
+* Remove deprecated *step* argument from [*time*.ticks](https://github.com/d3/d3-scale/blob/master/README.md#time_ticks) and [*time*.nice](https://github.com/d3/d3-scale/blob/master/README.md#time_nice).
+
+### d3-selection
+
+* Add [*selection*.selectChild](https://github.com/d3/d3-selection/blob/master/README.md#selection_selectChild).
+* Add [*selection*.selectChildren](https://github.com/d3/d3-selection/blob/master/README.md#selection_selectChildren).
+* Add [d3.pointer](https://github.com/d3/d3-selection/blob/master/README.md#pointer).
+* Add [d3.pointers](https://github.com/d3/d3-selection/blob/master/README.md#pointers).
+* Add *selection*[Symbol.iterator]; selections are now iterable!
+* Accept iterables with [*selection*.data](https://github.com/d3/d3-selection/blob/master/README.md#selection_data).
+* Accept iterables with [d3.selectAll](https://github.com/d3/d3-selection/blob/master/README.md#selectAll).
+* Change [*selection*.on](https://github.com/d3/d3-selection/blob/master/README.md#selection_on) to pass the *event* directly to listeners.
+* Remove index and group from *selection*.on listeners!
+* Remove d3.event!
+* Remove d3.mouse.
+* Remove d3.touch.
+* Remove d3.touches.
+* Remove d3.customEvent.
+* Remove d3.clientPoint.
+* Remove d3.sourceEvent.
+* Fix *selection*.merge(*transition*) to error.
+
+For an overview of changes, see https://observablehq.com/@d3/d3-selection-2-0.
+
+### d3-shape
+
+* Accept iterables.
+* Add [d3.line](https://github.com/d3/d3-shape/blob/master/README.md#line)(*x*, *y*) shorthand.
+* Add [d3.area](https://github.com/d3/d3-shape/blob/master/README.md#area)(*x*, *y0*, *y1*) shorthand.
+* Add [d3.symbol](https://github.com/d3/d3-shape/blob/master/README.md#symbol)(*type*, *size*) shorthand.
+
+### d3-time-format
+
+* Add ISO 8601 “week year” (`%G` and `%g`).
+
+### d3-timer
+
+* Fix [*interval*.restart](https://github.com/d3/d3-timer/blob/master/README.md#timer_restart) to restart as an interval.
+
+### d3-transition
+
+* Add [*transition*.easeVarying](https://github.com/d3/d3-transition/blob/master/README.md#transition_easeVarying).
+* Add *transition*[Symbol.iterator]; transitions are now iterable.
+* Fix [*selection*.transition](https://github.com/d3/d3-transition/blob/master/README.md#selection_transition) to error if the named transition to inherit is not found.k
+* Fix [*transition*.end](https://github.com/d3/d3-transition/blob/master/README.md#transition_end) to resolve immediately if the selection is empty.
+
+### d3-zoom
+
+* Add [*zoom*.tapDistance](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_tapDistance).
+* Change [*zoom*.on](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_on) to pass the *event* directly to listeners.
+* Change the default [*zoom*.filter](https://github.com/d3/d3-zoom/blob/master/README.md#zoom_filter) to observe *wheel* events if the control key is pressed.
+* Change the default [*zoom*.wheelDelta](ttps://github.com/d3/d3-zoom/blob/master/README.md#zoom_wheelDelta) to go faster if the control key is pressed.
+* Don‘t set touch-action: none.
+* Upgrade to [d3-selection 2](https://observablehq.com/@d3/d3-selection-2-0).
+
+### Breaking Changes
+
 D3 6.0 introduces several non-backwards-compatible changes.
 
-**Adoption of ES2015**
+* Remove [d3.event](https://observablehq.com/d/f91cccf0cad5e9cb#events).
+* Change [*selection*.on](https://observablehq.com/d/f91cccf0cad5e9cb#events) to pass the *event* directly to listeners.
+* Change [*transition*.on](https://observablehq.com/d/f91cccf0cad5e9cb#events) to pass the *event* directly to listeners.
+* Change [*brush*.on](https://observablehq.com/d/f91cccf0cad5e9cb#event_brush) to pass the *event* directly to listeners.
+* Change [*drag*.on](https://observablehq.com/d/f91cccf0cad5e9cb#event_drag) to pass the *event* directly to listeners.
+* Change [*zoom*.on](https://observablehq.com/d/f91cccf0cad5e9cb#event_zoom) to pass the *event* directly to listeners.
+* Remove d3.mouse; use [d3.pointer](https://observablehq.com/d/f91cccf0cad5e9cb#pointer).
+* Remove d3.touch; use [d3.pointer](https://observablehq.com/d/f91cccf0cad5e9cb#pointer).
+* Remove d3.touches; use [d3.pointers](https://observablehq.com/d/f91cccf0cad5e9cb#pointer).
+* Remove d3.clientPoint; use [d3.pointer](https://observablehq.com/d/f91cccf0cad5e9cb#pointer).
+* Remove d3.voronoi; use [d3.Delaunay](https://observablehq.com/d/f91cccf0cad5e9cb#delaunay).
+* Remove d3.nest; use [d3.group](https://observablehq.com/d/f91cccf0cad5e9cb#group) and [d3.rollup](https://observablehq.com/d/f91cccf0cad5e9cb#group).
+* Remove d3.map; use [Map](https://observablehq.com/d/f91cccf0cad5e9cb#collection).
+* Remove d3.set; use [Set](https://observablehq.com/d/f91cccf0cad5e9cb#collection).
+* Remove d3.keys; use [Object.keys](https://observablehq.com/d/f91cccf0cad5e9cb#collection).
+* Remove d3.values; use [Object.values](https://observablehq.com/d/f91cccf0cad5e9cb#collection).
+* Remove d3.entries; use [Object.entries](https://observablehq.com/d/f91cccf0cad5e9cb#collection).
+* Rename d3.histogram to [d3.bin](https://observablehq.com/d/f91cccf0cad5e9cb#bin).
+* Rename d3.scan to [d3.leastIndex](https://observablehq.com/d/f91cccf0cad5e9cb#leastIndex).
+* Change [d3.interpolateTransformCss](https://observablehq.com/d/f91cccf0cad5e9cb#interpolateTransformCss) to require absolute units.
+* Change [d3.format](https://observablehq.com/d/f91cccf0cad5e9cb#minus) to default to the minus sign instead of hyphen-minus for negative values.
 
-* *All* the D3 modules have now adopted ES2015. Developers who need to maintain compatibility with older browsers will use transpilation. [[details](https://observablehq.com/d/f91cccf0cad5e9cb#es2015)]
+D3 now requires a browser that supports [ES2015](http://www.ecma-international.org/ecma-262/6.0/). For older browsers, you must bring your own transpiler.
 
-**d3-selection** has a new event manager:
+Lastly, support for [Bower](https://bower.io) has been dropped; D3 is now exclusively published to npm and GitHub.
 
-* d3.event ⇨ (event) passed as the first argument to all listeners  [[details](https://observablehq.com/d/f91cccf0cad5e9cb#events)]
-* d3.mouse, d3.touch, d3.touches, d3.clientPoint ⇨ d3.pointer [[details](https://observablehq.com/d/f91cccf0cad5e9cb#pointer)]
-
-**d3-brush**, **d3-drag** and **d3-zoom** also use the new event manager:
-
-* *brush*.on listeners now receive event [[details](https://observablehq.com/d/f91cccf0cad5e9cb#event_brush)]
-* *drag*.on listeners now receive event [[details](https://observablehq.com/d/f91cccf0cad5e9cb#event_drag)]
-* *zoom*.on listeners now receive event [[details](https://observablehq.com/d/f91cccf0cad5e9cb#event_zoom)]
-
-**d3-voronoi** is deprecated, and replaced by [d3-delaunay](https://github.com/d3/d3-delaunay):
-
-* d3.voronoi ⇨ d3.Delaunay  [[details](https://observablehq.com/d/f91cccf0cad5e9cb#delaunay)]
-
-**d3-collection** is deprecated, and its methods are replaced:
-
-* d3.nest ⇨ d3.group and d3.rollup (from d3-array)  [[details](https://observablehq.com/d/f91cccf0cad5e9cb#group)]
-* d3.map ⇨ Map [[details](https://observablehq.com/d/f91cccf0cad5e9cb#collection)]
-* d3.set ⇨ Set [[details](https://observablehq.com/d/f91cccf0cad5e9cb#collection)]
-* d3.keys ⇨ Object.keys [[details](https://observablehq.com/d/f91cccf0cad5e9cb#collection)]
-* d3.values ⇨ Object.values [[details](https://observablehq.com/d/f91cccf0cad5e9cb#collection)]
-* d3.entries ⇨ Object.entries [[details](https://observablehq.com/d/f91cccf0cad5e9cb#collection)]
-
-**d3-array** has renamed two methods:
-* d3.histogram ⇨ d3.bin [[details](https://observablehq.com/d/f91cccf0cad5e9cb#bin)]
-* d3.scan ⇨ d3.leastIndex [[details](https://observablehq.com/d/f91cccf0cad5e9cb#leastIndex)]
-
-**d3-interpolate** has a breaking change in an ancillary method:
-* d3.interpolateTransformCss is now stricter in its inputs. [[details](https://observablehq.com/d/f91cccf0cad5e9cb#interpolateTransformCss)]
-
-**d3-format** changes its minus sign:
-* The default symbol for the sign of negative values becomes unicode minus instead of hyphen-minus. [[details](https://observablehq.com/d/f91cccf0cad5e9cb#minus)]
-
-**bower**
-
-Support for the [bower](https://github.com/mbostock-bower/d3-bower) package manager has been dropped; use [unpkg](https://unpkg.com/d3) or [cdnjs](https://cdnjs.com/libraries/d3).
-
-………
-
+See our [migration guide](https://observablehq.com/d/f91cccf0cad5e9cb) for help upgrading.
 
 # Changes in D3 5.0
 

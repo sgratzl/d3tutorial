@@ -36,7 +36,10 @@ const yaxis = d3.axisLeft(yscale);
 
 /////////////////////////
 
-d3.json<IElem[]>("weather.json").then((json: IElem[]) => {
+d3.json<IElem[]>("weather.json").then((json?: IElem[]) => {
+  if (!json) {
+    return;
+  }
   data = json;
 
   update(data);

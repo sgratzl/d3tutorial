@@ -22,13 +22,13 @@
   },
   "homepage": "https://github.com/sgratzl/d3tutorial#readme",
   "dependencies": {
-    "d3": "^6.0.0"
+    "d3": "^6.3.1"
   },
   "devDependencies": {
-    "@types/d3": "^5.7.2",
+    "@types/d3": "^6.2.0",
     "http-server": "^0.12.3",
-    "prettier": "^2.1.1",
-    "shx": "^0.3.2",
-    "typescript": "^4.0.2"
+    "prettier": "^2.2.1",
+    "shx": "^0.3.3",
+    "typescript": "^4.1.2"
   }
 }
