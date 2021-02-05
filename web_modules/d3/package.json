@@ -1,26 +1,26 @@
 {
-  "_from": "d3@^6.3.1",
-  "_id": "d3@6.3.1",
+  "_from": "d3@^6.5.0",
+  "_id": "d3@6.5.0",
   "_inBundle": false,
-  "_integrity": "sha512-rbaoA67o2N4lO1TCuvrTGQdowNb3zT0z2ygg6TLmJZAd7TRPg+lhbfDOVwQUAgdbRD+73kg2FrEQ9HLiap5H2w==",
+  "_integrity": "sha512-gr7FoRecKtBkBxelTeGVYERRTPgjPFLh2rOBisHdbXe3RIrVLjCo7COZYMSeFeiwVPOHDtxAGJlvN7XssNAIcg==",
   "_location": "/d3",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "d3@^6.3.1",
+    "raw": "d3@^6.5.0",
     "name": "d3",
     "escapedName": "d3",
-    "rawSpec": "^6.3.1",
+    "rawSpec": "^6.5.0",
     "saveSpec": null,
-    "fetchSpec": "^6.3.1"
+    "fetchSpec": "^6.5.0"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/d3/-/d3-6.3.1.tgz",
-  "_shasum": "c5fe6c7abff432826775a9e04db80b5f2e22eb1c",
-  "_spec": "d3@^6.3.1",
+  "_resolved": "https://registry.npmjs.org/d3/-/d3-6.5.0.tgz",
+  "_shasum": "55cc64690cfe7bf18788d2cfbe22d911b01309f0",
+  "_spec": "d3@^6.5.0",
   "_where": "D:\\w\\d3tutorial",
   "author": {
     "name": "Mike Bostock",
@@ -102,5 +102,5 @@
     "test": "tape 'test/**/*-test.js'"
   },
   "unpkg": "dist/d3.min.js",
-  "version": "6.3.1"
+  "version": "6.5.0"
 }
