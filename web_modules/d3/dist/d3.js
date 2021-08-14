@@ -1,14 +1,18 @@
-// https://d3js.org v6.7.0 Copyright 2021 Mike Bostock
+// https://d3js.org v7.0.0 Copyright 2010-2021 Mike Bostock
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 typeof define === 'function' && define.amd ? define(['exports'], factory) :
 (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.d3 = global.d3 || {}));
 }(this, (function (exports) { 'use strict';
 
-var version = "6.7.0";
+var version = "7.0.0";
 
 function ascending$3(a, b) {
-  return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
+  return a == null || b == null ? NaN
+    : a < b ? -1
+    : a > b ? 1
+    : a >= b ? 0
+    : NaN;
 }
 
 function bisector(f) {
@@ -143,7 +147,11 @@ function cumsum(values, valueof) {
 }
 
 function descending$2(a, b) {
-  return b < a ? -1 : b > a ? 1 : b >= a ? 0 : NaN;
+  return a == null || b == null ? NaN
+    : b < a ? -1
+    : b > a ? 1
+    : b >= a ? 0
+    : NaN;
 }
 
 function variance(values, valueof) {
@@ -351,6 +359,21 @@ function groups(values, ...keys) {
   return nest(values, Array.from, identity$9, keys);
 }
 
+function flatten$1(groups, keys) {
+  for (let i = 1, n = keys.length; i < n; ++i) {
+    groups = groups.flatMap(g => g.pop().map(([key, value]) => [...g, key, value]));
+  }
+  return groups;
+}
+
+function flatGroup(values, ...keys) {
+  return flatten$1(groups(values, ...keys), keys);
+}
+
+function flatRollup(values, reduce, ...keys) {
+  return flatten$1(rollups(values, reduce, ...keys), keys);
+}
+
 function rollup(values, reduce, ...keys) {
   return nest(values, identity$9, reduce, keys);
 }
@@ -427,7 +450,7 @@ function groupSort(values, reduce, key) {
 
 var array$5 = Array.prototype;
 
-var slice$4 = array$5.slice;
+var slice$3 = array$5.slice;
 
 function constant$b(x) {
   return function() {
@@ -581,7 +604,7 @@ function bin() {
     // Assign data to bins by value, ignoring any outside the domain.
     for (i = 0; i < n; ++i) {
       x = values[i];
-      if (x0 <= x && x <= x1) {
+      if (x != null && x0 <= x && x <= x1) {
         bins[bisectRight(tz, x, 0, m)].push(data[i]);
       }
     }
@@ -598,7 +621,7 @@ function bin() {
   };
 
   histogram.thresholds = function(_) {
-    return arguments.length ? (threshold = typeof _ === "function" ? _ : Array.isArray(_) ? constant$b(slice$4.call(_)) : constant$b(_), histogram) : threshold;
+    return arguments.length ? (threshold = typeof _ === "function" ? _ : Array.isArray(_) ? constant$b(slice$3.call(_)) : constant$b(_), histogram) : threshold;
   };
 
   return histogram;
@@ -802,6 +825,33 @@ function minIndex(values, valueof) {
   return minIndex;
 }
 
+function mode(values, valueof) {
+  const counts = new InternMap();
+  if (valueof === undefined) {
+    for (let value of values) {
+      if (value != null && value >= value) {
+        counts.set(value, (counts.get(value) || 0) + 1);
+      }
+    }
+  } else {
+    let index = -1;
+    for (let value of values) {
+      if ((value = valueof(value, ++index, values)) != null && value >= value) {
+        counts.set(value, (counts.get(value) || 0) + 1);
+      }
+    }
+  }
+  let modeValue;
+  let modeCount = 0;
+  for (const [value, count] of counts) {
+    if (count > modeCount) {
+      modeCount = count;
+      modeValue = value;
+    }
+  }
+  return modeValue;
+}
+
 function pairs(values, pairof = pair) {
   const pairs = [];
   let previous;
@@ -941,7 +991,7 @@ function shuffler(random) {
   };
 }
 
-function sum$1(values, valueof) {
+function sum$2(values, valueof) {
   let sum = 0;
   if (valueof === undefined) {
     for (let value of values) {
@@ -1108,8 +1158,6 @@ function union(...others) {
   return set;
 }
 
-var slice$3 = Array.prototype.slice;
-
 function identity$8(x) {
   return x;
 }
@@ -1118,7 +1166,7 @@ var top = 1,
     right = 2,
     bottom = 3,
     left = 4,
-    epsilon$5 = 1e-6;
+    epsilon$6 = 1e-6;
 
 function translateX(x) {
   return "translate(" + x + ",0)";
@@ -1192,11 +1240,11 @@ function axis(orient, scale) {
       text = text.transition(context);
 
       tickExit = tickExit.transition(context)
-          .attr("opacity", epsilon$5)
+          .attr("opacity", epsilon$6)
           .attr("transform", function(d) { return isFinite(d = position(d)) ? transform(d + offset) : this.getAttribute("transform"); });
 
       tickEnter
-          .attr("opacity", epsilon$5)
+          .attr("opacity", epsilon$6)
           .attr("transform", function(d) { var p = this.parentNode.__axis; return transform((p && isFinite(p = p(d)) ? p : position(d)) + offset); });
     }
 
@@ -1233,15 +1281,15 @@ function axis(orient, scale) {
   };
 
   axis.ticks = function() {
-    return tickArguments = slice$3.call(arguments), axis;
+    return tickArguments = Array.from(arguments), axis;
   };
 
   axis.tickArguments = function(_) {
-    return arguments.length ? (tickArguments = _ == null ? [] : slice$3.call(_), axis) : tickArguments.slice();
+    return arguments.length ? (tickArguments = _ == null ? [] : Array.from(_), axis) : tickArguments.slice();
   };
 
   axis.tickValues = function(_) {
-    return arguments.length ? (tickValues = _ == null ? null : slice$3.call(_), axis) : tickValues && tickValues.slice();
+    return arguments.length ? (tickValues = _ == null ? null : Array.from(_), axis) : tickValues && tickValues.slice();
   };
 
   axis.tickFormat = function(_) {
@@ -1432,10 +1480,14 @@ function selection_select(select) {
   return new Selection$1(subgroups, this._parents);
 }
 
+// Given something array like (or null), returns something that is strictly an
+// array. This is used to ensure that array-like objects passed to d3.selectAll
+// or selection.selectAll are converted into proper arrays when creating a
+// selection; we don’t ever want to create a selection backed by a live
+// HTMLCollection or NodeList. However, note that selection.selectAll will use a
+// static NodeList as a group, since it safely derived from querySelectorAll.
 function array$4(x) {
-  return typeof x === "object" && "length" in x
-    ? x // Array, TypedArray, NodeList, array-like
-    : Array.from(x); // Map, Set, iterable, string, or anything else
+  return x == null ? [] : Array.isArray(x) ? x : Array.from(x);
 }
 
 function empty$1() {
@@ -1450,8 +1502,7 @@ function selectorAll(selector) {
 
 function arrayAll(select) {
   return function() {
-    var group = select.apply(this, arguments);
-    return group == null ? [] : array$4(group);
+    return array$4(select.apply(this, arguments));
   };
 }
 
@@ -1503,7 +1554,7 @@ function selection_selectChild(match) {
 var filter = Array.prototype.filter;
 
 function children() {
-  return this.children;
+  return Array.from(this.children);
 }
 
 function childrenFilter(match) {
@@ -1648,7 +1699,7 @@ function selection_data(value, key) {
     var parent = parents[j],
         group = groups[j],
         groupLength = group.length,
-        data = array$4(value.call(parent, parent && parent.__data__, j, parents)),
+        data = arraylike(value.call(parent, parent && parent.__data__, j, parents)),
         dataLength = data.length,
         enterGroup = enter[j] = new Array(dataLength),
         updateGroup = update[j] = new Array(dataLength),
@@ -1674,20 +1725,40 @@ function selection_data(value, key) {
   return update;
 }
 
+// Given some data, this returns an array-like view of it: an object that
+// exposes a length property and allows numeric indexing. Note that unlike
+// selectAll, this isn’t worried about “live” collections because the resulting
+// array will only be used briefly while data is being bound. (It is possible to
+// cause the data to change while iterating by using a key function, but please
+// don’t; we’d rather avoid a gratuitous copy.)
+function arraylike(data) {
+  return typeof data === "object" && "length" in data
+    ? data // Array, TypedArray, NodeList, array-like
+    : Array.from(data); // Map, Set, iterable, string, or anything else
+}
+
 function selection_exit() {
   return new Selection$1(this._exit || this._groups.map(sparse), this._parents);
 }
 
 function selection_join(onenter, onupdate, onexit) {
   var enter = this.enter(), update = this, exit = this.exit();
-  enter = typeof onenter === "function" ? onenter(enter) : enter.append(onenter + "");
-  if (onupdate != null) update = onupdate(update);
+  if (typeof onenter === "function") {
+    enter = onenter(enter);
+    if (enter) enter = enter.selection();
+  } else {
+    enter = enter.append(onenter + "");
+  }
+  if (onupdate != null) {
+    update = onupdate(update);
+    if (update) update = update.selection();
+  }
   if (onexit == null) exit.remove(); else onexit(exit);
   return enter && update ? enter.merge(update).order() : update;
 }
 
-function selection_merge(selection) {
-  if (!(selection instanceof Selection$1)) throw new Error("invalid merge");
+function selection_merge(context) {
+  var selection = context.selection ? context.selection() : context;
 
   for (var groups0 = this._groups, groups1 = selection._groups, m0 = groups0.length, m1 = groups1.length, m = Math.min(m0, m1), merges = new Array(m0), j = 0; j < m; ++j) {
     for (var group0 = groups0[j], group1 = groups1[j], n = group0.length, merge = merges[j] = new Array(n), node, i = 0; i < n; ++i) {
@@ -2340,8 +2411,13 @@ function pointers(events, node) {
 function selectAll(selector) {
   return typeof selector === "string"
       ? new Selection$1([document.querySelectorAll(selector)], [document.documentElement])
-      : new Selection$1([selector == null ? [] : array$4(selector)], root$1);
+      : new Selection$1([array$4(selector)], root$1);
 }
+
+// These are typically used in conjunction with noevent to ensure that we can
+// preventDefault on the event.
+const nonpassive = {passive: false};
+const nonpassivecapture = {capture: true, passive: false};
 
 function nopropagation$2(event) {
   event.stopImmediatePropagation();
@@ -2354,9 +2430,9 @@ function noevent$2(event) {
 
 function dragDisable(view) {
   var root = view.document.documentElement,
-      selection = select(view).on("dragstart.drag", noevent$2, true);
+      selection = select(view).on("dragstart.drag", noevent$2, nonpassivecapture);
   if ("onselectstart" in root) {
-    selection.on("selectstart.drag", noevent$2, true);
+    selection.on("selectstart.drag", noevent$2, nonpassivecapture);
   } else {
     root.__noselect = root.style.MozUserSelect;
     root.style.MozUserSelect = "none";
@@ -2367,7 +2443,7 @@ function yesdrag(view, noclick) {
   var root = view.document.documentElement,
       selection = select(view).on("dragstart.drag", null);
   if (noclick) {
-    selection.on("click.drag", noevent$2, true);
+    selection.on("click.drag", noevent$2, nonpassivecapture);
     setTimeout(function() { selection.on("click.drag", null); }, 0);
   }
   if ("onselectstart" in root) {
@@ -2445,7 +2521,7 @@ function drag() {
         .on("mousedown.drag", mousedowned)
       .filter(touchable)
         .on("touchstart.drag", touchstarted)
-        .on("touchmove.drag", touchmoved)
+        .on("touchmove.drag", touchmoved, nonpassive)
         .on("touchend.drag touchcancel.drag", touchended)
         .style("touch-action", "none")
         .style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
@@ -2455,7 +2531,9 @@ function drag() {
     if (touchending || !filter.call(this, event, d)) return;
     var gesture = beforestart(this, container.call(this, event, d), event, d, "mouse");
     if (!gesture) return;
-    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
+    select(event.view)
+      .on("mousemove.drag", mousemoved, nonpassivecapture)
+      .on("mouseup.drag", mouseupped, nonpassivecapture);
     dragDisable(event.view);
     nopropagation$2(event);
     mousemoving = false;
@@ -2544,7 +2622,7 @@ function drag() {
       var p0 = p, n;
       switch (type) {
         case "start": gestures[identifier] = gesture, n = active++; break;
-        case "end": delete gestures[identifier], --active; // nobreak
+        case "end": delete gestures[identifier], --active; // falls through
         case "drag": p = pointer(touch || event, container), n = active; break;
       }
       dispatch.call(
@@ -3100,13 +3178,13 @@ define(Hcl, hcl$2, extend(Color, {
 }));
 
 var A = -0.14861,
-    B = +1.78277,
+    B$1 = +1.78277,
     C = -0.29227,
-    D = -0.90649,
+    D$1 = -0.90649,
     E = +1.97294,
-    ED = E * D,
-    EB = E * B,
-    BC_DA = B * C - D * A;
+    ED = E * D$1,
+    EB = E * B$1,
+    BC_DA = B$1 * C - D$1 * A;
 
 function cubehelixConvert(o) {
   if (o instanceof Cubehelix) return new Cubehelix(o.h, o.s, o.l, o.opacity);
@@ -3116,7 +3194,7 @@ function cubehelixConvert(o) {
       b = o.b / 255,
       l = (BC_DA * b + ED * r - EB * g) / (BC_DA + ED - EB),
       bl = b - l,
-      k = (E * (g - l) - C * bl) / D,
+      k = (E * (g - l) - C * bl) / D$1,
       s = Math.sqrt(k * k + bl * bl) / (E * l * (1 - l)), // NaN if l=0 or l=1
       h = s ? Math.atan2(k, bl) * degrees$2 - 120 : NaN;
   return new Cubehelix(h < 0 ? h + 360 : h, s, l, o.opacity);
@@ -3149,8 +3227,8 @@ define(Cubehelix, cubehelix$3, extend(Color, {
         cosh = Math.cos(h),
         sinh = Math.sin(h);
     return new Rgb(
-      255 * (l + a * (A * cosh + B * sinh)),
-      255 * (l + a * (C * cosh + D * sinh)),
+      255 * (l + a * (A * cosh + B$1 * sinh)),
+      255 * (l + a * (C * cosh + D$1 * sinh)),
       255 * (l + a * (E * cosh)),
       this.opacity
     );
@@ -3769,7 +3847,7 @@ function timerFlush() {
   ++frame; // Pretend we’ve set an alarm, if we haven’t already.
   var t = taskHead, e;
   while (t) {
-    if ((e = clockNow - t._time) >= 0) t._call.call(null, e);
+    if ((e = clockNow - t._time) >= 0) t._call.call(undefined, e);
     t = t._next;
   }
   --frame;
@@ -4643,6 +4721,8 @@ Transition.prototype = transition.prototype = {
   constructor: Transition,
   select: transition_select,
   selectAll: transition_selectAll,
+  selectChild: selection_prototype.selectChild,
+  selectChildren: selection_prototype.selectChildren,
   filter: transition_filter,
   merge: transition_merge,
   selection: transition_selection,
@@ -5176,7 +5256,7 @@ function brush$1(dim) {
         .style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
   }
 
-  brush.move = function(group, selection) {
+  brush.move = function(group, selection, event) {
     if (group.tween) {
       group
           .on("start.brush", function(event) { emitter(this, arguments).beforestart().start(event); })
@@ -5209,13 +5289,13 @@ function brush$1(dim) {
             interrupt(that);
             state.selection = selection1 === null ? null : selection1;
             redraw.call(that);
-            emit.start().brush().end();
+            emit.start(event).brush(event).end(event);
           });
     }
   };
 
-  brush.clear = function(group) {
-    brush.move(group, null);
+  brush.clear = function(group, event) {
+    brush.move(group, null, event);
   };
 
   function redraw() {
@@ -5326,6 +5406,9 @@ function brush$1(dim) {
           return t;
         });
 
+    interrupt(that);
+    var emit = emitter(that, arguments, true).beforestart();
+
     if (type === "overlay") {
       if (selection) moving = true;
       const pts = [points[0], points[1] || points[0]];
@@ -5336,7 +5419,7 @@ function brush$1(dim) {
           e0 = dim === Y ? E : max$2(pts[0][0], pts[1][0]),
           s0 = dim === X ? S : max$2(pts[0][1], pts[1][1])
         ]];
-      if (points.length > 1) move();
+      if (points.length > 1) move(event);
     } else {
       w0 = selection[0][0];
       n0 = selection[0][1];
@@ -5354,9 +5437,6 @@ function brush$1(dim) {
 
     var overlay = group.selectAll(".overlay")
         .attr("cursor", cursors[type]);
-
-    interrupt(that);
-    var emit = emitter(that, arguments, true).beforestart();
 
     if (event.touches) {
       emit.moved = moved;
@@ -5483,7 +5563,7 @@ function brush$1(dim) {
             if (signX) e0 = e1 - dx * signX, w0 = w1 + dx * signX;
             if (signY) s0 = s1 - dy * signY, n0 = n1 + dy * signY;
             mode = MODE_CENTER;
-            move();
+            move(event);
           }
           break;
         }
@@ -5493,7 +5573,7 @@ function brush$1(dim) {
             if (signY < 0) s0 = s1 - dy; else if (signY > 0) n0 = n1 - dy;
             mode = MODE_SPACE;
             overlay.attr("cursor", cursors.selection);
-            move();
+            move(event);
           }
           break;
         }
@@ -5507,7 +5587,7 @@ function brush$1(dim) {
         case 16: { // SHIFT
           if (shifting) {
             lockX = lockY = shifting = false;
-            move();
+            move(event);
           }
           break;
         }
@@ -5516,7 +5596,7 @@ function brush$1(dim) {
             if (signX < 0) e0 = e1; else if (signX > 0) w0 = w1;
             if (signY < 0) s0 = s1; else if (signY > 0) n0 = n1;
             mode = MODE_HANDLE;
-            move();
+            move(event);
           }
           break;
         }
@@ -5532,7 +5612,7 @@ function brush$1(dim) {
               mode = MODE_HANDLE;
             }
             overlay.attr("cursor", cursors[type]);
-            move();
+            move(event);
           }
           break;
         }
@@ -5592,7 +5672,7 @@ var pi$3 = Math.PI;
 var halfPi$2 = pi$3 / 2;
 var tau$4 = pi$3 * 2;
 var max$1 = Math.max;
-var epsilon$4 = 1e-12;
+var epsilon$5 = 1e-12;
 
 function range$1(i, j) {
   return Array.from({length: j - i}, (_, k) => i + k);
@@ -5717,8 +5797,8 @@ function chord$1(directed, transpose) {
 
 const pi$2 = Math.PI,
     tau$3 = 2 * pi$2,
-    epsilon$3 = 1e-6,
-    tauEpsilon = tau$3 - epsilon$3;
+    epsilon$4 = 1e-6,
+    tauEpsilon = tau$3 - epsilon$4;
 
 function Path$1() {
   this._x0 = this._y0 = // start of current subpath
@@ -5769,12 +5849,12 @@ Path$1.prototype = path.prototype = {
     }
 
     // Or, is (x1,y1) coincident with (x0,y0)? Do nothing.
-    else if (!(l01_2 > epsilon$3));
+    else if (!(l01_2 > epsilon$4));
 
     // Or, are (x0,y0), (x1,y1) and (x2,y2) collinear?
     // Equivalently, is (x1,y1) coincident with (x2,y2)?
     // Or, is the radius zero? Line to (x1,y1).
-    else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon$3) || !r) {
+    else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon$4) || !r) {
       this._ += "L" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
 
@@ -5791,7 +5871,7 @@ Path$1.prototype = path.prototype = {
           t21 = l / l21;
 
       // If the start tangent is not coincident with (x0,y0), line to.
-      if (Math.abs(t01 - 1) > epsilon$3) {
+      if (Math.abs(t01 - 1) > epsilon$4) {
         this._ += "L" + (x1 + t01 * x01) + "," + (y1 + t01 * y01);
       }
 
@@ -5816,7 +5896,7 @@ Path$1.prototype = path.prototype = {
     }
 
     // Or, is (x0,y0) not coincident with the previous point? Line to (x0,y0).
-    else if (Math.abs(this._x1 - x0) > epsilon$3 || Math.abs(this._y1 - y0) > epsilon$3) {
+    else if (Math.abs(this._x1 - x0) > epsilon$4 || Math.abs(this._y1 - y0) > epsilon$4) {
       this._ += "L" + x0 + "," + y0;
     }
 
@@ -5832,7 +5912,7 @@ Path$1.prototype = path.prototype = {
     }
 
     // Is this arc non-empty? Draw an arc!
-    else if (da > epsilon$3) {
+    else if (da > epsilon$4) {
       this._ += "A" + r + "," + r + ",0," + (+(da >= pi$2)) + "," + cw + "," + (this._x1 = x + r * Math.cos(a1)) + "," + (this._y1 = y + r * Math.sin(a1));
     }
   },
@@ -5905,10 +5985,10 @@ function ribbon(headRadius) {
 
     if (!context) context = buffer = path();
 
-    if (ap > epsilon$4) {
-      if (abs$2(sa1 - sa0) > ap * 2 + epsilon$4) sa1 > sa0 ? (sa0 += ap, sa1 -= ap) : (sa0 -= ap, sa1 += ap);
+    if (ap > epsilon$5) {
+      if (abs$2(sa1 - sa0) > ap * 2 + epsilon$5) sa1 > sa0 ? (sa0 += ap, sa1 -= ap) : (sa0 -= ap, sa1 += ap);
       else sa0 = sa1 = (sa0 + sa1) / 2;
-      if (abs$2(ta1 - ta0) > ap * 2 + epsilon$4) ta1 > ta0 ? (ta0 += ap, ta1 -= ap) : (ta0 -= ap, ta1 += ap);
+      if (abs$2(ta1 - ta0) > ap * 2 + epsilon$5) ta1 > ta0 ? (ta0 += ap, ta1 -= ap) : (ta0 -= ap, ta1 += ap);
       else ta0 = ta1 = (ta0 + ta1) / 2;
     }
 
@@ -6058,16 +6138,13 @@ function contours() {
 
     // Convert number of thresholds into uniform thresholds.
     if (!Array.isArray(tz)) {
-      var domain = extent$1(values), start = domain[0], stop = domain[1];
-      tz = tickStep(start, stop, tz);
-      tz = sequence(Math.floor(start / tz) * tz, Math.floor(stop / tz) * tz, tz);
+      const e = extent$1(values), ts = tickStep(e[0], e[1], tz);
+      tz = ticks(Math.floor(e[0] / ts) * ts, Math.floor(e[1] / ts - 1) * ts, tz);
     } else {
       tz = tz.slice().sort(ascending$1);
     }
 
-    return tz.map(function(value) {
-      return contour(values, value);
-    });
+    return tz.map(value => contour(values, value));
   }
 
   // Accumulate, smooth contour rings, assign holes to exterior rings.
@@ -6295,14 +6372,22 @@ function density() {
 
   function density(data) {
     var values0 = new Float32Array(n * m),
-        values1 = new Float32Array(n * m);
+        values1 = new Float32Array(n * m),
+        pow2k = Math.pow(2, -k);
 
     data.forEach(function(d, i, data) {
-      var xi = (+x(d, i, data) + o) >> k,
-          yi = (+y(d, i, data) + o) >> k,
+      var xi = (x(d, i, data) + o) * pow2k,
+          yi = (y(d, i, data) + o) * pow2k,
           wi = +weight(d, i, data);
       if (xi >= 0 && xi < n && yi >= 0 && yi < m) {
-        values0[xi + yi * n] += wi;
+        var x0 = Math.floor(xi),
+            y0 = Math.floor(yi),
+            xt = xi - x0 - 0.5,
+            yt = yi - y0 - 0.5;
+        values0[x0 + y0 * n] += (1 - xt) * (1 - yt) * wi;
+        values0[x0 + 1 + y0 * n] += xt * (1 - yt) * wi;
+        values0[x0 + 1 + (y0 + 1) * n] += xt * yt * wi;
+        values0[x0 + (y0 + 1) * n] += (1 - xt) * yt * wi;
       }
     });
 
@@ -6394,6 +6479,274 @@ function density() {
   };
 
   return density;
+}
+
+const epsilon$3 = 1.1102230246251565e-16;
+const splitter = 134217729;
+const resulterrbound = (3 + 8 * epsilon$3) * epsilon$3;
+
+// fast_expansion_sum_zeroelim routine from oritinal code
+function sum$1(elen, e, flen, f, h) {
+    let Q, Qnew, hh, bvirt;
+    let enow = e[0];
+    let fnow = f[0];
+    let eindex = 0;
+    let findex = 0;
+    if ((fnow > enow) === (fnow > -enow)) {
+        Q = enow;
+        enow = e[++eindex];
+    } else {
+        Q = fnow;
+        fnow = f[++findex];
+    }
+    let hindex = 0;
+    if (eindex < elen && findex < flen) {
+        if ((fnow > enow) === (fnow > -enow)) {
+            Qnew = enow + Q;
+            hh = Q - (Qnew - enow);
+            enow = e[++eindex];
+        } else {
+            Qnew = fnow + Q;
+            hh = Q - (Qnew - fnow);
+            fnow = f[++findex];
+        }
+        Q = Qnew;
+        if (hh !== 0) {
+            h[hindex++] = hh;
+        }
+        while (eindex < elen && findex < flen) {
+            if ((fnow > enow) === (fnow > -enow)) {
+                Qnew = Q + enow;
+                bvirt = Qnew - Q;
+                hh = Q - (Qnew - bvirt) + (enow - bvirt);
+                enow = e[++eindex];
+            } else {
+                Qnew = Q + fnow;
+                bvirt = Qnew - Q;
+                hh = Q - (Qnew - bvirt) + (fnow - bvirt);
+                fnow = f[++findex];
+            }
+            Q = Qnew;
+            if (hh !== 0) {
+                h[hindex++] = hh;
+            }
+        }
+    }
+    while (eindex < elen) {
+        Qnew = Q + enow;
+        bvirt = Qnew - Q;
+        hh = Q - (Qnew - bvirt) + (enow - bvirt);
+        enow = e[++eindex];
+        Q = Qnew;
+        if (hh !== 0) {
+            h[hindex++] = hh;
+        }
+    }
+    while (findex < flen) {
+        Qnew = Q + fnow;
+        bvirt = Qnew - Q;
+        hh = Q - (Qnew - bvirt) + (fnow - bvirt);
+        fnow = f[++findex];
+        Q = Qnew;
+        if (hh !== 0) {
+            h[hindex++] = hh;
+        }
+    }
+    if (Q !== 0 || hindex === 0) {
+        h[hindex++] = Q;
+    }
+    return hindex;
+}
+
+function estimate(elen, e) {
+    let Q = e[0];
+    for (let i = 1; i < elen; i++) Q += e[i];
+    return Q;
+}
+
+function vec(n) {
+    return new Float64Array(n);
+}
+
+const ccwerrboundA = (3 + 16 * epsilon$3) * epsilon$3;
+const ccwerrboundB = (2 + 12 * epsilon$3) * epsilon$3;
+const ccwerrboundC = (9 + 64 * epsilon$3) * epsilon$3 * epsilon$3;
+
+const B = vec(4);
+const C1 = vec(8);
+const C2 = vec(12);
+const D = vec(16);
+const u = vec(4);
+
+function orient2dadapt(ax, ay, bx, by, cx, cy, detsum) {
+    let acxtail, acytail, bcxtail, bcytail;
+    let bvirt, c, ahi, alo, bhi, blo, _i, _j, _0, s1, s0, t1, t0, u3;
+
+    const acx = ax - cx;
+    const bcx = bx - cx;
+    const acy = ay - cy;
+    const bcy = by - cy;
+
+    s1 = acx * bcy;
+    c = splitter * acx;
+    ahi = c - (c - acx);
+    alo = acx - ahi;
+    c = splitter * bcy;
+    bhi = c - (c - bcy);
+    blo = bcy - bhi;
+    s0 = alo * blo - (s1 - ahi * bhi - alo * bhi - ahi * blo);
+    t1 = acy * bcx;
+    c = splitter * acy;
+    ahi = c - (c - acy);
+    alo = acy - ahi;
+    c = splitter * bcx;
+    bhi = c - (c - bcx);
+    blo = bcx - bhi;
+    t0 = alo * blo - (t1 - ahi * bhi - alo * bhi - ahi * blo);
+    _i = s0 - t0;
+    bvirt = s0 - _i;
+    B[0] = s0 - (_i + bvirt) + (bvirt - t0);
+    _j = s1 + _i;
+    bvirt = _j - s1;
+    _0 = s1 - (_j - bvirt) + (_i - bvirt);
+    _i = _0 - t1;
+    bvirt = _0 - _i;
+    B[1] = _0 - (_i + bvirt) + (bvirt - t1);
+    u3 = _j + _i;
+    bvirt = u3 - _j;
+    B[2] = _j - (u3 - bvirt) + (_i - bvirt);
+    B[3] = u3;
+
+    let det = estimate(4, B);
+    let errbound = ccwerrboundB * detsum;
+    if (det >= errbound || -det >= errbound) {
+        return det;
+    }
+
+    bvirt = ax - acx;
+    acxtail = ax - (acx + bvirt) + (bvirt - cx);
+    bvirt = bx - bcx;
+    bcxtail = bx - (bcx + bvirt) + (bvirt - cx);
+    bvirt = ay - acy;
+    acytail = ay - (acy + bvirt) + (bvirt - cy);
+    bvirt = by - bcy;
+    bcytail = by - (bcy + bvirt) + (bvirt - cy);
+
+    if (acxtail === 0 && acytail === 0 && bcxtail === 0 && bcytail === 0) {
+        return det;
+    }
+
+    errbound = ccwerrboundC * detsum + resulterrbound * Math.abs(det);
+    det += (acx * bcytail + bcy * acxtail) - (acy * bcxtail + bcx * acytail);
+    if (det >= errbound || -det >= errbound) return det;
+
+    s1 = acxtail * bcy;
+    c = splitter * acxtail;
+    ahi = c - (c - acxtail);
+    alo = acxtail - ahi;
+    c = splitter * bcy;
+    bhi = c - (c - bcy);
+    blo = bcy - bhi;
+    s0 = alo * blo - (s1 - ahi * bhi - alo * bhi - ahi * blo);
+    t1 = acytail * bcx;
+    c = splitter * acytail;
+    ahi = c - (c - acytail);
+    alo = acytail - ahi;
+    c = splitter * bcx;
+    bhi = c - (c - bcx);
+    blo = bcx - bhi;
+    t0 = alo * blo - (t1 - ahi * bhi - alo * bhi - ahi * blo);
+    _i = s0 - t0;
+    bvirt = s0 - _i;
+    u[0] = s0 - (_i + bvirt) + (bvirt - t0);
+    _j = s1 + _i;
+    bvirt = _j - s1;
+    _0 = s1 - (_j - bvirt) + (_i - bvirt);
+    _i = _0 - t1;
+    bvirt = _0 - _i;
+    u[1] = _0 - (_i + bvirt) + (bvirt - t1);
+    u3 = _j + _i;
+    bvirt = u3 - _j;
+    u[2] = _j - (u3 - bvirt) + (_i - bvirt);
+    u[3] = u3;
+    const C1len = sum$1(4, B, 4, u, C1);
+
+    s1 = acx * bcytail;
+    c = splitter * acx;
+    ahi = c - (c - acx);
+    alo = acx - ahi;
+    c = splitter * bcytail;
+    bhi = c - (c - bcytail);
+    blo = bcytail - bhi;
+    s0 = alo * blo - (s1 - ahi * bhi - alo * bhi - ahi * blo);
+    t1 = acy * bcxtail;
+    c = splitter * acy;
+    ahi = c - (c - acy);
+    alo = acy - ahi;
+    c = splitter * bcxtail;
+    bhi = c - (c - bcxtail);
+    blo = bcxtail - bhi;
+    t0 = alo * blo - (t1 - ahi * bhi - alo * bhi - ahi * blo);
+    _i = s0 - t0;
+    bvirt = s0 - _i;
+    u[0] = s0 - (_i + bvirt) + (bvirt - t0);
+    _j = s1 + _i;
+    bvirt = _j - s1;
+    _0 = s1 - (_j - bvirt) + (_i - bvirt);
+    _i = _0 - t1;
+    bvirt = _0 - _i;
+    u[1] = _0 - (_i + bvirt) + (bvirt - t1);
+    u3 = _j + _i;
+    bvirt = u3 - _j;
+    u[2] = _j - (u3 - bvirt) + (_i - bvirt);
+    u[3] = u3;
+    const C2len = sum$1(C1len, C1, 4, u, C2);
+
+    s1 = acxtail * bcytail;
+    c = splitter * acxtail;
+    ahi = c - (c - acxtail);
+    alo = acxtail - ahi;
+    c = splitter * bcytail;
+    bhi = c - (c - bcytail);
+    blo = bcytail - bhi;
+    s0 = alo * blo - (s1 - ahi * bhi - alo * bhi - ahi * blo);
+    t1 = acytail * bcxtail;
+    c = splitter * acytail;
+    ahi = c - (c - acytail);
+    alo = acytail - ahi;
+    c = splitter * bcxtail;
+    bhi = c - (c - bcxtail);
+    blo = bcxtail - bhi;
+    t0 = alo * blo - (t1 - ahi * bhi - alo * bhi - ahi * blo);
+    _i = s0 - t0;
+    bvirt = s0 - _i;
+    u[0] = s0 - (_i + bvirt) + (bvirt - t0);
+    _j = s1 + _i;
+    bvirt = _j - s1;
+    _0 = s1 - (_j - bvirt) + (_i - bvirt);
+    _i = _0 - t1;
+    bvirt = _0 - _i;
+    u[1] = _0 - (_i + bvirt) + (bvirt - t1);
+    u3 = _j + _i;
+    bvirt = u3 - _j;
+    u[2] = _j - (u3 - bvirt) + (_i - bvirt);
+    u[3] = u3;
+    const Dlen = sum$1(C2len, C2, 4, u, D);
+
+    return D[Dlen - 1];
+}
+
+function orient2d(ax, ay, bx, by, cx, cy) {
+    const detleft = (ay - cy) * (bx - cx);
+    const detright = (ax - cx) * (by - cy);
+    const det = detleft - detright;
+
+    if (detleft === 0 || detright === 0 || (detleft > 0) !== (detright > 0)) return det;
+
+    const detsum = Math.abs(detleft + detright);
+    if (Math.abs(det) >= ccwerrboundA * detsum) return det;
+
+    return -orient2dadapt(ax, ay, bx, by, cx, cy, detsum);
 }
 
 const EPSILON = Math.pow(2, -52);
@@ -6526,7 +6879,7 @@ class Delaunator {
         }
 
         // swap the order of the seed points for counter-clockwise orientation
-        if (orient(i0x, i0y, i1x, i1y, i2x, i2y)) {
+        if (orient2d(i0x, i0y, i1x, i1y, i2x, i2y) < 0) {
             const i = i1;
             const x = i1x;
             const y = i1y;
@@ -6591,7 +6944,7 @@ class Delaunator {
 
             start = hullPrev[start];
             let e = start, q;
-            while (q = hullNext[e], !orient(x, y, coords[2 * e], coords[2 * e + 1], coords[2 * q], coords[2 * q + 1])) {
+            while (q = hullNext[e], orient2d(x, y, coords[2 * e], coords[2 * e + 1], coords[2 * q], coords[2 * q + 1]) >= 0) {
                 e = q;
                 if (e === start) {
                     e = -1;
@@ -6610,7 +6963,7 @@ class Delaunator {
 
             // walk forward through the hull, adding more triangles and flipping recursively
             let n = hullNext[e];
-            while (q = hullNext[n], orient(x, y, coords[2 * n], coords[2 * n + 1], coords[2 * q], coords[2 * q + 1])) {
+            while (q = hullNext[n], orient2d(x, y, coords[2 * n], coords[2 * n + 1], coords[2 * q], coords[2 * q + 1]) < 0) {
                 t = this._addTriangle(n, i, q, hullTri[i], -1, hullTri[n]);
                 hullTri[i] = this._legalize(t + 2);
                 hullNext[n] = n; // mark as removed
@@ -6620,7 +6973,7 @@ class Delaunator {
 
             // walk backward from the other side, adding more triangles and flipping
             if (e === start) {
-                while (q = hullPrev[e], orient(x, y, coords[2 * q], coords[2 * q + 1], coords[2 * e], coords[2 * e + 1])) {
+                while (q = hullPrev[e], orient2d(x, y, coords[2 * q], coords[2 * q + 1], coords[2 * e], coords[2 * e + 1]) < 0) {
                     t = this._addTriangle(q, i, e, -1, hullTri[e], hullTri[q]);
                     this._legalize(t + 2);
                     hullTri[q] = t;
@@ -6773,21 +7126,6 @@ function dist(ax, ay, bx, by) {
     const dx = ax - bx;
     const dy = ay - by;
     return dx * dx + dy * dy;
-}
-
-// return 2d orientation sign if we're confident in it through J. Shewchuk's error bound check
-function orientIfSure(px, py, rx, ry, qx, qy) {
-    const l = (ry - py) * (qx - px);
-    const r = (rx - px) * (qy - py);
-    return Math.abs(l - r) >= 3.3306690738754716e-16 * Math.abs(l + r) ? l - r : 0;
-}
-
-// a more robust orientation test that's stable in a given triangle (to fix robustness issues)
-function orient(rx, ry, qx, qy, px, py) {
-    const sign = orientIfSure(px, py, rx, ry, qx, qy) ||
-    orientIfSure(rx, ry, qx, qy, px, py) ||
-    orientIfSure(qx, qy, px, py, rx, ry);
-    return sign < 0;
 }
 
 function inCircle(ax, ay, bx, by, cx, cy, px, py) {
@@ -6982,21 +7320,26 @@ class Voronoi {
       const dy = y2 - y1;
       const ex = x3 - x1;
       const ey = y3 - y1;
-      const bl = dx * dx + dy * dy;
-      const cl = ex * ex + ey * ey;
       const ab = (dx * ey - dy * ex) * 2;
 
-      if (!ab) {
+      if (Math.abs(ab) < 1e-9) {
         // degenerate case (collinear diagram)
-        x = (x1 + x3) / 2 - 1e8 * ey;
-        y = (y1 + y3) / 2 + 1e8 * ex;
-      }
-      else if (Math.abs(ab) < 1e-8) {
         // almost equal points (degenerate triangle)
-        x = (x1 + x3) / 2;
-        y = (y1 + y3) / 2;
+        // the circumcenter is at the infinity, in a
+        // direction that is:
+        // 1. orthogonal to the halfedge.
+        let a = 1e9;
+        // 2. points away from the center; since the list of triangles starts
+        // in the center, the first point of the first triangle
+        // will be our reference
+        const r = triangles[0] * 2;
+        a *= Math.sign((points[r] - x1) * ey - (points[r + 1] - y1) * ex);
+        x = (x1 + x3) / 2 - a * ey;
+        y = (y1 + y3) / 2 + a * ex;
       } else {
         const d = 1 / ab;
+        const bl = dx * dx + dy * dy;
+        const cl = ex * ex + ey * ey;
         x = x1 + (ey * bl - dy * cl) * d;
         y = y1 + (dx * cl - ex * bl) * d;
       }
@@ -7144,7 +7487,7 @@ class Voronoi {
     let P = null;
     let x0, y0, x1 = points[n - 2], y1 = points[n - 1];
     let c0, c1 = this._regioncode(x1, y1);
-    let e0, e1;
+    let e0, e1 = 0;
     for (let j = 0; j < n; j += 2) {
       x0 = x1, y0 = y1, x1 = points[j], y1 = points[j + 1];
       c0 = c1, c1 = this._regioncode(x1, y1);
@@ -7219,6 +7562,8 @@ class Voronoi {
         case 0b1001: e0 = 0b0001; continue; // bottom-left
         case 0b0001: e0 = 0b0101, x = this.xmin, y = this.ymin; break; // left
       }
+      // Note: this implicitly checks for out of bounds: if P[j] or P[j+1] are
+      // undefined, the conditional statement will be executed.
       if ((P[j] !== x || P[j + 1] !== y) && this.contains(i, x, y)) {
         P.splice(j, 0, x, y), j += 2;
       }
@@ -7353,10 +7698,12 @@ class Delaunay {
       this.triangles = new Int32Array(3).fill(-1);
       this.halfedges = new Int32Array(3).fill(-1);
       this.triangles[0] = hull[0];
-      this.triangles[1] = hull[1];
-      this.triangles[2] = hull[1];
       inedges[hull[0]] = 1;
-      if (hull.length === 2) inedges[hull[1]] = 0;
+      if (hull.length === 2) {
+        inedges[hull[1]] = 0;
+        this.triangles[1] = hull[1];
+        this.triangles[2] = hull[1];
+      }
     }
   }
   voronoi(bounds) {
@@ -7433,7 +7780,9 @@ class Delaunay {
     this.renderHull(context);
     return buffer && buffer.value();
   }
-  renderPoints(context, r = 2) {
+  renderPoints(context, r) {
+    if (r === undefined && (!context || typeof context.moveTo !== "function")) r = context, context = null;
+    r = r == undefined ? 2 : +r;
     const buffer = context == null ? context = new Path : undefined;
     const {points} = this;
     for (let i = 0, n = points.length; i < n; i += 2) {
@@ -10012,10 +10361,7 @@ function link$1(array) {
 }
 
 function longitude(point) {
-  if (abs$1(point[0]) <= pi$1)
-    return point[0];
-  else
-    return sign$1(point[0]) * ((abs$1(point[0]) + pi$1) % tau$1 - pi$1);
+  return abs$1(point[0]) <= pi$1 ? point[0] : sign$1(point[0]) * ((abs$1(point[0]) + pi$1) % tau$1 - pi$1);
 }
 
 function polygonContains(polygon, point) {
@@ -14055,27 +14401,26 @@ function initInterpolator(domain, interpolator) {
 const implicit = Symbol("implicit");
 
 function ordinal() {
-  var index = new Map(),
+  var index = new InternMap(),
       domain = [],
       range = [],
       unknown = implicit;
 
   function scale(d) {
-    var key = d + "", i = index.get(key);
-    if (!i) {
+    let i = index.get(d);
+    if (i === undefined) {
       if (unknown !== implicit) return unknown;
-      index.set(key, i = domain.push(d));
+      index.set(d, i = domain.push(d) - 1);
     }
-    return range[(i - 1) % range.length];
+    return range[i % range.length];
   }
 
   scale.domain = function(_) {
     if (!arguments.length) return domain.slice();
-    domain = [], index = new Map();
+    domain = [], index = new InternMap();
     for (const value of _) {
-      const key = value + "";
-      if (index.has(key)) continue;
-      index.set(key, domain.push(value));
+      if (index.has(value)) continue;
+      index.set(value, domain.push(value) - 1);
     }
     return scale;
   };
@@ -17013,7 +17358,7 @@ Linear.prototype = {
     x = +x, y = +y;
     switch (this._point) {
       case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
-      case 1: this._point = 2; // proceed
+      case 1: this._point = 2; // falls through
       default: this._context.lineTo(x, y); break;
     }
   }
@@ -17612,7 +17957,7 @@ Basis.prototype = {
   },
   lineEnd: function() {
     switch (this._point) {
-      case 3: point$3(this, this._x1, this._y1); // proceed
+      case 3: point$3(this, this._x1, this._y1); // falls through
       case 2: this._context.lineTo(this._x1, this._y1); break;
     }
     if (this._line || (this._line !== 0 && this._point === 1)) this._context.closePath();
@@ -17623,7 +17968,7 @@ Basis.prototype = {
     switch (this._point) {
       case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
       case 1: this._point = 2; break;
-      case 2: this._point = 3; this._context.lineTo((5 * this._x0 + this._x1) / 6, (5 * this._y0 + this._y1) / 6); // proceed
+      case 2: this._point = 3; this._context.lineTo((5 * this._x0 + this._x1) / 6, (5 * this._y0 + this._y1) / 6); // falls through
       default: point$3(this, x, y); break;
     }
     this._x0 = this._x1, this._x1 = x;
@@ -17711,7 +18056,7 @@ BasisOpen.prototype = {
       case 0: this._point = 1; break;
       case 1: this._point = 2; break;
       case 2: this._point = 3; var x0 = (this._x0 + 4 * this._x1 + x) / 6, y0 = (this._y0 + 4 * this._y1 + y) / 6; this._line ? this._context.lineTo(x0, y0) : this._context.moveTo(x0, y0); break;
-      case 3: this._point = 4; // proceed
+      case 3: this._point = 4; // falls through
       default: point$3(this, x, y); break;
     }
     this._x0 = this._x1, this._x1 = x;
@@ -17750,7 +18095,7 @@ class Bump {
         else this._context.moveTo(x, y);
         break;
       }
-      case 1: this._point = 2; // proceed
+      case 1: this._point = 2; // falls through
       default: {
         if (this._x) this._context.bezierCurveTo(this._x0 = (this._x0 + x) / 2, this._y0, this._x0, y, x, y);
         else this._context.bezierCurveTo(this._x0, this._y0 = (this._y0 + y) / 2, x, this._y0, x, y);
@@ -17865,7 +18210,7 @@ Cardinal.prototype = {
     switch (this._point) {
       case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
       case 1: this._point = 2; this._x1 = x, this._y1 = y; break;
-      case 2: this._point = 3; // proceed
+      case 2: this._point = 3; // falls through
       default: point$2(this, x, y); break;
     }
     this._x0 = this._x1, this._x1 = this._x2, this._x2 = x;
@@ -17972,7 +18317,7 @@ CardinalOpen.prototype = {
       case 0: this._point = 1; break;
       case 1: this._point = 2; break;
       case 2: this._point = 3; this._line ? this._context.lineTo(this._x2, this._y2) : this._context.moveTo(this._x2, this._y2); break;
-      case 3: this._point = 4; // proceed
+      case 3: this._point = 4; // falls through
       default: point$2(this, x, y); break;
     }
     this._x0 = this._x1, this._x1 = this._x2, this._x2 = x;
@@ -18055,7 +18400,7 @@ CatmullRom.prototype = {
     switch (this._point) {
       case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
       case 1: this._point = 2; break;
-      case 2: this._point = 3; // proceed
+      case 2: this._point = 3; // falls through
       default: point$1(this, x, y); break;
     }
 
@@ -18186,7 +18531,7 @@ CatmullRomOpen.prototype = {
       case 0: this._point = 1; break;
       case 1: this._point = 2; break;
       case 2: this._point = 3; this._line ? this._context.lineTo(this._x2, this._y2) : this._context.moveTo(this._x2, this._y2); break;
-      case 3: this._point = 4; // proceed
+      case 3: this._point = 4; // falls through
       default: point$1(this, x, y); break;
     }
 
@@ -18430,7 +18775,7 @@ Step.prototype = {
     x = +x, y = +y;
     switch (this._point) {
       case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
-      case 1: this._point = 2; // proceed
+      case 1: this._point = 2; // falls through
       default: {
         if (this._t <= 0) {
           this._context.lineTo(this._x, y);
@@ -18782,7 +19127,7 @@ function zoom() {
   function zoom(selection) {
     selection
         .property("__zoom", defaultTransform)
-        .on("wheel.zoom", wheeled)
+        .on("wheel.zoom", wheeled, {passive: false})
         .on("mousedown.zoom", mousedowned)
         .on("dblclick.zoom", dblclicked)
       .filter(touchable)
@@ -18979,10 +19324,10 @@ function zoom() {
 
   function mousedowned(event, ...args) {
     if (touchending || !filter.apply(this, arguments)) return;
-    var g = gesture(this, args, true).event(event),
+    var currentTarget = event.currentTarget,
+        g = gesture(this, args, true).event(event),
         v = select(event.view).on("mousemove.zoom", mousemoved, true).on("mouseup.zoom", mouseupped, true),
         p = pointer(event, currentTarget),
-        currentTarget = event.currentTarget,
         x0 = event.clientX,
         y0 = event.clientY;
 
@@ -19161,7 +19506,9 @@ exports.Delaunay = Delaunay;
 exports.FormatSpecifier = FormatSpecifier;
 exports.InternMap = InternMap;
 exports.InternSet = InternSet;
+exports.Node = Node$1;
 exports.Voronoi = Voronoi;
+exports.ZoomTransform = Transform;
 exports.active = active;
 exports.arc = arc;
 exports.area = area;
@@ -19276,6 +19623,8 @@ exports.every = every;
 exports.extent = extent$1;
 exports.fcumsum = fcumsum;
 exports.filter = filter$1;
+exports.flatGroup = flatGroup;
+exports.flatRollup = flatRollup;
 exports.forceCenter = center;
 exports.forceCollide = collide;
 exports.forceLink = link$2;
@@ -19439,6 +19788,7 @@ exports.median = median;
 exports.merge = merge;
 exports.min = min$2;
 exports.minIndex = minIndex;
+exports.mode = mode;
 exports.namespace = namespace;
 exports.namespaces = namespaces;
 exports.nice = nice$1;
@@ -19585,7 +19935,7 @@ exports.stackOrderReverse = reverse;
 exports.stratify = stratify;
 exports.style = styleValue;
 exports.subset = subset;
-exports.sum = sum$1;
+exports.sum = sum$2;
 exports.superset = superset;
 exports.svg = svg;
 exports.symbol = symbol;
