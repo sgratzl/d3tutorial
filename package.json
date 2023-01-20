@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "http-server",
-    "postinstall": "rimraf web_modules/d3 && cpx \"node_modules/d3/{dist/d3.js,dist/d3.min.js,README.md,LICENSE,package.json}\" web_modules/d3 && npm run compile",
+    "postinstall": "shx rm -rf web_modules/d3 && shx mkdir -p web_modules/d3/dist && shx cp -r \"node_modules/d3/{README.md,LICENSE,package.json}\" web_modules/d3 && shx cp -r \"node_modules/d3/dist/d3*.js\" web_modules/d3/dist && npm run compile",
     "compile": "tsc -p .",
     "watch": "tsc -w -p .",
     "format": "prettier --print-width 120 --write \"examples/*.(html|ts|css|json)\" index.html README.md package.json"
@@ -22,14 +22,13 @@
   },
   "homepage": "https://github.com/sgratzl/d3tutorial#readme",
   "dependencies": {
-    "d3": "^7.6.1"
+    "d3": "^7.8.2"
   },
   "devDependencies": {
     "@types/d3": "^7.4.0",
-    "cpx": "^1.5.0",
     "http-server": "^14.1.1",
-    "prettier": "^2.7.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.7.4"
+    "prettier": "^2.8.3",
+    "shx": "^0.3.4",
+    "typescript": "^4.9.4"
   }
 }

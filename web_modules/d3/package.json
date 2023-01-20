@@ -1,6 +1,6 @@
 {
   "name": "d3",
-  "version": "7.6.1",
+  "version": "7.8.2",
   "description": "Data-Driven Documents",
   "homepage": "https://d3js.org",
   "repository": {
@@ -66,18 +66,17 @@
     "d3-zoom": "3"
   },
   "devDependencies": {
-    "@rollup/plugin-json": "4",
-    "@rollup/plugin-node-resolve": "13",
+    "@rollup/plugin-json": "6",
+    "@rollup/plugin-node-resolve": "15",
     "eslint": "8",
     "mocha": "10",
-    "rollup": "2",
-    "rollup-plugin-ascii": "0.0",
+    "rollup": "3",
     "rollup-plugin-terser": "7"
   },
   "scripts": {
     "test": "mocha 'test/**/*-test.js' && eslint src test",
-    "prepublishOnly": "rm -rf dist && yarn test && rollup -c && git push",
-    "postpublish": "git push --tags && cd ../d3.github.com && git pull && cp ../d3/dist/d3.js d3.v${npm_package_version%%.*}.js && cp ../d3/dist/d3.min.js d3.v${npm_package_version%%.*}.min.js && git add d3.v${npm_package_version%%.*}.js d3.v${npm_package_version%%.*}.min.js && git commit -m \"d3 ${npm_package_version}\" && git push && cd -"
+    "prepublishOnly": "rm -rf dist && rollup -c",
+    "postpublish": "git push && git push --tags && cd ../d3.github.com && git pull && cp ../d3/dist/d3.js d3.v${npm_package_version%%.*}.js && cp ../d3/dist/d3.min.js d3.v${npm_package_version%%.*}.min.js && git add d3.v${npm_package_version%%.*}.js d3.v${npm_package_version%%.*}.min.js && git commit -m \"d3 ${npm_package_version}\" && git push && cd -"
   },
   "engines": {
     "node": ">=12"

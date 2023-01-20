@@ -1,11 +1,11 @@
-// https://d3js.org v7.6.1 Copyright 2010-2022 Mike Bostock
+// https://d3js.org v7.8.2 Copyright 2010-2023 Mike Bostock
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 typeof define === 'function' && define.amd ? define(['exports'], factory) :
 (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.d3 = global.d3 || {}));
 })(this, (function (exports) { 'use strict';
 
-var version = "7.6.1";
+var version = "7.8.2";
 
 function ascending$3(a, b) {
   return a == null || b == null ? NaN : a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -592,59 +592,60 @@ function constant$b(x) {
   return () => x;
 }
 
-var e10 = Math.sqrt(50),
+const e10 = Math.sqrt(50),
     e5 = Math.sqrt(10),
     e2 = Math.sqrt(2);
 
-function ticks(start, stop, count) {
-  var reverse,
-      i = -1,
-      n,
-      ticks,
-      step;
-
-  stop = +stop, start = +start, count = +count;
-  if (start === stop && count > 0) return [start];
-  if (reverse = stop < start) n = start, start = stop, stop = n;
-  if ((step = tickIncrement(start, stop, count)) === 0 || !isFinite(step)) return [];
-
-  if (step > 0) {
-    let r0 = Math.round(start / step), r1 = Math.round(stop / step);
-    if (r0 * step < start) ++r0;
-    if (r1 * step > stop) --r1;
-    ticks = new Array(n = r1 - r0 + 1);
-    while (++i < n) ticks[i] = (r0 + i) * step;
+function tickSpec(start, stop, count) {
+  const step = (stop - start) / Math.max(0, count),
+      power = Math.floor(Math.log10(step)),
+      error = step / Math.pow(10, power),
+      factor = error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1;
+  let i1, i2, inc;
+  if (power < 0) {
+    inc = Math.pow(10, -power) / factor;
+    i1 = Math.round(start * inc);
+    i2 = Math.round(stop * inc);
+    if (i1 / inc < start) ++i1;
+    if (i2 / inc > stop) --i2;
+    inc = -inc;
   } else {
-    step = -step;
-    let r0 = Math.round(start * step), r1 = Math.round(stop * step);
-    if (r0 / step < start) ++r0;
-    if (r1 / step > stop) --r1;
-    ticks = new Array(n = r1 - r0 + 1);
-    while (++i < n) ticks[i] = (r0 + i) / step;
+    inc = Math.pow(10, power) * factor;
+    i1 = Math.round(start / inc);
+    i2 = Math.round(stop / inc);
+    if (i1 * inc < start) ++i1;
+    if (i2 * inc > stop) --i2;
   }
+  if (i2 < i1 && 0.5 <= count && count < 2) return tickSpec(start, stop, count * 2);
+  return [i1, i2, inc];
+}
 
-  if (reverse) ticks.reverse();
-
+function ticks(start, stop, count) {
+  stop = +stop, start = +start, count = +count;
+  if (!(count > 0)) return [];
+  if (start === stop) return [start];
+  const reverse = stop < start, [i1, i2, inc] = reverse ? tickSpec(stop, start, count) : tickSpec(start, stop, count);
+  if (!(i2 >= i1)) return [];
+  const n = i2 - i1 + 1, ticks = new Array(n);
+  if (reverse) {
+    if (inc < 0) for (let i = 0; i < n; ++i) ticks[i] = (i2 - i) / -inc;
+    else for (let i = 0; i < n; ++i) ticks[i] = (i2 - i) * inc;
+  } else {
+    if (inc < 0) for (let i = 0; i < n; ++i) ticks[i] = (i1 + i) / -inc;
+    else for (let i = 0; i < n; ++i) ticks[i] = (i1 + i) * inc;
+  }
   return ticks;
 }
 
 function tickIncrement(start, stop, count) {
-  var step = (stop - start) / Math.max(0, count),
-      power = Math.floor(Math.log(step) / Math.LN10),
-      error = step / Math.pow(10, power);
-  return power >= 0
-      ? (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1) * Math.pow(10, power)
-      : -Math.pow(10, -power) / (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1);
+  stop = +stop, start = +start, count = +count;
+  return tickSpec(start, stop, count)[2];
 }
 
 function tickStep(start, stop, count) {
-  var step0 = Math.abs(stop - start) / Math.max(0, count),
-      step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
-      error = step0 / step1;
-  if (error >= e10) step1 *= 10;
-  else if (error >= e5) step1 *= 5;
-  else if (error >= e2) step1 *= 2;
-  return stop < start ? -step1 : step1;
+  stop = +stop, start = +start, count = +count;
+  const reverse = stop < start, inc = reverse ? tickIncrement(stop, start, count) : tickIncrement(start, stop, count);
+  return (reverse ? -1 : 1) * (inc < 0 ? 1 / -inc : inc);
 }
 
 function nice$1(start, stop, count) {
@@ -727,9 +728,11 @@ function bin() {
     }
 
     // Remove any thresholds outside the domain.
-    var m = tz.length;
-    while (tz[0] <= x0) tz.shift(), --m;
-    while (tz[m - 1] > x1) tz.pop(), --m;
+    // Be careful not to mutate an array owned by the user!
+    var m = tz.length, a = 0, b = m;
+    while (tz[a] <= x0) ++a;
+    while (tz[b - 1] > x1) --b;
+    if (a || b < m) tz = tz.slice(a, b), m = b - a;
 
     var bins = new Array(m + 1),
         bin;
@@ -777,7 +780,7 @@ function bin() {
   };
 
   histogram.thresholds = function(_) {
-    return arguments.length ? (threshold = typeof _ === "function" ? _ : Array.isArray(_) ? constant$b(slice$3.call(_)) : constant$b(_), histogram) : threshold;
+    return arguments.length ? (threshold = typeof _ === "function" ? _ : constant$b(Array.isArray(_) ? slice$3.call(_) : _), histogram) : threshold;
   };
 
   return histogram;
@@ -873,7 +876,13 @@ function minIndex(values, valueof) {
 
 // Based on https://github.com/mourner/quickselect
 // ISC license, Copyright 2018 Vladimir Agafonkin.
-function quickselect(array, k, left = 0, right = array.length - 1, compare) {
+function quickselect(array, k, left = 0, right = Infinity, compare) {
+  k = Math.floor(k);
+  left = Math.floor(Math.max(0, left));
+  right = Math.floor(Math.min(array.length - 1, right));
+
+  if (!(left <= k && k <= right)) return array;
+
   compare = compare === undefined ? ascendingDefined : compareDefined(compare);
 
   while (right > left) {
@@ -947,8 +956,8 @@ function greatest(values, compare = ascending$3) {
 
 function quantile$1(values, p, valueof) {
   values = Float64Array.from(numbers(values, valueof));
-  if (!(n = values.length)) return;
-  if ((p = +p) <= 0 || n < 2) return min$2(values);
+  if (!(n = values.length) || isNaN(p = +p)) return;
+  if (p <= 0 || n < 2) return min$2(values);
   if (p >= 1) return max$3(values);
   var n,
       i = (n - 1) * p,
@@ -959,8 +968,8 @@ function quantile$1(values, p, valueof) {
 }
 
 function quantileSorted(values, p, valueof = number$3) {
-  if (!(n = values.length)) return;
-  if ((p = +p) <= 0 || n < 2) return +valueof(values[0], 0, values);
+  if (!(n = values.length) || isNaN(p = +p)) return;
+  if (p <= 0 || n < 2) return +valueof(values[0], 0, values);
   if (p >= 1) return +valueof(values[n - 1], n - 1, values);
   var n,
       i = (n - 1) * p,
@@ -972,8 +981,8 @@ function quantileSorted(values, p, valueof = number$3) {
 
 function quantileIndex(values, p, valueof) {
   values = Float64Array.from(numbers(values, valueof));
-  if (!(n = values.length)) return;
-  if ((p = +p) <= 0 || n < 2) return minIndex(values);
+  if (!(n = values.length) || isNaN(p = +p)) return;
+  if (p <= 0 || n < 2) return minIndex(values);
   if (p >= 1) return maxIndex(values);
   var n,
       i = Math.floor((n - 1) * p),
@@ -6028,39 +6037,58 @@ const pi$2 = Math.PI,
     epsilon$4 = 1e-6,
     tauEpsilon = tau$3 - epsilon$4;
 
-function Path$1() {
-  this._x0 = this._y0 = // start of current subpath
-  this._x1 = this._y1 = null; // end of current subpath
-  this._ = "";
+function append$1(strings) {
+  this._ += strings[0];
+  for (let i = 1, n = strings.length; i < n; ++i) {
+    this._ += arguments[i] + strings[i];
+  }
 }
 
-function path() {
-  return new Path$1;
+function appendRound$1(digits) {
+  let d = Math.floor(digits);
+  if (!(d >= 0)) throw new Error(`invalid digits: ${digits}`);
+  if (d > 15) return append$1;
+  const k = 10 ** d;
+  return function(strings) {
+    this._ += strings[0];
+    for (let i = 1, n = strings.length; i < n; ++i) {
+      this._ += Math.round(arguments[i] * k) / k + strings[i];
+    }
+  };
 }
 
-Path$1.prototype = path.prototype = {
-  constructor: Path$1,
-  moveTo: function(x, y) {
-    this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y);
-  },
-  closePath: function() {
+let Path$1 = class Path {
+  constructor(digits) {
+    this._x0 = this._y0 = // start of current subpath
+    this._x1 = this._y1 = null; // end of current subpath
+    this._ = "";
+    this._append = digits == null ? append$1 : appendRound$1(digits);
+  }
+  moveTo(x, y) {
+    this._append`M${this._x0 = this._x1 = +x},${this._y0 = this._y1 = +y}`;
+  }
+  closePath() {
     if (this._x1 !== null) {
       this._x1 = this._x0, this._y1 = this._y0;
-      this._ += "Z";
+      this._append`Z`;
     }
-  },
-  lineTo: function(x, y) {
-    this._ += "L" + (this._x1 = +x) + "," + (this._y1 = +y);
-  },
-  quadraticCurveTo: function(x1, y1, x, y) {
-    this._ += "Q" + (+x1) + "," + (+y1) + "," + (this._x1 = +x) + "," + (this._y1 = +y);
-  },
-  bezierCurveTo: function(x1, y1, x2, y2, x, y) {
-    this._ += "C" + (+x1) + "," + (+y1) + "," + (+x2) + "," + (+y2) + "," + (this._x1 = +x) + "," + (this._y1 = +y);
-  },
-  arcTo: function(x1, y1, x2, y2, r) {
+  }
+  lineTo(x, y) {
+    this._append`L${this._x1 = +x},${this._y1 = +y}`;
+  }
+  quadraticCurveTo(x1, y1, x, y) {
+    this._append`Q${+x1},${+y1},${this._x1 = +x},${this._y1 = +y}`;
+  }
+  bezierCurveTo(x1, y1, x2, y2, x, y) {
+    this._append`C${+x1},${+y1},${+x2},${+y2},${this._x1 = +x},${this._y1 = +y}`;
+  }
+  arcTo(x1, y1, x2, y2, r) {
     x1 = +x1, y1 = +y1, x2 = +x2, y2 = +y2, r = +r;
-    var x0 = this._x1,
+
+    // Is the radius negative? Error.
+    if (r < 0) throw new Error(`negative radius: ${r}`);
+
+    let x0 = this._x1,
         y0 = this._y1,
         x21 = x2 - x1,
         y21 = y2 - y1,
@@ -6068,12 +6096,9 @@ Path$1.prototype = path.prototype = {
         y01 = y0 - y1,
         l01_2 = x01 * x01 + y01 * y01;
 
-    // Is the radius negative? Error.
-    if (r < 0) throw new Error("negative radius: " + r);
-
     // Is this path empty? Move to (x1,y1).
     if (this._x1 === null) {
-      this._ += "M" + (this._x1 = x1) + "," + (this._y1 = y1);
+      this._append`M${this._x1 = x1},${this._y1 = y1}`;
     }
 
     // Or, is (x1,y1) coincident with (x0,y0)? Do nothing.
@@ -6083,12 +6108,12 @@ Path$1.prototype = path.prototype = {
     // Equivalently, is (x1,y1) coincident with (x2,y2)?
     // Or, is the radius zero? Line to (x1,y1).
     else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon$4) || !r) {
-      this._ += "L" + (this._x1 = x1) + "," + (this._y1 = y1);
+      this._append`L${this._x1 = x1},${this._y1 = y1}`;
     }
 
     // Otherwise, draw an arc!
     else {
-      var x20 = x2 - x0,
+      let x20 = x2 - x0,
           y20 = y2 - y0,
           l21_2 = x21 * x21 + y21 * y21,
           l20_2 = x20 * x20 + y20 * y20,
@@ -6100,32 +6125,33 @@ Path$1.prototype = path.prototype = {
 
       // If the start tangent is not coincident with (x0,y0), line to.
       if (Math.abs(t01 - 1) > epsilon$4) {
-        this._ += "L" + (x1 + t01 * x01) + "," + (y1 + t01 * y01);
+        this._append`L${x1 + t01 * x01},${y1 + t01 * y01}`;
       }
 
-      this._ += "A" + r + "," + r + ",0,0," + (+(y01 * x20 > x01 * y20)) + "," + (this._x1 = x1 + t21 * x21) + "," + (this._y1 = y1 + t21 * y21);
+      this._append`A${r},${r},0,0,${+(y01 * x20 > x01 * y20)},${this._x1 = x1 + t21 * x21},${this._y1 = y1 + t21 * y21}`;
     }
-  },
-  arc: function(x, y, r, a0, a1, ccw) {
+  }
+  arc(x, y, r, a0, a1, ccw) {
     x = +x, y = +y, r = +r, ccw = !!ccw;
-    var dx = r * Math.cos(a0),
+
+    // Is the radius negative? Error.
+    if (r < 0) throw new Error(`negative radius: ${r}`);
+
+    let dx = r * Math.cos(a0),
         dy = r * Math.sin(a0),
         x0 = x + dx,
         y0 = y + dy,
         cw = 1 ^ ccw,
         da = ccw ? a0 - a1 : a1 - a0;
 
-    // Is the radius negative? Error.
-    if (r < 0) throw new Error("negative radius: " + r);
-
     // Is this path empty? Move to (x0,y0).
     if (this._x1 === null) {
-      this._ += "M" + x0 + "," + y0;
+      this._append`M${x0},${y0}`;
     }
 
     // Or, is (x0,y0) not coincident with the previous point? Line to (x0,y0).
     else if (Math.abs(this._x1 - x0) > epsilon$4 || Math.abs(this._y1 - y0) > epsilon$4) {
-      this._ += "L" + x0 + "," + y0;
+      this._append`L${x0},${y0}`;
     }
 
     // Is this arc empty? We’re done.
@@ -6136,21 +6162,32 @@ Path$1.prototype = path.prototype = {
 
     // Is this a complete circle? Draw two arcs to complete the circle.
     if (da > tauEpsilon) {
-      this._ += "A" + r + "," + r + ",0,1," + cw + "," + (x - dx) + "," + (y - dy) + "A" + r + "," + r + ",0,1," + cw + "," + (this._x1 = x0) + "," + (this._y1 = y0);
+      this._append`A${r},${r},0,1,${cw},${x - dx},${y - dy}A${r},${r},0,1,${cw},${this._x1 = x0},${this._y1 = y0}`;
     }
 
     // Is this arc non-empty? Draw an arc!
     else if (da > epsilon$4) {
-      this._ += "A" + r + "," + r + ",0," + (+(da >= pi$2)) + "," + cw + "," + (this._x1 = x + r * Math.cos(a1)) + "," + (this._y1 = y + r * Math.sin(a1));
+      this._append`A${r},${r},0,${+(da >= pi$2)},${cw},${this._x1 = x + r * Math.cos(a1)},${this._y1 = y + r * Math.sin(a1)}`;
     }
-  },
-  rect: function(x, y, w, h) {
-    this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y) + "h" + (+w) + "v" + (+h) + "h" + (-w) + "Z";
-  },
-  toString: function() {
+  }
+  rect(x, y, w, h) {
+    this._append`M${this._x0 = this._x1 = +x},${this._y0 = this._y1 = +y}h${w = +w}v${+h}h${-w}Z`;
+  }
+  toString() {
     return this._;
   }
 };
+
+function path() {
+  return new Path$1;
+}
+
+// Allow instanceof d3.path
+path.prototype = Path$1.prototype;
+
+function pathRound(digits = 3) {
+  return new Path$1(+digits);
+}
 
 var slice$2 = Array.prototype.slice;
 
@@ -6366,8 +6403,10 @@ function Contours() {
 
     // Convert number of thresholds into uniform thresholds.
     if (!Array.isArray(tz)) {
-      const e = extent$1(values), ts = tickStep(e[0], e[1], tz);
-      tz = ticks(Math.floor(e[0] / ts) * ts, Math.floor(e[1] / ts - 1) * ts, tz);
+      const e = extent$1(values, finite);
+      tz = ticks(...nice$1(e[0], e[1], tz), tz);
+      while (tz[tz.length - 1] >= e[1]) tz.pop();
+      while (tz[1] < e[0]) tz.shift();
     } else {
       tz = tz.slice().sort(ascending$1);
     }
@@ -6378,11 +6417,14 @@ function Contours() {
   // Accumulate, smooth contour rings, assign holes to exterior rings.
   // Based on https://github.com/mbostock/shapefile/blob/v0.6.2/shp/polygon.js
   function contour(values, value) {
+    const v = value == null ? NaN : +value;
+    if (isNaN(v)) throw new Error(`invalid value: ${value}`);
+
     var polygons = [],
         holes = [];
 
-    isorings(values, value, function(ring) {
-      smooth(ring, values, value);
+    isorings(values, v, function(ring) {
+      smooth(ring, values, v);
       if (area$3(ring) > 0) polygons.push([ring]);
       else holes.push(ring);
     });
@@ -6412,10 +6454,10 @@ function Contours() {
 
     // Special case for the first row (y = -1, t2 = t3 = 0).
     x = y = -1;
-    t1 = values[0] >= value;
+    t1 = above(values[0], value);
     cases[t1 << 1].forEach(stitch);
     while (++x < dx - 1) {
-      t0 = t1, t1 = values[x + 1] >= value;
+      t0 = t1, t1 = above(values[x + 1], value);
       cases[t0 | t1 << 1].forEach(stitch);
     }
     cases[t1 << 0].forEach(stitch);
@@ -6423,12 +6465,12 @@ function Contours() {
     // General case for the intermediate rows.
     while (++y < dy - 1) {
       x = -1;
-      t1 = values[y * dx + dx] >= value;
-      t2 = values[y * dx] >= value;
+      t1 = above(values[y * dx + dx], value);
+      t2 = above(values[y * dx], value);
       cases[t1 << 1 | t2 << 2].forEach(stitch);
       while (++x < dx - 1) {
-        t0 = t1, t1 = values[y * dx + dx + x + 1] >= value;
-        t3 = t2, t2 = values[y * dx + x + 1] >= value;
+        t0 = t1, t1 = above(values[y * dx + dx + x + 1], value);
+        t3 = t2, t2 = above(values[y * dx + x + 1], value);
         cases[t0 | t1 << 1 | t2 << 2 | t3 << 3].forEach(stitch);
       }
       cases[t1 | t2 << 3].forEach(stitch);
@@ -6439,7 +6481,7 @@ function Contours() {
     t2 = values[y * dx] >= value;
     cases[t2 << 2].forEach(stitch);
     while (++x < dx - 1) {
-      t3 = t2, t2 = values[y * dx + x + 1] >= value;
+      t3 = t2, t2 = above(values[y * dx + x + 1], value);
       cases[t2 << 2 | t3 << 3].forEach(stitch);
     }
     cases[t2 << 3].forEach(stitch);
@@ -6496,15 +6538,12 @@ function Contours() {
           y = point[1],
           xt = x | 0,
           yt = y | 0,
-          v0,
-          v1 = values[yt * dx + xt];
+          v1 = valid(values[yt * dx + xt]);
       if (x > 0 && x < dx && xt === x) {
-        v0 = values[yt * dx + xt - 1];
-        point[0] = x + (value - v0) / (v1 - v0) - 0.5;
+        point[0] = smooth1(x, valid(values[yt * dx + xt - 1]), v1, value);
       }
       if (y > 0 && y < dy && yt === y) {
-        v0 = values[(yt - 1) * dx + xt];
-        point[1] = y + (value - v0) / (v1 - v0) - 0.5;
+        point[1] = smooth1(y, valid(values[(yt - 1) * dx + xt]), v1, value);
       }
     });
   }
@@ -6527,6 +6566,29 @@ function Contours() {
   };
 
   return contours;
+}
+
+// When computing the extent, ignore infinite values (as well as invalid ones).
+function finite(x) {
+  return isFinite(x) ? x : NaN;
+}
+
+// Is the (possibly invalid) x greater than or equal to the (known valid) value?
+// Treat any invalid value as below negative infinity.
+function above(x, value) {
+  return x == null ? false : +x >= value;
+}
+
+// During smoothing, treat any invalid value as negative infinity.
+function valid(v) {
+  return v == null || isNaN(v = +v) ? -Infinity : v;
+}
+
+function smooth1(x, v0, v1, value) {
+  const a = value - v0;
+  const b = v1 - v0;
+  const d = isFinite(a) || isFinite(b) ? a / b : Math.sign(a) / Math.sign(b);
+  return isNaN(d) ? x : x + d - 0.5;
 }
 
 function defaultX$1(d) {
@@ -6563,7 +6625,7 @@ function density() {
       var xi = (x(d, ++i, data) + o) * pow2k,
           yi = (y(d, i, data) + o) * pow2k,
           wi = +weight(d, i, data);
-      if (xi >= 0 && xi < n && yi >= 0 && yi < m) {
+      if (wi && xi >= 0 && xi < n && yi >= 0 && yi < m) {
         var x0 = Math.floor(xi),
             y0 = Math.floor(yi),
             xt = xi - x0 - 0.5,
@@ -8789,7 +8851,7 @@ function jiggle(random) {
   return (random() - 0.5) * 1e-6;
 }
 
-function x$4(d) {
+function x$3(d) {
   return d.x + d.vx;
 }
 
@@ -8816,7 +8878,7 @@ function collide(radius) {
         ri2;
 
     for (var k = 0; k < iterations; ++k) {
-      tree = quadtree(nodes, x$4, y$3).visitAfter(prepare);
+      tree = quadtree(nodes, x$3, y$3).visitAfter(prepare);
       for (i = 0; i < n; ++i) {
         node = nodes[i];
         ri = radii[node.index], ri2 = ri * ri;
@@ -9011,7 +9073,7 @@ function lcg$2() {
   return () => (s = (a$2 * s + c$4) % m$1) / m$1;
 }
 
-function x$3(d) {
+function x$2(d) {
   return d.x;
 }
 
@@ -9176,7 +9238,7 @@ function manyBody() {
       theta2 = 0.81;
 
   function force(_) {
-    var i, n = nodes.length, tree = quadtree(nodes, x$3, y$2).visitAfter(accumulate);
+    var i, n = nodes.length, tree = quadtree(nodes, x$2, y$2).visitAfter(accumulate);
     for (alpha = _, i = 0; i < n; ++i) node = nodes[i], tree.visit(apply);
   }
 
@@ -9332,7 +9394,7 @@ function radial$1(radius, x, y) {
   return force;
 }
 
-function x$2(x) {
+function x$1(x) {
   var strength = constant$4(0.1),
       nodes,
       strengths,
@@ -9570,7 +9632,7 @@ function identity$6(x) {
 }
 
 var map = Array.prototype.map,
-    prefixes = ["y","z","a","f","p","n","\xB5","m","","k","M","G","T","P","E","Z","Y"];
+    prefixes = ["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];
 
 function formatLocale$1(locale) {
   var group = locale.grouping === undefined || locale.thousands === undefined ? identity$6 : formatGroup(map.call(locale.grouping, Number), locale.thousands + ""),
@@ -9579,7 +9641,7 @@ function formatLocale$1(locale) {
       decimal = locale.decimal === undefined ? "." : locale.decimal + "",
       numerals = locale.numerals === undefined ? identity$6 : formatNumerals(map.call(locale.numerals, String)),
       percent = locale.percent === undefined ? "%" : locale.percent + "",
-      minus = locale.minus === undefined ? "\u2212" : locale.minus + "",
+      minus = locale.minus === undefined ? "−" : locale.minus + "",
       nan = locale.nan === undefined ? "NaN" : locale.nan + "";
 
   function newFormat(specifier) {
@@ -10284,7 +10346,8 @@ function compose(a, b) {
 }
 
 function rotationIdentity(lambda, phi) {
-  return [abs$1(lambda) > pi$1 ? lambda + Math.round(-lambda / tau$1) * tau$1 : lambda, phi];
+  if (abs$1(lambda) > pi$1) lambda -= Math.round(lambda / tau$1) * tau$1;
+  return [lambda, phi];
 }
 
 rotationIdentity.invert = rotationIdentity;
@@ -10298,7 +10361,9 @@ function rotateRadians(deltaLambda, deltaPhi, deltaGamma) {
 
 function forwardRotationLambda(deltaLambda) {
   return function(lambda, phi) {
-    return lambda += deltaLambda, [lambda > pi$1 ? lambda - tau$1 : lambda < -pi$1 ? lambda + tau$1 : lambda, phi];
+    lambda += deltaLambda;
+    if (abs$1(lambda) > pi$1) lambda -= Math.round(lambda / tau$1) * tau$1;
+    return [lambda, phi];
   };
 }
 
@@ -10385,7 +10450,7 @@ function circleRadius(cosRadius, point) {
   return ((-point[2] < 0 ? -radius : radius) + tau$1 - epsilon$1) % tau$1;
 }
 
-function circle$2() {
+function circle$1() {
   var center = constant$3([0, 0]),
       radius = constant$3(90),
       precision = constant$3(6),
@@ -11804,68 +11869,96 @@ function lengthPoint(x, y) {
 
 var pathMeasure = lengthStream;
 
-function PathString() {
-  this._string = [];
-}
+// Simple caching for constant-radius points.
+let cacheDigits, cacheAppend, cacheRadius, cacheCircle;
 
-PathString.prototype = {
-  _radius: 4.5,
-  _circle: circle$1(4.5),
-  pointRadius: function(_) {
-    if ((_ = +_) !== this._radius) this._radius = _, this._circle = null;
+class PathString {
+  constructor(digits) {
+    this._append = digits == null ? append : appendRound(digits);
+    this._radius = 4.5;
+    this._ = "";
+  }
+  pointRadius(_) {
+    this._radius = +_;
     return this;
-  },
-  polygonStart: function() {
+  }
+  polygonStart() {
     this._line = 0;
-  },
-  polygonEnd: function() {
+  }
+  polygonEnd() {
     this._line = NaN;
-  },
-  lineStart: function() {
+  }
+  lineStart() {
     this._point = 0;
-  },
-  lineEnd: function() {
-    if (this._line === 0) this._string.push("Z");
+  }
+  lineEnd() {
+    if (this._line === 0) this._ += "Z";
     this._point = NaN;
-  },
-  point: function(x, y) {
+  }
+  point(x, y) {
     switch (this._point) {
       case 0: {
-        this._string.push("M", x, ",", y);
+        this._append`M${x},${y}`;
         this._point = 1;
         break;
       }
       case 1: {
-        this._string.push("L", x, ",", y);
+        this._append`L${x},${y}`;
         break;
       }
       default: {
-        if (this._circle == null) this._circle = circle$1(this._radius);
-        this._string.push("M", x, ",", y, this._circle);
+        this._append`M${x},${y}`;
+        if (this._radius !== cacheRadius || this._append !== cacheAppend) {
+          const r = this._radius;
+          const s = this._;
+          this._ = ""; // stash the old string so we can cache the circle path fragment
+          this._append`m0,${r}a${r},${r} 0 1,1 0,${-2 * r}a${r},${r} 0 1,1 0,${2 * r}z`;
+          cacheRadius = r;
+          cacheAppend = this._append;
+          cacheCircle = this._;
+          this._ = s;
+        }
+        this._ += cacheCircle;
         break;
       }
     }
-  },
-  result: function() {
-    if (this._string.length) {
-      var result = this._string.join("");
-      this._string = [];
-      return result;
-    } else {
-      return null;
-    }
   }
-};
+  result() {
+    const result = this._;
+    this._ = "";
+    return result.length ? result : null;
+  }
+}
 
-function circle$1(radius) {
-  return "m0," + radius
-      + "a" + radius + "," + radius + " 0 1,1 0," + -2 * radius
-      + "a" + radius + "," + radius + " 0 1,1 0," + 2 * radius
-      + "z";
+function append(strings) {
+  let i = 1;
+  this._ += strings[0];
+  for (const j = strings.length; i < j; ++i) {
+    this._ += arguments[i] + strings[i];
+  }
+}
+
+function appendRound(digits) {
+  const d = Math.floor(digits);
+  if (!(d >= 0)) throw new RangeError(`invalid digits: ${digits}`);
+  if (d > 15) return append;
+  if (d !== cacheDigits) {
+    const k = 10 ** d;
+    cacheDigits = d;
+    cacheAppend = function append(strings) {
+      let i = 1;
+      this._ += strings[0];
+      for (const j = strings.length; i < j; ++i) {
+        this._ += Math.round(arguments[i] * k) / k + strings[i];
+      }
+    };
+  }
+  return cacheAppend;
 }
 
 function index$2(projection, context) {
-  var pointRadius = 4.5,
+  let digits = 3,
+      pointRadius = 4.5,
       projectionStream,
       contextStream;
 
@@ -11898,12 +11991,14 @@ function index$2(projection, context) {
   };
 
   path.projection = function(_) {
-    return arguments.length ? (projectionStream = _ == null ? (projection = null, identity$5) : (projection = _).stream, path) : projection;
+    if (!arguments.length) return projection;
+    projectionStream = _ == null ? (projection = null, identity$5) : (projection = _).stream;
+    return path;
   };
 
   path.context = function(_) {
     if (!arguments.length) return context;
-    contextStream = _ == null ? (context = null, new PathString) : new PathContext(context = _);
+    contextStream = _ == null ? (context = null, new PathString(digits)) : new PathContext(context = _);
     if (typeof pointRadius !== "function") contextStream.pointRadius(pointRadius);
     return path;
   };
@@ -11914,7 +12009,19 @@ function index$2(projection, context) {
     return path;
   };
 
-  return path.projection(projection).context(context);
+  path.digits = function(_) {
+    if (!arguments.length) return digits;
+    if (_ == null) digits = null;
+    else {
+      const d = Math.floor(_);
+      if (!(d >= 0)) throw new RangeError(`invalid digits: ${_}`);
+      digits = d;
+    }
+    if (context === null) contextStream = new PathString(digits);
+    return path;
+  };
+
+  return path.projection(projection).digits(digits).context(context);
 }
 
 function transform$1(methods) {
@@ -15513,47 +15620,46 @@ function threshold() {
   return initRange.apply(scale, arguments);
 }
 
-var t0 = new Date,
-    t1 = new Date;
+const t0 = new Date, t1 = new Date;
 
-function newInterval(floori, offseti, count, field) {
+function timeInterval(floori, offseti, count, field) {
 
   function interval(date) {
     return floori(date = arguments.length === 0 ? new Date : new Date(+date)), date;
   }
 
-  interval.floor = function(date) {
+  interval.floor = (date) => {
     return floori(date = new Date(+date)), date;
   };
 
-  interval.ceil = function(date) {
+  interval.ceil = (date) => {
     return floori(date = new Date(date - 1)), offseti(date, 1), floori(date), date;
   };
 
-  interval.round = function(date) {
-    var d0 = interval(date),
-        d1 = interval.ceil(date);
+  interval.round = (date) => {
+    const d0 = interval(date), d1 = interval.ceil(date);
     return date - d0 < d1 - date ? d0 : d1;
   };
 
-  interval.offset = function(date, step) {
+  interval.offset = (date, step) => {
     return offseti(date = new Date(+date), step == null ? 1 : Math.floor(step)), date;
   };
 
-  interval.range = function(start, stop, step) {
-    var range = [], previous;
+  interval.range = (start, stop, step) => {
+    const range = [];
     start = interval.ceil(start);
     step = step == null ? 1 : Math.floor(step);
     if (!(start < stop) || !(step > 0)) return range; // also handles Invalid Date
+    let previous;
     do range.push(previous = new Date(+start)), offseti(start, step), floori(start);
     while (previous < start && start < stop);
     return range;
   };
 
-  interval.filter = function(test) {
-    return newInterval(function(date) {
+  interval.filter = (test) => {
+    return timeInterval((date) => {
       if (date >= date) while (floori(date), !test(date)) date.setTime(date - 1);
-    }, function(date, step) {
+    }, (date, step) => {
       if (date >= date) {
         if (step < 0) while (++step <= 0) {
           while (offseti(date, -1), !test(date)) {} // eslint-disable-line no-empty
@@ -15565,49 +15671,48 @@ function newInterval(floori, offseti, count, field) {
   };
 
   if (count) {
-    interval.count = function(start, end) {
+    interval.count = (start, end) => {
       t0.setTime(+start), t1.setTime(+end);
       floori(t0), floori(t1);
       return Math.floor(count(t0, t1));
     };
 
-    interval.every = function(step) {
+    interval.every = (step) => {
       step = Math.floor(step);
       return !isFinite(step) || !(step > 0) ? null
           : !(step > 1) ? interval
           : interval.filter(field
-              ? function(d) { return field(d) % step === 0; }
-              : function(d) { return interval.count(0, d) % step === 0; });
+              ? (d) => field(d) % step === 0
+              : (d) => interval.count(0, d) % step === 0);
     };
   }
 
   return interval;
 }
 
-var millisecond = newInterval(function() {
+const millisecond = timeInterval(() => {
   // noop
-}, function(date, step) {
+}, (date, step) => {
   date.setTime(+date + step);
-}, function(start, end) {
+}, (start, end) => {
   return end - start;
 });
 
 // An optimized implementation for this simple case.
-millisecond.every = function(k) {
+millisecond.every = (k) => {
   k = Math.floor(k);
   if (!isFinite(k) || !(k > 0)) return null;
   if (!(k > 1)) return millisecond;
-  return newInterval(function(date) {
+  return timeInterval((date) => {
     date.setTime(Math.floor(date / k) * k);
-  }, function(date, step) {
+  }, (date, step) => {
     date.setTime(+date + step * k);
-  }, function(start, end) {
+  }, (start, end) => {
     return (end - start) / k;
   });
 };
 
-var millisecond$1 = millisecond;
-var milliseconds = millisecond.range;
+const milliseconds = millisecond.range;
 
 const durationSecond = 1000;
 const durationMinute = durationSecond * 60;
@@ -15617,233 +15722,234 @@ const durationWeek = durationDay * 7;
 const durationMonth = durationDay * 30;
 const durationYear = durationDay * 365;
 
-var second = newInterval(function(date) {
+const second = timeInterval((date) => {
   date.setTime(date - date.getMilliseconds());
-}, function(date, step) {
+}, (date, step) => {
   date.setTime(+date + step * durationSecond);
-}, function(start, end) {
+}, (start, end) => {
   return (end - start) / durationSecond;
-}, function(date) {
+}, (date) => {
   return date.getUTCSeconds();
 });
 
-var utcSecond = second;
-var seconds = second.range;
+const seconds = second.range;
 
-var minute = newInterval(function(date) {
+const timeMinute = timeInterval((date) => {
   date.setTime(date - date.getMilliseconds() - date.getSeconds() * durationSecond);
-}, function(date, step) {
+}, (date, step) => {
   date.setTime(+date + step * durationMinute);
-}, function(start, end) {
+}, (start, end) => {
   return (end - start) / durationMinute;
-}, function(date) {
+}, (date) => {
   return date.getMinutes();
 });
 
-var timeMinute = minute;
-var minutes = minute.range;
+const timeMinutes = timeMinute.range;
 
-var hour = newInterval(function(date) {
+const utcMinute = timeInterval((date) => {
+  date.setUTCSeconds(0, 0);
+}, (date, step) => {
+  date.setTime(+date + step * durationMinute);
+}, (start, end) => {
+  return (end - start) / durationMinute;
+}, (date) => {
+  return date.getUTCMinutes();
+});
+
+const utcMinutes = utcMinute.range;
+
+const timeHour = timeInterval((date) => {
   date.setTime(date - date.getMilliseconds() - date.getSeconds() * durationSecond - date.getMinutes() * durationMinute);
-}, function(date, step) {
+}, (date, step) => {
   date.setTime(+date + step * durationHour);
-}, function(start, end) {
+}, (start, end) => {
   return (end - start) / durationHour;
-}, function(date) {
+}, (date) => {
   return date.getHours();
 });
 
-var timeHour = hour;
-var hours = hour.range;
+const timeHours = timeHour.range;
 
-var day = newInterval(
+const utcHour = timeInterval((date) => {
+  date.setUTCMinutes(0, 0, 0);
+}, (date, step) => {
+  date.setTime(+date + step * durationHour);
+}, (start, end) => {
+  return (end - start) / durationHour;
+}, (date) => {
+  return date.getUTCHours();
+});
+
+const utcHours = utcHour.range;
+
+const timeDay = timeInterval(
   date => date.setHours(0, 0, 0, 0),
   (date, step) => date.setDate(date.getDate() + step),
   (start, end) => (end - start - (end.getTimezoneOffset() - start.getTimezoneOffset()) * durationMinute) / durationDay,
   date => date.getDate() - 1
 );
 
-var timeDay = day;
-var days = day.range;
+const timeDays = timeDay.range;
 
-function weekday(i) {
-  return newInterval(function(date) {
+const utcDay = timeInterval((date) => {
+  date.setUTCHours(0, 0, 0, 0);
+}, (date, step) => {
+  date.setUTCDate(date.getUTCDate() + step);
+}, (start, end) => {
+  return (end - start) / durationDay;
+}, (date) => {
+  return date.getUTCDate() - 1;
+});
+
+const utcDays = utcDay.range;
+
+const unixDay = timeInterval((date) => {
+  date.setUTCHours(0, 0, 0, 0);
+}, (date, step) => {
+  date.setUTCDate(date.getUTCDate() + step);
+}, (start, end) => {
+  return (end - start) / durationDay;
+}, (date) => {
+  return Math.floor(date / durationDay);
+});
+
+const unixDays = unixDay.range;
+
+function timeWeekday(i) {
+  return timeInterval((date) => {
     date.setDate(date.getDate() - (date.getDay() + 7 - i) % 7);
     date.setHours(0, 0, 0, 0);
-  }, function(date, step) {
+  }, (date, step) => {
     date.setDate(date.getDate() + step * 7);
-  }, function(start, end) {
+  }, (start, end) => {
     return (end - start - (end.getTimezoneOffset() - start.getTimezoneOffset()) * durationMinute) / durationWeek;
   });
 }
 
-var sunday = weekday(0);
-var monday = weekday(1);
-var tuesday = weekday(2);
-var wednesday = weekday(3);
-var thursday = weekday(4);
-var friday = weekday(5);
-var saturday = weekday(6);
+const timeSunday = timeWeekday(0);
+const timeMonday = timeWeekday(1);
+const timeTuesday = timeWeekday(2);
+const timeWednesday = timeWeekday(3);
+const timeThursday = timeWeekday(4);
+const timeFriday = timeWeekday(5);
+const timeSaturday = timeWeekday(6);
 
-var sundays = sunday.range;
-var mondays = monday.range;
-var tuesdays = tuesday.range;
-var wednesdays = wednesday.range;
-var thursdays = thursday.range;
-var fridays = friday.range;
-var saturdays = saturday.range;
-
-var month = newInterval(function(date) {
-  date.setDate(1);
-  date.setHours(0, 0, 0, 0);
-}, function(date, step) {
-  date.setMonth(date.getMonth() + step);
-}, function(start, end) {
-  return end.getMonth() - start.getMonth() + (end.getFullYear() - start.getFullYear()) * 12;
-}, function(date) {
-  return date.getMonth();
-});
-
-var timeMonth = month;
-var months = month.range;
-
-var year = newInterval(function(date) {
-  date.setMonth(0, 1);
-  date.setHours(0, 0, 0, 0);
-}, function(date, step) {
-  date.setFullYear(date.getFullYear() + step);
-}, function(start, end) {
-  return end.getFullYear() - start.getFullYear();
-}, function(date) {
-  return date.getFullYear();
-});
-
-// An optimized implementation for this simple case.
-year.every = function(k) {
-  return !isFinite(k = Math.floor(k)) || !(k > 0) ? null : newInterval(function(date) {
-    date.setFullYear(Math.floor(date.getFullYear() / k) * k);
-    date.setMonth(0, 1);
-    date.setHours(0, 0, 0, 0);
-  }, function(date, step) {
-    date.setFullYear(date.getFullYear() + step * k);
-  });
-};
-
-var timeYear = year;
-var years = year.range;
-
-var utcMinute = newInterval(function(date) {
-  date.setUTCSeconds(0, 0);
-}, function(date, step) {
-  date.setTime(+date + step * durationMinute);
-}, function(start, end) {
-  return (end - start) / durationMinute;
-}, function(date) {
-  return date.getUTCMinutes();
-});
-
-var utcMinute$1 = utcMinute;
-var utcMinutes = utcMinute.range;
-
-var utcHour = newInterval(function(date) {
-  date.setUTCMinutes(0, 0, 0);
-}, function(date, step) {
-  date.setTime(+date + step * durationHour);
-}, function(start, end) {
-  return (end - start) / durationHour;
-}, function(date) {
-  return date.getUTCHours();
-});
-
-var utcHour$1 = utcHour;
-var utcHours = utcHour.range;
-
-var utcDay = newInterval(function(date) {
-  date.setUTCHours(0, 0, 0, 0);
-}, function(date, step) {
-  date.setUTCDate(date.getUTCDate() + step);
-}, function(start, end) {
-  return (end - start) / durationDay;
-}, function(date) {
-  return date.getUTCDate() - 1;
-});
-
-var utcDay$1 = utcDay;
-var utcDays = utcDay.range;
+const timeSundays = timeSunday.range;
+const timeMondays = timeMonday.range;
+const timeTuesdays = timeTuesday.range;
+const timeWednesdays = timeWednesday.range;
+const timeThursdays = timeThursday.range;
+const timeFridays = timeFriday.range;
+const timeSaturdays = timeSaturday.range;
 
 function utcWeekday(i) {
-  return newInterval(function(date) {
+  return timeInterval((date) => {
     date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 7 - i) % 7);
     date.setUTCHours(0, 0, 0, 0);
-  }, function(date, step) {
+  }, (date, step) => {
     date.setUTCDate(date.getUTCDate() + step * 7);
-  }, function(start, end) {
+  }, (start, end) => {
     return (end - start) / durationWeek;
   });
 }
 
-var utcSunday = utcWeekday(0);
-var utcMonday = utcWeekday(1);
-var utcTuesday = utcWeekday(2);
-var utcWednesday = utcWeekday(3);
-var utcThursday = utcWeekday(4);
-var utcFriday = utcWeekday(5);
-var utcSaturday = utcWeekday(6);
+const utcSunday = utcWeekday(0);
+const utcMonday = utcWeekday(1);
+const utcTuesday = utcWeekday(2);
+const utcWednesday = utcWeekday(3);
+const utcThursday = utcWeekday(4);
+const utcFriday = utcWeekday(5);
+const utcSaturday = utcWeekday(6);
 
-var utcSundays = utcSunday.range;
-var utcMondays = utcMonday.range;
-var utcTuesdays = utcTuesday.range;
-var utcWednesdays = utcWednesday.range;
-var utcThursdays = utcThursday.range;
-var utcFridays = utcFriday.range;
-var utcSaturdays = utcSaturday.range;
+const utcSundays = utcSunday.range;
+const utcMondays = utcMonday.range;
+const utcTuesdays = utcTuesday.range;
+const utcWednesdays = utcWednesday.range;
+const utcThursdays = utcThursday.range;
+const utcFridays = utcFriday.range;
+const utcSaturdays = utcSaturday.range;
 
-var utcMonth = newInterval(function(date) {
+const timeMonth = timeInterval((date) => {
+  date.setDate(1);
+  date.setHours(0, 0, 0, 0);
+}, (date, step) => {
+  date.setMonth(date.getMonth() + step);
+}, (start, end) => {
+  return end.getMonth() - start.getMonth() + (end.getFullYear() - start.getFullYear()) * 12;
+}, (date) => {
+  return date.getMonth();
+});
+
+const timeMonths = timeMonth.range;
+
+const utcMonth = timeInterval((date) => {
   date.setUTCDate(1);
   date.setUTCHours(0, 0, 0, 0);
-}, function(date, step) {
+}, (date, step) => {
   date.setUTCMonth(date.getUTCMonth() + step);
-}, function(start, end) {
+}, (start, end) => {
   return end.getUTCMonth() - start.getUTCMonth() + (end.getUTCFullYear() - start.getUTCFullYear()) * 12;
-}, function(date) {
+}, (date) => {
   return date.getUTCMonth();
 });
 
-var utcMonth$1 = utcMonth;
-var utcMonths = utcMonth.range;
+const utcMonths = utcMonth.range;
 
-var utcYear = newInterval(function(date) {
+const timeYear = timeInterval((date) => {
+  date.setMonth(0, 1);
+  date.setHours(0, 0, 0, 0);
+}, (date, step) => {
+  date.setFullYear(date.getFullYear() + step);
+}, (start, end) => {
+  return end.getFullYear() - start.getFullYear();
+}, (date) => {
+  return date.getFullYear();
+});
+
+// An optimized implementation for this simple case.
+timeYear.every = (k) => {
+  return !isFinite(k = Math.floor(k)) || !(k > 0) ? null : timeInterval((date) => {
+    date.setFullYear(Math.floor(date.getFullYear() / k) * k);
+    date.setMonth(0, 1);
+    date.setHours(0, 0, 0, 0);
+  }, (date, step) => {
+    date.setFullYear(date.getFullYear() + step * k);
+  });
+};
+
+const timeYears = timeYear.range;
+
+const utcYear = timeInterval((date) => {
   date.setUTCMonth(0, 1);
   date.setUTCHours(0, 0, 0, 0);
-}, function(date, step) {
+}, (date, step) => {
   date.setUTCFullYear(date.getUTCFullYear() + step);
-}, function(start, end) {
+}, (start, end) => {
   return end.getUTCFullYear() - start.getUTCFullYear();
-}, function(date) {
+}, (date) => {
   return date.getUTCFullYear();
 });
 
 // An optimized implementation for this simple case.
-utcYear.every = function(k) {
-  return !isFinite(k = Math.floor(k)) || !(k > 0) ? null : newInterval(function(date) {
+utcYear.every = (k) => {
+  return !isFinite(k = Math.floor(k)) || !(k > 0) ? null : timeInterval((date) => {
     date.setUTCFullYear(Math.floor(date.getUTCFullYear() / k) * k);
     date.setUTCMonth(0, 1);
     date.setUTCHours(0, 0, 0, 0);
-  }, function(date, step) {
+  }, (date, step) => {
     date.setUTCFullYear(date.getUTCFullYear() + step * k);
   });
 };
 
-var utcYear$1 = utcYear;
-var utcYears = utcYear.range;
+const utcYears = utcYear.range;
 
 function ticker(year, month, week, day, hour, minute) {
 
   const tickIntervals = [
-    [utcSecond,  1,      durationSecond],
-    [utcSecond,  5,  5 * durationSecond],
-    [utcSecond, 15, 15 * durationSecond],
-    [utcSecond, 30, 30 * durationSecond],
+    [second,  1,      durationSecond],
+    [second,  5,  5 * durationSecond],
+    [second, 15, 15 * durationSecond],
+    [second, 30, 30 * durationSecond],
     [minute,  1,      durationMinute],
     [minute,  5,  5 * durationMinute],
     [minute, 15, 15 * durationMinute],
@@ -15872,7 +15978,7 @@ function ticker(year, month, week, day, hour, minute) {
     const target = Math.abs(stop - start) / count;
     const i = bisector(([,, step]) => step).right(tickIntervals, target);
     if (i === tickIntervals.length) return year.every(tickStep(start / durationYear, stop / durationYear, count));
-    if (i === 0) return millisecond$1.every(Math.max(tickStep(start, stop, count), 1));
+    if (i === 0) return millisecond.every(Math.max(tickStep(start, stop, count), 1));
     const [t, step] = tickIntervals[target / tickIntervals[i - 1][2] < tickIntervals[i][2] / target ? i - 1 : i];
     return t.every(step);
   }
@@ -15880,8 +15986,8 @@ function ticker(year, month, week, day, hour, minute) {
   return [ticks, tickInterval];
 }
 
-const [utcTicks, utcTickInterval] = ticker(utcYear$1, utcMonth$1, utcSunday, utcDay$1, utcHour$1, utcMinute$1);
-const [timeTicks, timeTickInterval] = ticker(timeYear, timeMonth, sunday, timeDay, timeHour, timeMinute);
+const [utcTicks, utcTickInterval] = ticker(utcYear, utcMonth, utcSunday, unixDay, utcHour, utcMinute);
+const [timeTicks, timeTickInterval] = ticker(timeYear, timeMonth, timeSunday, timeDay, timeHour, timeMinute);
 
 function localDate(d) {
   if (0 <= d.y && d.y < 100) {
@@ -16094,13 +16200,13 @@ function formatLocale(locale) {
         if ("Z" in d) {
           week = utcDate(newDate(d.y, 0, 1)), day = week.getUTCDay();
           week = day > 4 || day === 0 ? utcMonday.ceil(week) : utcMonday(week);
-          week = utcDay$1.offset(week, (d.V - 1) * 7);
+          week = utcDay.offset(week, (d.V - 1) * 7);
           d.y = week.getUTCFullYear();
           d.m = week.getUTCMonth();
           d.d = week.getUTCDate() + (d.w + 6) % 7;
         } else {
           week = localDate(newDate(d.y, 0, 1)), day = week.getDay();
-          week = day > 4 || day === 0 ? monday.ceil(week) : monday(week);
+          week = day > 4 || day === 0 ? timeMonday.ceil(week) : timeMonday(week);
           week = timeDay.offset(week, (d.V - 1) * 7);
           d.y = week.getFullYear();
           d.m = week.getMonth();
@@ -16423,17 +16529,17 @@ function formatWeekdayNumberMonday(d) {
 }
 
 function formatWeekNumberSunday(d, p) {
-  return pad(sunday.count(timeYear(d) - 1, d), p, 2);
+  return pad(timeSunday.count(timeYear(d) - 1, d), p, 2);
 }
 
 function dISO(d) {
   var day = d.getDay();
-  return (day >= 4 || day === 0) ? thursday(d) : thursday.ceil(d);
+  return (day >= 4 || day === 0) ? timeThursday(d) : timeThursday.ceil(d);
 }
 
 function formatWeekNumberISO(d, p) {
   d = dISO(d);
-  return pad(thursday.count(timeYear(d), d) + (timeYear(d).getDay() === 4), p, 2);
+  return pad(timeThursday.count(timeYear(d), d) + (timeYear(d).getDay() === 4), p, 2);
 }
 
 function formatWeekdayNumberSunday(d) {
@@ -16441,7 +16547,7 @@ function formatWeekdayNumberSunday(d) {
 }
 
 function formatWeekNumberMonday(d, p) {
-  return pad(monday.count(timeYear(d) - 1, d), p, 2);
+  return pad(timeMonday.count(timeYear(d) - 1, d), p, 2);
 }
 
 function formatYear(d, p) {
@@ -16459,7 +16565,7 @@ function formatFullYear(d, p) {
 
 function formatFullYearISO(d, p) {
   var day = d.getDay();
-  d = (day >= 4 || day === 0) ? thursday(d) : thursday.ceil(d);
+  d = (day >= 4 || day === 0) ? timeThursday(d) : timeThursday.ceil(d);
   return pad(d.getFullYear() % 10000, p, 4);
 }
 
@@ -16483,7 +16589,7 @@ function formatUTCHour12(d, p) {
 }
 
 function formatUTCDayOfYear(d, p) {
-  return pad(1 + utcDay$1.count(utcYear$1(d), d), p, 3);
+  return pad(1 + utcDay.count(utcYear(d), d), p, 3);
 }
 
 function formatUTCMilliseconds(d, p) {
@@ -16512,7 +16618,7 @@ function formatUTCWeekdayNumberMonday(d) {
 }
 
 function formatUTCWeekNumberSunday(d, p) {
-  return pad(utcSunday.count(utcYear$1(d) - 1, d), p, 2);
+  return pad(utcSunday.count(utcYear(d) - 1, d), p, 2);
 }
 
 function UTCdISO(d) {
@@ -16522,7 +16628,7 @@ function UTCdISO(d) {
 
 function formatUTCWeekNumberISO(d, p) {
   d = UTCdISO(d);
-  return pad(utcThursday.count(utcYear$1(d), d) + (utcYear$1(d).getUTCDay() === 4), p, 2);
+  return pad(utcThursday.count(utcYear(d), d) + (utcYear(d).getUTCDay() === 4), p, 2);
 }
 
 function formatUTCWeekdayNumberSunday(d) {
@@ -16530,7 +16636,7 @@ function formatUTCWeekdayNumberSunday(d) {
 }
 
 function formatUTCWeekNumberMonday(d, p) {
-  return pad(utcMonday.count(utcYear$1(d) - 1, d), p, 2);
+  return pad(utcMonday.count(utcYear(d) - 1, d), p, 2);
 }
 
 function formatUTCYear(d, p) {
@@ -16680,11 +16786,11 @@ function calendar(ticks, tickInterval, year, month, week, day, hour, minute, sec
 }
 
 function time() {
-  return initRange.apply(calendar(timeTicks, timeTickInterval, timeYear, timeMonth, sunday, timeDay, timeHour, timeMinute, utcSecond, exports.timeFormat).domain([new Date(2000, 0, 1), new Date(2000, 0, 2)]), arguments);
+  return initRange.apply(calendar(timeTicks, timeTickInterval, timeYear, timeMonth, timeSunday, timeDay, timeHour, timeMinute, second, exports.timeFormat).domain([new Date(2000, 0, 1), new Date(2000, 0, 2)]), arguments);
 }
 
 function utcTime() {
-  return initRange.apply(calendar(utcTicks, utcTickInterval, utcYear$1, utcMonth$1, utcSunday, utcDay$1, utcHour$1, utcMinute$1, utcSecond, exports.utcFormat).domain([Date.UTC(2000, 0, 1), Date.UTC(2000, 0, 2)]), arguments);
+  return initRange.apply(calendar(utcTicks, utcTickInterval, utcYear, utcMonth, utcSunday, utcDay, utcHour, utcMinute, second, exports.utcFormat).domain([Date.UTC(2000, 0, 1), Date.UTC(2000, 0, 2)]), arguments);
 }
 
 function transformer$1() {
@@ -17378,6 +17484,24 @@ function asin(x) {
   return x >= 1 ? halfPi : x <= -1 ? -halfPi : Math.asin(x);
 }
 
+function withPath(shape) {
+  let digits = 3;
+
+  shape.digits = function(_) {
+    if (!arguments.length) return digits;
+    if (_ == null) {
+      digits = null;
+    } else {
+      const d = Math.floor(_);
+      if (!(d >= 0)) throw new RangeError(`invalid digits: ${_}`);
+      digits = d;
+    }
+    return shape;
+  };
+
+  return () => new Path$1(digits);
+}
+
 function arcInnerRadius(d) {
   return d.innerRadius;
 }
@@ -17458,7 +17582,8 @@ function arc() {
       startAngle = arcStartAngle,
       endAngle = arcEndAngle,
       padAngle = arcPadAngle,
-      context = null;
+      context = null,
+      path = withPath(arc);
 
   function arc() {
     var buffer,
@@ -17527,16 +17652,22 @@ function arc() {
             y00 = r0 * sin(a00),
             oc;
 
-        // Restrict the corner radius according to the sector angle.
-        if (da < pi && (oc = intersect(x01, y01, x00, y00, x11, y11, x10, y10))) {
-          var ax = x01 - oc[0],
-              ay = y01 - oc[1],
-              bx = x11 - oc[0],
-              by = y11 - oc[1],
-              kc = 1 / sin(acos((ax * bx + ay * by) / (sqrt(ax * ax + ay * ay) * sqrt(bx * bx + by * by))) / 2),
-              lc = sqrt(oc[0] * oc[0] + oc[1] * oc[1]);
-          rc0 = min(rc, (r0 - lc) / (kc - 1));
-          rc1 = min(rc, (r1 - lc) / (kc + 1));
+        // Restrict the corner radius according to the sector angle. If this
+        // intersection fails, it’s probably because the arc is too small, so
+        // disable the corner radius entirely.
+        if (da < pi) {
+          if (oc = intersect(x01, y01, x00, y00, x11, y11, x10, y10)) {
+            var ax = x01 - oc[0],
+                ay = y01 - oc[1],
+                bx = x11 - oc[0],
+                by = y11 - oc[1],
+                kc = 1 / sin(acos((ax * bx + ay * by) / (sqrt(ax * ax + ay * ay) * sqrt(bx * bx + by * by))) / 2),
+                lc = sqrt(oc[0] * oc[0] + oc[1] * oc[1]);
+            rc0 = min(rc, (r0 - lc) / (kc - 1));
+            rc1 = min(rc, (r1 - lc) / (kc + 1));
+          } else {
+            rc0 = rc1 = 0;
+          }
         }
       }
 
@@ -17676,7 +17807,7 @@ function curveLinear(context) {
   return new Linear(context);
 }
 
-function x$1(p) {
+function x(p) {
   return p[0];
 }
 
@@ -17684,13 +17815,14 @@ function y(p) {
   return p[1];
 }
 
-function line(x, y$1) {
+function line(x$1, y$1) {
   var defined = constant$1(true),
       context = null,
       curve = curveLinear,
-      output = null;
+      output = null,
+      path = withPath(line);
 
-  x = typeof x === "function" ? x : (x === undefined) ? x$1 : constant$1(x);
+  x$1 = typeof x$1 === "function" ? x$1 : (x$1 === undefined) ? x : constant$1(x$1);
   y$1 = typeof y$1 === "function" ? y$1 : (y$1 === undefined) ? y : constant$1(y$1);
 
   function line(data) {
@@ -17707,14 +17839,14 @@ function line(x, y$1) {
         if (defined0 = !defined0) output.lineStart();
         else output.lineEnd();
       }
-      if (defined0) output.point(+x(d, i, data), +y$1(d, i, data));
+      if (defined0) output.point(+x$1(d, i, data), +y$1(d, i, data));
     }
 
     if (buffer) return output = null, buffer + "" || null;
   }
 
   line.x = function(_) {
-    return arguments.length ? (x = typeof _ === "function" ? _ : constant$1(+_), line) : x;
+    return arguments.length ? (x$1 = typeof _ === "function" ? _ : constant$1(+_), line) : x$1;
   };
 
   line.y = function(_) {
@@ -17741,9 +17873,10 @@ function area(x0, y0, y1) {
       defined = constant$1(true),
       context = null,
       curve = curveLinear,
-      output = null;
+      output = null,
+      path = withPath(area);
 
-  x0 = typeof x0 === "function" ? x0 : (x0 === undefined) ? x$1 : constant$1(+x0);
+  x0 = typeof x0 === "function" ? x0 : (x0 === undefined) ? x : constant$1(+x0);
   y0 = typeof y0 === "function" ? y0 : (y0 === undefined) ? constant$1(0) : constant$1(+y0);
   y1 = typeof y1 === "function" ? y1 : (y1 === undefined) ? y : constant$1(+y1);
 
@@ -18054,8 +18187,8 @@ class BumpRadial {
   lineEnd() {}
   point(x, y) {
     x = +x, y = +y;
-    if (this._point++ === 0) {
-      this._x0 = x, this._y0 = y;
+    if (this._point === 0) {
+      this._point = 1;
     } else {
       const p0 = pointRadial(this._x0, this._y0);
       const p1 = pointRadial(this._x0, this._y0 = (this._y0 + y) / 2);
@@ -18064,6 +18197,7 @@ class BumpRadial {
       this._context.moveTo(...p0);
       this._context.bezierCurveTo(...p1, ...p2, ...p3);
     }
+    this._x0 = x, this._y0 = y;
   }
 }
 
@@ -18088,12 +18222,13 @@ function linkTarget(d) {
 }
 
 function link(curve) {
-  let source = linkSource;
-  let target = linkTarget;
-  let x = x$1;
-  let y$1 = y;
-  let context = null;
-  let output = null;
+  let source = linkSource,
+      target = linkTarget,
+      x$1 = x,
+      y$1 = y,
+      context = null,
+      output = null,
+      path = withPath(link);
 
   function link() {
     let buffer;
@@ -18102,8 +18237,8 @@ function link(curve) {
     const t = target.apply(this, argv);
     if (context == null) output = curve(buffer = path());
     output.lineStart();
-    argv[0] = s, output.point(+x.apply(this, argv), +y$1.apply(this, argv));
-    argv[0] = t, output.point(+x.apply(this, argv), +y$1.apply(this, argv));
+    argv[0] = s, output.point(+x$1.apply(this, argv), +y$1.apply(this, argv));
+    argv[0] = t, output.point(+x$1.apply(this, argv), +y$1.apply(this, argv));
     output.lineEnd();
     if (buffer) return output = null, buffer + "" || null;
   }
@@ -18117,7 +18252,7 @@ function link(curve) {
   };
 
   link.x = function(_) {
-    return arguments.length ? (x = typeof _ === "function" ? _ : constant$1(+_), link) : x;
+    return arguments.length ? (x$1 = typeof _ === "function" ? _ : constant$1(+_), link) : x$1;
   };
 
   link.y = function(_) {
@@ -18317,7 +18452,7 @@ var wye = {
   }
 };
 
-var x = {
+var times = {
   draw(context, size) {
     const r = sqrt(size - min(size / 6, 1.7)) * 0.6189;
     context.moveTo(-r, -r);
@@ -18342,7 +18477,7 @@ const symbolsFill = [
 const symbolsStroke = [
   circle,
   plus,
-  x,
+  times,
   triangle2,
   asterisk,
   square2,
@@ -18350,7 +18485,8 @@ const symbolsStroke = [
 ];
 
 function Symbol$1(type, size) {
-  let context = null;
+  let context = null,
+      path = withPath(symbol);
 
   type = typeof type === "function" ? type : constant$1(type || circle);
   size = typeof size === "function" ? size : constant$1(size === undefined ? 64 : +size);
@@ -19912,6 +20048,7 @@ exports.FormatSpecifier = FormatSpecifier;
 exports.InternMap = InternMap;
 exports.InternSet = InternSet;
 exports.Node = Node$1;
+exports.Path = Path$1;
 exports.Voronoi = Voronoi;
 exports.ZoomTransform = Transform;
 exports.active = active;
@@ -20039,7 +20176,7 @@ exports.forceLink = link$2;
 exports.forceManyBody = manyBody;
 exports.forceRadial = radial$1;
 exports.forceSimulation = simulation;
-exports.forceX = x$2;
+exports.forceX = x$1;
 exports.forceY = y$1;
 exports.formatDefaultLocale = defaultLocale$1;
 exports.formatLocale = formatLocale$1;
@@ -20054,7 +20191,7 @@ exports.geoAzimuthalEquidistant = azimuthalEquidistant;
 exports.geoAzimuthalEquidistantRaw = azimuthalEquidistantRaw;
 exports.geoBounds = bounds;
 exports.geoCentroid = centroid$1;
-exports.geoCircle = circle$2;
+exports.geoCircle = circle$1;
 exports.geoClipAntimeridian = clipAntimeridian;
 exports.geoClipCircle = clipCircle;
 exports.geoClipExtent = extent;
@@ -20209,6 +20346,7 @@ exports.packSiblings = siblings;
 exports.pairs = pairs;
 exports.partition = partition;
 exports.path = path;
+exports.pathRound = pathRound;
 exports.permute = permute;
 exports.pie = pie;
 exports.piecewise = piecewise;
@@ -20360,10 +20498,11 @@ exports.symbolPlus = plus;
 exports.symbolSquare = square;
 exports.symbolSquare2 = square2;
 exports.symbolStar = star;
+exports.symbolTimes = times;
 exports.symbolTriangle = triangle;
 exports.symbolTriangle2 = triangle2;
 exports.symbolWye = wye;
-exports.symbolX = x;
+exports.symbolX = times;
 exports.symbols = symbolsFill;
 exports.symbolsFill = symbolsFill;
 exports.symbolsStroke = symbolsStroke;
@@ -20376,40 +20515,40 @@ exports.tickIncrement = tickIncrement;
 exports.tickStep = tickStep;
 exports.ticks = ticks;
 exports.timeDay = timeDay;
-exports.timeDays = days;
+exports.timeDays = timeDays;
 exports.timeFormatDefaultLocale = defaultLocale;
 exports.timeFormatLocale = formatLocale;
-exports.timeFriday = friday;
-exports.timeFridays = fridays;
+exports.timeFriday = timeFriday;
+exports.timeFridays = timeFridays;
 exports.timeHour = timeHour;
-exports.timeHours = hours;
-exports.timeInterval = newInterval;
-exports.timeMillisecond = millisecond$1;
+exports.timeHours = timeHours;
+exports.timeInterval = timeInterval;
+exports.timeMillisecond = millisecond;
 exports.timeMilliseconds = milliseconds;
 exports.timeMinute = timeMinute;
-exports.timeMinutes = minutes;
-exports.timeMonday = monday;
-exports.timeMondays = mondays;
+exports.timeMinutes = timeMinutes;
+exports.timeMonday = timeMonday;
+exports.timeMondays = timeMondays;
 exports.timeMonth = timeMonth;
-exports.timeMonths = months;
-exports.timeSaturday = saturday;
-exports.timeSaturdays = saturdays;
-exports.timeSecond = utcSecond;
+exports.timeMonths = timeMonths;
+exports.timeSaturday = timeSaturday;
+exports.timeSaturdays = timeSaturdays;
+exports.timeSecond = second;
 exports.timeSeconds = seconds;
-exports.timeSunday = sunday;
-exports.timeSundays = sundays;
-exports.timeThursday = thursday;
-exports.timeThursdays = thursdays;
+exports.timeSunday = timeSunday;
+exports.timeSundays = timeSundays;
+exports.timeThursday = timeThursday;
+exports.timeThursdays = timeThursdays;
 exports.timeTickInterval = timeTickInterval;
 exports.timeTicks = timeTicks;
-exports.timeTuesday = tuesday;
-exports.timeTuesdays = tuesdays;
-exports.timeWednesday = wednesday;
-exports.timeWednesdays = wednesdays;
-exports.timeWeek = sunday;
-exports.timeWeeks = sundays;
+exports.timeTuesday = timeTuesday;
+exports.timeTuesdays = timeTuesdays;
+exports.timeWednesday = timeWednesday;
+exports.timeWednesdays = timeWednesdays;
+exports.timeWeek = timeSunday;
+exports.timeWeeks = timeSundays;
 exports.timeYear = timeYear;
-exports.timeYears = years;
+exports.timeYears = timeYears;
 exports.timeout = timeout;
 exports.timer = timer;
 exports.timerFlush = timerFlush;
@@ -20432,23 +20571,25 @@ exports.tsvFormatValue = tsvFormatValue;
 exports.tsvParse = tsvParse;
 exports.tsvParseRows = tsvParseRows;
 exports.union = union;
-exports.utcDay = utcDay$1;
+exports.unixDay = unixDay;
+exports.unixDays = unixDays;
+exports.utcDay = utcDay;
 exports.utcDays = utcDays;
 exports.utcFriday = utcFriday;
 exports.utcFridays = utcFridays;
-exports.utcHour = utcHour$1;
+exports.utcHour = utcHour;
 exports.utcHours = utcHours;
-exports.utcMillisecond = millisecond$1;
+exports.utcMillisecond = millisecond;
 exports.utcMilliseconds = milliseconds;
-exports.utcMinute = utcMinute$1;
+exports.utcMinute = utcMinute;
 exports.utcMinutes = utcMinutes;
 exports.utcMonday = utcMonday;
 exports.utcMondays = utcMondays;
-exports.utcMonth = utcMonth$1;
+exports.utcMonth = utcMonth;
 exports.utcMonths = utcMonths;
 exports.utcSaturday = utcSaturday;
 exports.utcSaturdays = utcSaturdays;
-exports.utcSecond = utcSecond;
+exports.utcSecond = second;
 exports.utcSeconds = seconds;
 exports.utcSunday = utcSunday;
 exports.utcSundays = utcSundays;
@@ -20462,7 +20603,7 @@ exports.utcWednesday = utcWednesday;
 exports.utcWednesdays = utcWednesdays;
 exports.utcWeek = utcSunday;
 exports.utcWeeks = utcSundays;
-exports.utcYear = utcYear$1;
+exports.utcYear = utcYear;
 exports.utcYears = utcYears;
 exports.variance = variance;
 exports.version = version;
@@ -20472,7 +20613,5 @@ exports.zip = zip;
 exports.zoom = zoom;
 exports.zoomIdentity = identity;
 exports.zoomTransform = transform;
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
